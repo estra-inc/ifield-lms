@@ -11,6 +11,14 @@ export interface AvailableSlot {
   endTime: string   // HH:MM
 }
 
+/**
+ * Date を JST (UTC+9) として解釈する。
+ * Vercel (UTC) 環境で正しく日本時間の年月日・曜日を取得するために使用。
+ */
+export function toJST(date: Date): Date {
+  return new Date(date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }))
+}
+
 const JS_DAY_TO_KEY = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const
 
 /**
@@ -110,8 +118,8 @@ function isSlotBusy(
   endTime: string,
   busyPeriods: { start: string; end: string }[]
 ): boolean {
-  const slotStart = new Date(`${date}T${startTime}:00`).getTime()
-  const slotEnd = new Date(`${date}T${endTime}:00`).getTime()
+  const slotStart = new Date(`${date}T${startTime}:00+09:00`).getTime()
+  const slotEnd = new Date(`${date}T${endTime}:00+09:00`).getTime()
 
   for (const busy of busyPeriods) {
     const busyStart = new Date(busy.start).getTime()
@@ -137,7 +145,8 @@ export function computeAvailableSlots(
   bookedSessions: { session_date: string; start_time: string }[]
 ): AvailableSlot[] {
   const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const jstNow = toJST(now)
+  const today = new Date(jstNow.getFullYear(), jstNow.getMonth(), jstNow.getDate())
 
   const startDate = new Date(today)
   startDate.setDate(startDate.getDate() + businessHours.bookingLeadDays)
@@ -171,8 +180,8 @@ export function computeAvailableSlots(
       // busy チェック
       if (isSlotBusy(dateStr, slot.start, slot.end, busySlots)) continue
 
-      // 過去時刻チェック
-      const slotDateTime = new Date(`${dateStr}T${slot.start}:00`)
+      // 過去時刻チェック（JST として解釈）
+      const slotDateTime = new Date(`${dateStr}T${slot.start}:00+09:00`)
       if (slotDateTime <= now) continue
 
       available.push({

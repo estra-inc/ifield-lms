@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { getGoogleCalendarBusySlots } from "@/lib/google-calendar"
-import { computeAvailableSlots, formatDateStr, getBusinessHoursForGenre } from "@/lib/utils/coaching-slots"
+import { computeAvailableSlots, formatDateStr, getBusinessHoursForGenre, toJST } from "@/lib/utils/coaching-slots"
 import { isCoachActive, getActiveCoaches } from "@/lib/utils/coach-helpers"
 import type { BusinessHours, CoachingGenre, GenreBusinessHours } from "@/lib/types/database"
 
@@ -59,9 +59,10 @@ export async function GET(request: NextRequest) {
     const slotDuration = businessHours.slotDurationMinutes ?? 60
     const buffer = businessHours.bufferMinutes ?? 0
 
-    // 期間計算
+    // 期間計算（JST ベース）
     const now = new Date()
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const jstNow = toJST(now)
+    const today = new Date(jstNow.getFullYear(), jstNow.getMonth(), jstNow.getDate())
     const startDate = new Date(today)
     startDate.setDate(startDate.getDate() + leadDays)
     const endDate = new Date(today)

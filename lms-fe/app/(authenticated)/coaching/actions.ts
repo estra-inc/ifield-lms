@@ -8,6 +8,7 @@ import {
   deleteCalendarEvent,
 } from "@/lib/google-calendar"
 import { isCoachActive, getActiveCoaches } from "@/lib/utils/coach-helpers"
+import { toJST, formatDateStr } from "@/lib/utils/coaching-slots"
 import type { ActionResult } from "@/lib/validations/auth"
 
 /**
@@ -154,7 +155,7 @@ export async function bookSession(
     }
 
     // 3. 残りのコーチの中で scheduled セッション数が最少のコーチを選択（負荷分散）
-    const today = new Date().toISOString().slice(0, 10)
+    const today = formatDateStr(toJST(new Date()))
     const { data: loadData } = await adminClient
       .from("coaching_sessions")
       .select("coach_id")
