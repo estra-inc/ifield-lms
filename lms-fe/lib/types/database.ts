@@ -535,6 +535,7 @@ export type Database = {
           user_id: string
           project_id: string
           status: "started"
+          due_date: string | null
           created_at: string
         }
         Insert: {
@@ -542,6 +543,7 @@ export type Database = {
           user_id: string
           project_id: string
           status?: "started"
+          due_date?: string | null
           created_at?: string
         }
         Update: {
@@ -549,6 +551,7 @@ export type Database = {
           user_id?: string
           project_id?: string
           status?: "started"
+          due_date?: string | null
           created_at?: string
         }
         Relationships: [
