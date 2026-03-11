@@ -109,6 +109,20 @@ export async function updateDueDate(
     }
   }
 
+  // 過去日付のバリデーション
+  if (dueDate) {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const selected = new Date(dueDate)
+    selected.setHours(0, 0, 0, 0)
+    if (selected < today) {
+      return {
+        success: false,
+        message: "過去の日付は設定できません。",
+      }
+    }
+  }
+
   const { error: updateError } = await supabase
     .from("project_assignments")
     .update({ due_date: dueDate })

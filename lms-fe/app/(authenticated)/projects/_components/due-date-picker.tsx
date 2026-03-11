@@ -122,6 +122,7 @@ export function DueDateEditDialog({
                 id="due-date-edit"
                 type="date"
                 value={editValue}
+                min={new Date().toISOString().slice(0, 10)}
                 onChange={(e) => setEditValue(e.target.value)}
                 disabled={isPending}
                 className="w-full font-mono"
