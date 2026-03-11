@@ -1,0 +1,3486 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "YXhVl",
+      "x": 0,
+      "y": 0,
+      "name": "Version Management - List",
+      "width": 1440,
+      "height": "fit_content(900)",
+      "fill": "$--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "rn0LV",
+          "name": "Sidebar",
+          "width": 240,
+          "height": "fill_container",
+          "fill": "$--sidebar",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "mcTtw",
+              "name": "sTop",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MUuOw",
+                  "name": "sLogo",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    20,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "CFNGF",
+                      "name": "sLogoT",
+                      "fill": "$--sidebar-foreground",
+                      "content": "i.field LMS",
+                      "fontFamily": "Sora",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bRfrC",
+                  "name": "sSep",
+                  "width": "fill_container",
+                  "height": 1,
+                  "fill": "$--sidebar-border"
+                },
+                {
+                  "type": "frame",
+                  "id": "12U6f",
+                  "name": "sMenu",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MH1Gb",
+                      "name": "m1",
+                      "width": "fill_container",
+                      "fill": "$--sidebar-accent",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "Z1T9o",
+                          "name": "m1i",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "git-branch",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-accent-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ue1A0",
+                          "name": "m1l",
+                          "fill": "$--sidebar-accent-foreground",
+                          "content": "バージョン管理",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "eBjoC",
+                      "name": "m2",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "bY38p",
+                          "name": "m2i",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "layout-dashboard",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "TjNk9",
+                          "name": "m2l",
+                          "fill": "$--sidebar-foreground",
+                          "content": "管理者ダッシュボード",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "deYLy",
+                      "name": "m3",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "5crNy",
+                          "name": "m3i",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "users",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "6zeAm",
+                          "name": "m3l",
+                          "fill": "$--sidebar-foreground",
+                          "content": "ユーザー管理",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "6Qptx",
+                      "name": "m4",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "oErAy",
+                          "name": "m4i",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "file-text",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "DhQvX",
+                          "name": "m4l",
+                          "fill": "$--sidebar-foreground",
+                          "content": "コンテンツ管理",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UN9uJ",
+                      "name": "m5",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "IGwf3",
+                          "name": "m5i",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "settings",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "hzBn5",
+                          "name": "m5l",
+                          "fill": "$--sidebar-foreground",
+                          "content": "システム設定",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "DvSnz",
+          "name": "ContentArea",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Omj5v",
+              "name": "Header",
+              "width": "fill_container",
+              "height": 64,
+              "stroke": {
+                "align": "inside",
+                "thickness": {
+                  "bottom": 1
+                },
+                "fill": "$--border"
+              },
+              "padding": [
+                0,
+                24
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "S73js",
+                  "name": "hdrT",
+                  "fill": "$--foreground",
+                  "content": "コンテンツバージョン管理",
+                  "fontFamily": "Sora",
+                  "fontSize": 16,
+                  "fontWeight": "600",
+                  "letterSpacing": -1
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "5Zv8X",
+              "name": "Main",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "$--background",
+              "layout": "vertical",
+              "gap": 24,
+              "padding": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "t1LIm",
+                  "name": "ph",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "uAfFE",
+                      "name": "phT",
+                      "fill": "$--foreground",
+                      "content": "バージョン管理",
+                      "fontFamily": "Sora",
+                      "fontSize": 22,
+                      "fontWeight": "700",
+                      "letterSpacing": -1
+                    },
+                    {
+                      "type": "text",
+                      "id": "IUV2V",
+                      "name": "phD",
+                      "fill": "$--muted-foreground",
+                      "content": "教材リポジトリからの同期状況を確認し、公開を承認します。",
+                      "fontFamily": "IBM Plex Mono",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "osOfM",
+                  "name": "StatusCards",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "FCPN9",
+                      "name": "ActiveCard",
+                      "width": "fill_container",
+                      "fill": "$--card",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 24,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "0kKv2",
+                          "name": "acH",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "fcjEM",
+                              "name": "acL",
+                              "fill": "$--muted-foreground",
+                              "content": "公開中バージョン",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "5HgXn",
+                              "name": "acB",
+                              "fill": "#22C55E",
+                              "padding": [
+                                4,
+                                10
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "jyvCE",
+                                  "name": "acBt",
+                                  "fill": "#FFFFFF",
+                                  "content": "ACTIVE",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "lITIj",
+                          "name": "acBody",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "eO2LQ",
+                              "name": "acR1",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "rdYVo",
+                                  "name": "acR1i",
+                                  "width": 16,
+                                  "height": 16,
+                                  "iconFontName": "git-commit-horizontal",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--muted-foreground"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "YotOR",
+                                  "name": "acR1t",
+                                  "fill": "$--foreground",
+                                  "content": "a1b2c3d",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 14,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "EqIGW",
+                              "name": "acR2",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "XxyCx",
+                                  "name": "acR2i",
+                                  "width": 14,
+                                  "height": 14,
+                                  "iconFontName": "calendar",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--muted-foreground"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "3KvRx",
+                                  "name": "acR2t",
+                                  "fill": "$--muted-foreground",
+                                  "content": "2026/02/27 14:30 承認",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NxLoY",
+                      "name": "DraftCard",
+                      "width": "fill_container",
+                      "fill": "$--card",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 2,
+                        "fill": "$--accent"
+                      },
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 24,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "eqFno",
+                          "name": "dcH",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "RPF7Y",
+                              "name": "dcL",
+                              "fill": "$--muted-foreground",
+                              "content": "承認待ちバージョン",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "oTsvW",
+                              "name": "dcB",
+                              "fill": "$--accent",
+                              "padding": [
+                                4,
+                                10
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "GZHJ0",
+                                  "name": "dcBt",
+                                  "fill": "$--accent-foreground",
+                                  "content": "DRAFT",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "fD1FT",
+                          "name": "dcBody",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "COPkw",
+                              "name": "dcR1",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "Yh1Tk",
+                                  "name": "dcR1i",
+                                  "width": 16,
+                                  "height": 16,
+                                  "iconFontName": "git-commit-horizontal",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--muted-foreground"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "itzR5",
+                                  "name": "dcR1t",
+                                  "fill": "$--foreground",
+                                  "content": "e4f5g6h",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 14,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "4kN5i",
+                              "name": "dcR2",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "EOmOT",
+                                  "name": "dcR2i",
+                                  "width": 14,
+                                  "height": 14,
+                                  "iconFontName": "timer",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--muted-foreground"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "Os4Pc",
+                                  "name": "dcR2t",
+                                  "fill": "$--muted-foreground",
+                                  "content": "2026/02/28 10:15 同期",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "UVoBj",
+                              "name": "dcChg",
+                              "fill": "$--primary",
+                              "content": "+3 追加 / 5 更新 / 1 削除",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "2LyTk",
+                          "name": "dcAct",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "A1Jh5",
+                              "name": "dcPB",
+                              "stroke": {
+                                "align": "inside",
+                                "thickness": 1,
+                                "fill": "$--border"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                10,
+                                16
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "cjoHj",
+                                  "name": "dcPBi",
+                                  "width": 16,
+                                  "height": 16,
+                                  "iconFontName": "eye",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--foreground"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "dW1YN",
+                                  "name": "dcPBl",
+                                  "fill": "$--foreground",
+                                  "content": "変更を確認",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 13,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "MYbRi",
+                              "name": "dcAB",
+                              "fill": "$--primary",
+                              "gap": 8,
+                              "padding": [
+                                10,
+                                16
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "2Vmkf",
+                                  "name": "dcABi",
+                                  "width": 16,
+                                  "height": 16,
+                                  "iconFontName": "check",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--primary-foreground"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "S7JBt",
+                                  "name": "dcABl",
+                                  "fill": "$--primary-foreground",
+                                  "content": "承認して公開",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 13,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "huH3m",
+                  "name": "VersionHistory",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "0XcF1",
+                      "name": "hsH",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "xaEMg",
+                          "name": "hsT",
+                          "fill": "$--foreground",
+                          "content": "バージョン履歴",
+                          "fontFamily": "Sora",
+                          "fontSize": 16,
+                          "fontWeight": "600",
+                          "letterSpacing": -1
+                        },
+                        {
+                          "type": "text",
+                          "id": "xuPxl",
+                          "name": "hsC",
+                          "fill": "$--muted-foreground",
+                          "content": "全 5 件",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fgOaK",
+                      "name": "Table",
+                      "width": "fill_container",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "7nCjQ",
+                          "name": "HeaderRow",
+                          "width": "fill_container",
+                          "fill": "$--muted",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "bottom": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "IGfQW",
+                              "name": "th1",
+                              "width": 140,
+                              "padding": [
+                                12,
+                                16
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "IutAD",
+                                  "name": "th1t",
+                                  "fill": "$--foreground",
+                                  "content": "コミット",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "600",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "idISf",
+                              "name": "th2",
+                              "width": 100,
+                              "padding": [
+                                12,
+                                16
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "a72ca",
+                                  "name": "th2t",
+                                  "fill": "$--foreground",
+                                  "content": "ステータス",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "600",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "WssXx",
+                              "name": "th3",
+                              "width": "fill_container",
+                              "padding": [
+                                12,
+                                16
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "uI3Lb",
+                                  "name": "th3t",
+                                  "fill": "$--foreground",
+                                  "content": "変更サマリー",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "600",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "YZeTU",
+                              "name": "th4",
+                              "width": 160,
+                              "padding": [
+                                12,
+                                16
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "j66cs",
+                                  "name": "th4t",
+                                  "fill": "$--foreground",
+                                  "content": "同期日時",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "600",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "fd0Ti",
+                              "name": "th5",
+                              "width": 140,
+                              "padding": [
+                                12,
+                                16
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "PztRM",
+                                  "name": "th5t",
+                                  "fill": "$--foreground",
+                                  "content": "承認者",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "600",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "levO9",
+                          "name": "Row/Draft",
+                          "width": "fill_container",
+                          "fill": "#FFFCEB",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "bottom": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "YfFFI",
+                              "name": "r1a",
+                              "width": 140,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ZhTI5",
+                                  "name": "r1at",
+                                  "fill": "$--primary",
+                                  "content": "e4f5g6h",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "cK02r",
+                              "name": "r1b",
+                              "width": 100,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "2nbPz",
+                                  "name": "r1bb",
+                                  "fill": "$--accent",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "FqQOe",
+                                      "name": "r1bbt",
+                                      "fill": "$--accent-foreground",
+                                      "content": "DRAFT",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "UUPxD",
+                              "name": "r1c",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "s1I0y",
+                                  "name": "r1ct",
+                                  "fill": "$--foreground",
+                                  "content": "+3 追加 / 5 更新 / 1 削除",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "YvGtp",
+                              "name": "r1d",
+                              "width": 160,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "38qeV",
+                                  "name": "r1dt",
+                                  "fill": "$--muted-foreground",
+                                  "content": "2026/02/28 10:15",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "qFR2O",
+                              "name": "r1e",
+                              "width": 140,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "2V7ok",
+                                  "name": "r1et",
+                                  "fill": "$--muted-foreground",
+                                  "content": "—",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "QMRra",
+                          "name": "Row/Active",
+                          "width": "fill_container",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "bottom": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Xh2UG",
+                              "name": "r2a",
+                              "width": 140,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "vzMXX",
+                                  "name": "r2at",
+                                  "fill": "$--foreground",
+                                  "content": "a1b2c3d",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "zmjaI",
+                              "name": "r2b",
+                              "width": 100,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "g0L08",
+                                  "name": "r2bb",
+                                  "fill": "#22C55E",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "kamDG",
+                                      "name": "r2bbt",
+                                      "fill": "#FFFFFF",
+                                      "content": "ACTIVE",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "7zpGx",
+                              "name": "r2c",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "1bImC",
+                                  "name": "r2ct",
+                                  "fill": "$--foreground",
+                                  "content": "+2 追加 / 8 更新 / 0 削除",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "H6Xvq",
+                              "name": "r2d",
+                              "width": 160,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ZqWYo",
+                                  "name": "r2dt",
+                                  "fill": "$--muted-foreground",
+                                  "content": "2026/02/27 14:30",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "BL8Ta",
+                              "name": "r2e",
+                              "width": 140,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "KqUnm",
+                                  "name": "r2et",
+                                  "fill": "$--foreground",
+                                  "content": "管理者 太郎",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zaMls",
+                          "name": "Row/Archived1",
+                          "width": "fill_container",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "bottom": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "6sy6g",
+                              "name": "r3a",
+                              "width": 140,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "eHJfU",
+                                  "name": "r3at",
+                                  "fill": "$--muted-foreground",
+                                  "content": "x9y8z7w",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "PZtF7",
+                              "name": "r3b",
+                              "width": 100,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "OxlWL",
+                                  "name": "r3bb",
+                                  "stroke": {
+                                    "align": "inside",
+                                    "thickness": 1,
+                                    "fill": "$--border"
+                                  },
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "ckWL5",
+                                      "name": "r3bbt",
+                                      "fill": "$--muted-foreground",
+                                      "content": "ARCHIVED",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Pzqcs",
+                              "name": "r3c",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "EgIUo",
+                                  "name": "r3ct",
+                                  "fill": "$--muted-foreground",
+                                  "content": "+1 追加 / 12 更新 / 2 削除",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "QE6Ug",
+                              "name": "r3d",
+                              "width": 160,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "kPouv",
+                                  "name": "r3dt",
+                                  "fill": "$--muted-foreground",
+                                  "content": "2026/02/25 09:45",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ThvTt",
+                              "name": "r3e",
+                              "width": 140,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Y200f",
+                                  "name": "r3et",
+                                  "fill": "$--muted-foreground",
+                                  "content": "管理者 太郎",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uz4Zp",
+                          "name": "Row/Archived2",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "JDslq",
+                              "name": "r4a",
+                              "width": 140,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "9I11t",
+                                  "name": "r4at",
+                                  "fill": "$--muted-foreground",
+                                  "content": "m3n4o5p",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ydbuv",
+                              "name": "r4b",
+                              "width": 100,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "5cZZo",
+                                  "name": "r4bb",
+                                  "stroke": {
+                                    "align": "inside",
+                                    "thickness": 1,
+                                    "fill": "$--border"
+                                  },
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "eY5pM",
+                                      "name": "r4bbt",
+                                      "fill": "$--muted-foreground",
+                                      "content": "ARCHIVED",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "lnVoB",
+                              "name": "r4c",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "cBSZi",
+                                  "name": "r4ct",
+                                  "fill": "$--muted-foreground",
+                                  "content": "+5 追加 / 3 更新 / 0 削除",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "9iCji",
+                              "name": "r4d",
+                              "width": 160,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "OYIZA",
+                                  "name": "r4dt",
+                                  "fill": "$--muted-foreground",
+                                  "content": "2026/02/20 16:00",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "W7Z9N",
+                              "name": "r4e",
+                              "width": 140,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "E6kVs",
+                                  "name": "r4et",
+                                  "fill": "$--muted-foreground",
+                                  "content": "管理者 太郎",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "a27yB",
+      "x": 1540,
+      "y": 0,
+      "name": "Version Management - Diff View",
+      "width": 1440,
+      "height": "fit_content(900)",
+      "fill": "$--background",
+      "children": [
+        {
+          "type": "frame",
+          "id": "tXyP3",
+          "name": "Sidebar",
+          "width": 240,
+          "height": "fill_container",
+          "fill": "$--sidebar",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "a2nqt",
+              "name": "sTop",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "DvsPx",
+                  "name": "LogoArea",
+                  "width": "fill_container",
+                  "height": 64,
+                  "padding": [
+                    0,
+                    20
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "cKALa",
+                      "name": "logoText2",
+                      "fill": "$--sidebar-foreground",
+                      "content": "i.field LMS",
+                      "fontFamily": "Sora",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BuZny",
+                  "name": "sep2",
+                  "width": "fill_container",
+                  "height": 1,
+                  "fill": "$--border"
+                },
+                {
+                  "type": "frame",
+                  "id": "xA6h7",
+                  "name": "Nav",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "pul8z",
+                      "name": "navItem1",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "YAgak",
+                          "name": "navIcon1",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "layout-dashboard",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "EhCrz",
+                          "name": "navLabel1",
+                          "fill": "$--sidebar-foreground",
+                          "content": "ダッシュボード",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZajQh",
+                      "name": "navItem2",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "f0rha",
+                          "name": "navIcon2",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "users",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "zymy4",
+                          "name": "navLabel2",
+                          "fill": "$--sidebar-foreground",
+                          "content": "ユーザー管理",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bRmpb",
+                      "name": "navItem3",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "jNrC6",
+                          "name": "navIcon3",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "book-open",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "V33Em",
+                          "name": "navLabel3",
+                          "fill": "$--sidebar-foreground",
+                          "content": "コンテンツ管理",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Haiux",
+                      "name": "navItemActive",
+                      "width": "fill_container",
+                      "fill": "$--sidebar-accent",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "Fqxzb",
+                          "name": "navIconActive",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "git-branch",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-accent-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "yyw7J",
+                          "name": "navLabelActive",
+                          "fill": "$--sidebar-accent-foreground",
+                          "content": "バージョン管理",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uB621",
+                      "name": "navItem5",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "d2SG8",
+                          "name": "navIcon5",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "settings",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--sidebar-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "o9cbP",
+                          "name": "navLabel5",
+                          "fill": "$--sidebar-foreground",
+                          "content": "システム設定",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "NscUG",
+          "name": "ContentArea",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "JeW8K",
+              "name": "Header",
+              "width": "fill_container",
+              "height": 64,
+              "stroke": {
+                "align": "inside",
+                "thickness": {
+                  "bottom": 1
+                },
+                "fill": "$--border"
+              },
+              "padding": [
+                0,
+                24
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "cgKq6",
+                  "name": "headerLeft",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "dhgtW",
+                      "name": "backIcon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "arrow-left",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--foreground"
+                    },
+                    {
+                      "type": "text",
+                      "id": "2EsPp",
+                      "name": "headerTitle",
+                      "fill": "$--foreground",
+                      "content": "差分ビュー",
+                      "fontFamily": "Sora",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "6uqVH",
+              "name": "Main",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "$--background",
+              "layout": "vertical",
+              "gap": 24,
+              "padding": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "3qFgL",
+                  "name": "ActionRow",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "justifyContent": "end",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "01z0F",
+                      "name": "previewBtn",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "gap": 8,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "QVTC3",
+                          "name": "previewIcon",
+                          "width": 16,
+                          "height": 16,
+                          "iconFontName": "eye",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "6odjS",
+                          "name": "previewLabel",
+                          "fill": "$--foreground",
+                          "content": "全体プレビュー",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oJIOw",
+                      "name": "approveBtn",
+                      "fill": "$--primary",
+                      "gap": 8,
+                      "padding": [
+                        10,
+                        16
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "gIaMw",
+                          "name": "approveIcon",
+                          "width": 16,
+                          "height": 16,
+                          "iconFontName": "circle-check",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--primary-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "tVEfI",
+                          "name": "approveLabel",
+                          "fill": "$--primary-foreground",
+                          "content": "承認して公開",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Y6lVa",
+                  "name": "DraftInfoCard",
+                  "width": "fill_container",
+                  "fill": "$--card",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$--border"
+                  },
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "0dFzG",
+                      "name": "draftInfoTop",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "pkt1U",
+                          "name": "draftInfoLeft",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "qL2Up",
+                              "name": "draftCommitRow",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "yC8P0",
+                                  "name": "draftCommitIcon",
+                                  "width": 16,
+                                  "height": 16,
+                                  "iconFontName": "git-commit-horizontal",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--muted-foreground"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "RQuY1",
+                                  "name": "draftCommitText",
+                                  "fill": "$--foreground",
+                                  "content": "コミット: e4f5g6h",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "TZOZx",
+                              "name": "draftSyncRow",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "6D2C2",
+                                  "name": "draftSyncIcon",
+                                  "width": 16,
+                                  "height": 16,
+                                  "iconFontName": "timer",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--muted-foreground"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "UyjuR",
+                                  "name": "draftSyncText",
+                                  "fill": "$--muted-foreground",
+                                  "content": "同期: 2026-02-28 15:30",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "7Ix1c",
+                          "name": "changeSummary",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Pbz7M",
+                              "name": "addBadge",
+                              "fill": "#22C55E",
+                              "padding": [
+                                4,
+                                10
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "FL5QX",
+                                  "name": "addText",
+                                  "fill": "#FFFFFF",
+                                  "content": "+3 追加",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "11wLu",
+                              "name": "updateBadge",
+                              "fill": "#7FCEF4",
+                              "padding": [
+                                4,
+                                10
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "3UYzx",
+                                  "name": "updateText",
+                                  "fill": "#FFFFFF",
+                                  "content": "5 更新",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "x4V46",
+                              "name": "deleteBadge",
+                              "fill": "$--destructive",
+                              "padding": [
+                                4,
+                                10
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Eb3XP",
+                                  "name": "deleteText",
+                                  "fill": "#FFFFFF",
+                                  "content": "1 削除",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Q0fjL",
+                  "name": "DiffSection",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TfiOI",
+                      "name": "diffTitle",
+                      "fill": "$--foreground",
+                      "content": "変更ファイル一覧",
+                      "fontFamily": "Sora",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wWLAb",
+                      "name": "DiffTable",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "R7yjH",
+                          "name": "thRow",
+                          "width": "fill_container",
+                          "fill": "$--muted",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": 1,
+                            "fill": "$--border"
+                          },
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Lgx3X",
+                              "name": "th1",
+                              "width": "fill_container",
+                              "padding": [
+                                12,
+                                16
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n8Yy5",
+                                  "name": "th1t",
+                                  "fill": "$--muted-foreground",
+                                  "content": "ファイルパス",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "fSqX0",
+                              "name": "th2",
+                              "width": 120,
+                              "padding": [
+                                12,
+                                16
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "P0HUV",
+                                  "name": "th2t",
+                                  "fill": "$--muted-foreground",
+                                  "content": "変更種別",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "FX1Ec",
+                              "name": "th3",
+                              "width": 120,
+                              "padding": [
+                                12,
+                                16
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "SHLa3",
+                                  "name": "th3t",
+                                  "fill": "$--muted-foreground",
+                                  "content": "操作",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EzZE0",
+                          "name": "row1",
+                          "width": "fill_container",
+                          "fill": "#F0FDF4",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "right": 1,
+                              "bottom": 1,
+                              "left": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "6JRhR",
+                              "name": "r1td1",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "RRRm9",
+                                  "name": "r1t1",
+                                  "fill": "$--foreground",
+                                  "content": "engineering/tutorial-10/chapter-1/10-1-1",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "5ljwl",
+                              "name": "r1td2",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "thQlK",
+                                  "name": "r1badge",
+                                  "fill": "#22C55E",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "vgooy",
+                                      "name": "r1bt",
+                                      "fill": "#FFFFFF",
+                                      "content": "追加",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "kFykm",
+                              "name": "r1td3",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "p5HsF",
+                                  "name": "r1btn",
+                                  "fill": "$--primary",
+                                  "content": "プレビュー →",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "VKe0k",
+                          "name": "row2",
+                          "width": "fill_container",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "right": 1,
+                              "bottom": 1,
+                              "left": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "OcvR8",
+                              "name": "r2td1",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Y4sfV",
+                                  "name": "r2t1",
+                                  "fill": "$--foreground",
+                                  "content": "engineering/tutorial-10/chapter-1/10-1-2",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "oDScd",
+                              "name": "r2td2",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "PaBBr",
+                                  "name": "r2badge",
+                                  "fill": "#22C55E",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "w9lWj",
+                                      "name": "r2bt",
+                                      "fill": "#FFFFFF",
+                                      "content": "追加",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "vcUyo",
+                              "name": "r2td3",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "4zwka",
+                                  "name": "r2btn",
+                                  "fill": "$--primary",
+                                  "content": "プレビュー →",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "5L5wh",
+                          "name": "row3",
+                          "width": "fill_container",
+                          "fill": "#F0FDF4",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "right": 1,
+                              "bottom": 1,
+                              "left": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "hV9hk",
+                              "name": "r3td1",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "cpykw",
+                                  "name": "r3t1",
+                                  "fill": "$--foreground",
+                                  "content": "engineering/tutorial-10/chapter-1/10-1-3",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ZPFzH",
+                              "name": "r3td2",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "prA1P",
+                                  "name": "r3badge",
+                                  "fill": "#22C55E",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "PcW3T",
+                                      "name": "r3bt",
+                                      "fill": "#FFFFFF",
+                                      "content": "追加",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Er5mA",
+                              "name": "r3td3",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "gthiM",
+                                  "name": "r3btn",
+                                  "fill": "$--primary",
+                                  "content": "プレビュー →",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "unZll",
+                          "name": "row4",
+                          "width": "fill_container",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "right": 1,
+                              "bottom": 1,
+                              "left": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "ZWUyt",
+                              "name": "r4td1",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "JvsCz",
+                                  "name": "r4t1",
+                                  "fill": "$--foreground",
+                                  "content": "engineering/tutorial-10/chapter-2/10-2-1",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "wxgVC",
+                              "name": "r4td2",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "K96Kq",
+                                  "name": "r4badge",
+                                  "fill": "#7FCEF4",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "tq1r1",
+                                      "name": "r4bt",
+                                      "fill": "#FFFFFF",
+                                      "content": "更新",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "E40w5",
+                              "name": "r4td3",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "fYwNr",
+                                  "name": "r4btn",
+                                  "fill": "$--primary",
+                                  "content": "プレビュー →",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "5tOdc",
+                          "name": "row5",
+                          "width": "fill_container",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "right": 1,
+                              "bottom": 1,
+                              "left": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "efkBo",
+                              "name": "r5td1",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "G5fdH",
+                                  "name": "r5t1",
+                                  "fill": "$--foreground",
+                                  "content": "engineering/tutorial-10/chapter-2/10-2-2",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "TWJwk",
+                              "name": "r5td2",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "bssog",
+                                  "name": "r5badge",
+                                  "fill": "#7FCEF4",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "IOdxm",
+                                      "name": "r5bt",
+                                      "fill": "#FFFFFF",
+                                      "content": "更新",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "UpOmx",
+                              "name": "r5td3",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "yolLa",
+                                  "name": "r5btn",
+                                  "fill": "$--primary",
+                                  "content": "プレビュー →",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Mlwam",
+                          "name": "row6",
+                          "width": "fill_container",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "right": 1,
+                              "bottom": 1,
+                              "left": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "g1LnX",
+                              "name": "r6td1",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "74Mwi",
+                                  "name": "r6t1",
+                                  "fill": "$--foreground",
+                                  "content": "engineering/tutorial-10/chapter-2/10-2-3",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Ga8KF",
+                              "name": "r6td2",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "WqxZR",
+                                  "name": "r6badge",
+                                  "fill": "#7FCEF4",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "87aUa",
+                                      "name": "r6bt",
+                                      "fill": "#FFFFFF",
+                                      "content": "更新",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "r13jK",
+                              "name": "r6td3",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Pg7sL",
+                                  "name": "r6btn",
+                                  "fill": "$--primary",
+                                  "content": "プレビュー →",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dw9yB",
+                          "name": "row7",
+                          "width": "fill_container",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "right": 1,
+                              "bottom": 1,
+                              "left": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "2re4m",
+                              "name": "r7td1",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Q8PpF",
+                                  "name": "r7t1",
+                                  "fill": "$--foreground",
+                                  "content": "engineering/tutorial-10/chapter-3/10-3-1",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "iN2cm",
+                              "name": "r7td2",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "13scj",
+                                  "name": "r7badge",
+                                  "fill": "#7FCEF4",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "O2mDm",
+                                      "name": "r7bt",
+                                      "fill": "#FFFFFF",
+                                      "content": "更新",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "29fO2",
+                              "name": "r7td3",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ux6i7",
+                                  "name": "r7btn",
+                                  "fill": "$--primary",
+                                  "content": "プレビュー →",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "S6Ou0",
+                          "name": "row8",
+                          "width": "fill_container",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "right": 1,
+                              "bottom": 1,
+                              "left": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "pfVSD",
+                              "name": "r8td1",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "7MVod",
+                                  "name": "r8t1",
+                                  "fill": "$--foreground",
+                                  "content": "engineering/tutorial-10/chapter-3/10-3-2",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "fCg9u",
+                              "name": "r8td2",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Zw8N0",
+                                  "name": "r8badge",
+                                  "fill": "#7FCEF4",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "8T446",
+                                      "name": "r8bt",
+                                      "fill": "#FFFFFF",
+                                      "content": "更新",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "iy5aH",
+                              "name": "r8td3",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "SMCqO",
+                                  "name": "r8btn",
+                                  "fill": "$--primary",
+                                  "content": "プレビュー →",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "A899j",
+                          "name": "row9",
+                          "width": "fill_container",
+                          "fill": "#FEF2F2",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": {
+                              "right": 1,
+                              "bottom": 1,
+                              "left": 1
+                            },
+                            "fill": "$--border"
+                          },
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "7kCmL",
+                              "name": "r9td1",
+                              "width": "fill_container",
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "dquM7",
+                                  "name": "r9t1",
+                                  "fill": "$--muted-foreground",
+                                  "content": "engineering/tutorial-10/chapter-4/10-4-1",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "aXQ4j",
+                              "name": "r9td2",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "C3de7",
+                                  "name": "r9badge",
+                                  "fill": "$--destructive",
+                                  "padding": [
+                                    4,
+                                    10
+                                  ],
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "uPaF0",
+                                      "name": "r9bt",
+                                      "fill": "#FFFFFF",
+                                      "content": "削除",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "500"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "SzOMT",
+                              "name": "r9td3",
+                              "width": 120,
+                              "padding": [
+                                14,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "NBXRS",
+                                  "name": "r9t3",
+                                  "fill": "$--muted-foreground",
+                                  "content": "—",
+                                  "fontFamily": "Sora",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "v2XDU",
+      "x": 3080,
+      "y": 0,
+      "name": "Approval Confirmation Dialog",
+      "width": 1440,
+      "height": 900,
+      "fill": "rgba(0,0,0,0.5)",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "RGG9i",
+          "name": "Dialog",
+          "width": 480,
+          "fill": "$--card",
+          "stroke": {
+            "align": "inside",
+            "thickness": 1,
+            "fill": "$--border"
+          },
+          "layout": "vertical",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "u3hdT",
+              "name": "DialogHeader",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                32,
+                32,
+                16,
+                32
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "yNNgj",
+                  "name": "iconCircle",
+                  "width": 56,
+                  "height": 56,
+                  "fill": "#EFF6FF",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "cWrMx",
+                      "name": "shieldIcon",
+                      "width": 28,
+                      "height": 28,
+                      "iconFontName": "shield-check",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "vZ6rZ",
+                  "name": "dialogTitle",
+                  "fill": "$--foreground",
+                  "content": "コンテンツを公開しますか？",
+                  "textAlign": "center",
+                  "fontFamily": "Sora",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "Bzvlk",
+                  "name": "dialogDesc",
+                  "fill": "$--muted-foreground",
+                  "content": "この操作により、draft バージョンが active に昇格し、\n受講生に公開されます。現在の active バージョンは\narchived に移行します。",
+                  "lineHeight": 1.6,
+                  "textAlign": "center",
+                  "fontFamily": "IBM Plex Mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "G2YB0",
+              "name": "DialogBody",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                0,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "3bd9F",
+                  "name": "SummaryBox",
+                  "width": "fill_container",
+                  "fill": "$--muted",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 20,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "EfmY9",
+                      "name": "summaryTitle",
+                      "fill": "$--foreground",
+                      "content": "変更サマリー",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zcqCp",
+                      "name": "summaryRow",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "r6UDR",
+                          "name": "summaryLeft",
+                          "fill": "$--muted-foreground",
+                          "content": "コミット",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "5k3pu",
+                          "name": "summaryRight",
+                          "fill": "$--foreground",
+                          "content": "e4f5g6h",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "i9Xea",
+                      "name": "summaryRow2",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "9WpXz",
+                          "name": "summaryLeft2",
+                          "fill": "$--muted-foreground",
+                          "content": "同期日時",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "PFHAP",
+                          "name": "summaryRight2",
+                          "fill": "$--foreground",
+                          "content": "2026-02-28 15:30",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oe0IH",
+                      "name": "badgeRow",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "1ecpz",
+                          "name": "sBadge1",
+                          "fill": "#22C55E",
+                          "padding": [
+                            4,
+                            10
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "agPIN",
+                              "name": "sBt1",
+                              "fill": "#FFFFFF",
+                              "content": "+3 追加",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 11,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "O8yVi",
+                          "name": "sBadge2",
+                          "fill": "#7FCEF4",
+                          "padding": [
+                            4,
+                            10
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "1tAGQ",
+                              "name": "sBt2",
+                              "fill": "#FFFFFF",
+                              "content": "5 更新",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 11,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "1tkEN",
+                          "name": "sBadge3",
+                          "fill": "$--destructive",
+                          "padding": [
+                            4,
+                            10
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "4ilMN",
+                              "name": "sBt3",
+                              "fill": "#FFFFFF",
+                              "content": "1 削除",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 11,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "dK7Mj",
+              "name": "DialogFooter",
+              "width": "fill_container",
+              "gap": 12,
+              "padding": [
+                16,
+                32,
+                32,
+                32
+              ],
+              "justifyContent": "end",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "y1hxE",
+                  "name": "cancelBtn",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$--border"
+                  },
+                  "padding": [
+                    10,
+                    24
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "79UMe",
+                      "name": "cancelText",
+                      "fill": "$--foreground",
+                      "content": "キャンセル",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "E4zBU",
+                  "name": "approveBtn3",
+                  "fill": "$--primary",
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    24
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "2LtJt",
+                      "name": "approveIcon3",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "circle-check",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--primary-foreground"
+                    },
+                    {
+                      "type": "text",
+                      "id": "zIcZm",
+                      "name": "approveText3",
+                      "fill": "$--primary-foreground",
+                      "content": "承認して公開する",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "--accent": {
+      "type": "color",
+      "value": "#F3C116"
+    },
+    "--accent-foreground": {
+      "type": "color",
+      "value": "#1A1A1A"
+    },
+    "--background": {
+      "type": "color",
+      "value": "#FAFAFA"
+    },
+    "--border": {
+      "type": "color",
+      "value": "#E5E7EB"
+    },
+    "--card": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "--card-foreground": {
+      "type": "color",
+      "value": "#1A1A1A"
+    },
+    "--destructive": {
+      "type": "color",
+      "value": "#EF4444"
+    },
+    "--foreground": {
+      "type": "color",
+      "value": "#1A1A1A"
+    },
+    "--muted": {
+      "type": "color",
+      "value": "#F3F4F6"
+    },
+    "--muted-foreground": {
+      "type": "color",
+      "value": "#6B7280"
+    },
+    "--primary": {
+      "type": "color",
+      "value": "#00B0EC"
+    },
+    "--primary-foreground": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "--secondary": {
+      "type": "color",
+      "value": "#EFF9FE"
+    },
+    "--sidebar": {
+      "type": "color",
+      "value": "#0C1D2E"
+    },
+    "--sidebar-accent": {
+      "type": "color",
+      "value": "#163456"
+    },
+    "--sidebar-accent-foreground": {
+      "type": "color",
+      "value": "#F0F9FF"
+    },
+    "--sidebar-border": {
+      "type": "color",
+      "value": "#1E3A5F"
+    },
+    "--sidebar-foreground": {
+      "type": "color",
+      "value": "#F0F9FF"
+    }
+  }
+}

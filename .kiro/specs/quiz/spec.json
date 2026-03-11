@@ -1,0 +1,23 @@
+{
+  "feature_name": "quiz",
+  "created_at": "2026-03-02T18:00:00Z",
+  "updated_at": "2026-03-02T22:00:00Z",
+  "language": "ja",
+  "phase": "tasks-generated",
+  "description": "演習問題（Quiz）機能。教材セクションに紐づく演習問題（選択式・複数選択式）をGitHubからJSON形式で同期し、受講生が教材学習後にクイズを実施できる。即座に自動採点・結果表示を行い、quiz_logsテーブルに履歴を記録する。何度でも再チャレンジ可能。選択肢はランダムシャッフル。",
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": false
+    }
+  },
+  "ready_for_implementation": false
+}

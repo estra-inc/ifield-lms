@@ -1,0 +1,188 @@
+import { redirect } from "next/navigation"
+import { createClient } from "@/lib/supabase/server"
+import { resolveVersionId } from "@/lib/supabase/content-version"
+import { ProgressSummaryCards } from "./_components/progress-summary-cards"
+import { TutorialCard } from "./_components/tutorial-card"
+import { ContentsTabs } from "./_components/contents-tabs"
+import { QuizListTab } from "./_components/quiz-list-tab"
+import { GenreSelectDynamic as GenreSelect } from "./_components/genre-select-dynamic"
+import {
+  calculateTutorialProgress,
+  calculateGenreProgressSummary,
+  type TutorialWithProgress,
+} from "./_lib/progress"
+
+interface ContentsPageProps {
+  searchParams: Promise<{ genre?: string; version_id?: string; tab?: string }>
+}
+
+/**
+ * 教材一覧ページ（Server Component）
+ *
+ * 進捗サマリーカード + タブ + ジャンルプルダウン + チュートリアルカードグリッドを表示する。
+ * URL searchParams でジャンルフィルタリングを管理する。
+ */
+export default async function ContentsPage({ searchParams }: ContentsPageProps) {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/auth/login")
+  }
+
+  // ユーザーのデフォルトジャンルとロールを取得
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("default_genre, role")
+    .eq("id", user.id)
+    .single()
+
+  const defaultGenre = profile?.default_genre ?? "engineering"
+  const isSuperAdmin = profile?.role === "super_admin"
+  const isReadOnly = isSuperAdmin || profile?.role === "manager"
+  const params = await searchParams
+  const selectedGenre = params.genre ?? defaultGenre
+  const activeTab = params.tab ?? "materials"
+  const genreLabel = selectedGenre === "engineering" ? "エンジニアリング" : "デザイン"
+
+  // バージョン ID を解決（version_id パラメータ指定時は Super Admin のみプレビュー可能）
+  const activeVersionId = await resolveVersionId(supabase, params)
+
+  // active バージョンが存在しない場合はコンテンツなしとして扱う
+  if (!activeVersionId) {
+    const emptyTutorials: TutorialWithProgress[] = []
+    const summary = calculateGenreProgressSummary(emptyTutorials)
+
+    return (
+      <div className="space-y-6 px-8 py-6">
+        {!isReadOnly && (
+          <ProgressSummaryCards summary={summary} genreLabel={genreLabel} />
+        )}
+        <ContentsTabs activeTab={activeTab} genre={selectedGenre} />
+        <div className="flex items-center justify-end">
+          <GenreSelect currentGenre={selectedGenre} defaultGenre={defaultGenre} />
+        </div>
+        {activeTab === "quizzes" ? (
+          <QuizListTab genre={selectedGenre} />
+        ) : (
+          <div className="py-12 text-center">
+            <p className="font-mono text-sm text-muted-foreground">
+              このジャンルにはまだチュートリアルがありません。
+            </p>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // チュートリアル一覧を取得（active バージョンのみ、指定ジャンル）
+  const { data: tutorials } = await supabase
+    .from("contents")
+    .select("id, slug_path, title, genre, tutorial")
+    .eq("version_id", activeVersionId)
+    .eq("content_type", "tutorial")
+    .eq("genre", selectedGenre)
+    .order("order")
+
+  // 全セクションを取得（進捗率計算用）
+  const { data: allSections } = await supabase
+    .from("contents")
+    .select("id, tutorial, chapter")
+    .eq("version_id", activeVersionId)
+    .eq("content_type", "section")
+    .eq("genre", selectedGenre)
+
+  // 全チャプターを取得（チャプター数計算用）
+  const { data: allChapters } = await supabase
+    .from("contents")
+    .select("id, tutorial")
+    .eq("version_id", activeVersionId)
+    .eq("content_type", "chapter")
+    .eq("genre", selectedGenre)
+
+  // ユーザーの進捗データを取得（閲覧専用ロールはスキップ）
+  let completedContentIds = new Set<string>()
+  if (!isReadOnly) {
+    const { data: progressData } = await supabase
+      .from("content_progress")
+      .select("content_id")
+      .eq("user_id", user.id)
+
+    completedContentIds = new Set(
+      (progressData ?? []).map((p) => p.content_id)
+    )
+  }
+
+  // チュートリアルごとの進捗率を算出
+  const tutorialsWithProgress: TutorialWithProgress[] = (tutorials ?? []).map(
+    (tutorial) => {
+      const sections = (allSections ?? []).filter(
+        (s) => s.tutorial === tutorial.tutorial
+      )
+      const chapters = (allChapters ?? []).filter(
+        (c) => c.tutorial === tutorial.tutorial
+      )
+      const completedCount = sections.filter((s) =>
+        completedContentIds.has(s.id)
+      ).length
+
+      return {
+        id: tutorial.id,
+        title: tutorial.title,
+        slug_path: tutorial.tutorial,
+        genre: tutorial.genre,
+        chapterCount: chapters.length,
+        sectionCount: sections.length,
+        completedSectionCount: completedCount,
+        progressPercent: calculateTutorialProgress(
+          sections.length,
+          completedCount
+        ),
+      }
+    }
+  )
+
+  const summary = calculateGenreProgressSummary(tutorialsWithProgress)
+
+  return (
+    <div className="space-y-6 px-8 py-6">
+      {/* 進捗サマリーカード（super_admin は閲覧モードなので非表示） */}
+      {!isReadOnly && (
+        <ProgressSummaryCards summary={summary} genreLabel={genreLabel} />
+      )}
+
+      {/* タブ */}
+      <ContentsTabs activeTab={activeTab} genre={selectedGenre} />
+
+      {/* フィルタ行: ジャンルプルダウン（右寄せ） */}
+      <div className="flex items-center justify-end">
+        <GenreSelect currentGenre={selectedGenre} defaultGenre={defaultGenre} />
+      </div>
+
+      {/* タブコンテンツ */}
+      {activeTab === "quizzes" ? (
+        <QuizListTab genre={selectedGenre} />
+      ) : (
+        <>
+          {/* チュートリアルカードグリッド */}
+          {tutorialsWithProgress.length > 0 ? (
+            <div className="grid grid-cols-3 gap-4">
+              {tutorialsWithProgress.map((tutorial) => (
+                <TutorialCard key={tutorial.id} tutorial={tutorial} />
+              ))}
+            </div>
+          ) : (
+            <div className="py-12 text-center">
+              <p className="font-mono text-sm text-muted-foreground">
+                このジャンルにはまだチュートリアルがありません。
+              </p>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}

@@ -1,0 +1,410 @@
+name: Sync Curriculum Contents
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  CURRICULUM_DIR: curriculums
+  EXERCISES_DIR: exercises
+  MOCK_PROJECTS_DIR: mock-projects
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Parse curriculum and sync to LMS
+        env:
+          LMS_BASE_URL: ${{ secrets.LMS_BASE_URL }}
+          SYNC_API_KEY: ${{ secrets.SYNC_API_KEY }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          node << 'SCRIPT'
+          const fs = require("fs");
+          const path = require("path");
+
+          const CURRICULUM_DIR = process.env.CURRICULUM_DIR || "curriculums";
+          const EXERCISES_DIR = process.env.EXERCISES_DIR || "exercises";
+          const MOCK_PROJECTS_DIR = process.env.MOCK_PROJECTS_DIR || "mock-projects";
+          const LMS_BASE_URL = process.env.LMS_BASE_URL;
+          const SYNC_API_KEY = process.env.SYNC_API_KEY;
+
+          if (!LMS_BASE_URL || !SYNC_API_KEY) {
+            console.error("❌ LMS_BASE_URL and SYNC_API_KEY secrets are required.");
+            process.exit(1);
+          }
+
+          if (!fs.existsSync(CURRICULUM_DIR)) {
+            console.error(`❌ Directory "${CURRICULUM_DIR}" does not exist.`);
+            process.exit(1);
+          }
+
+          // ============================================================
+          // パーサー
+          // ============================================================
+
+          function parseFrontmatter(content) {
+            const match = content.match(/^---\n([\s\S]*?)\n---/);
+            if (!match) return { attributes: {}, body: content };
+            const attributes = {};
+            const lines = match[1].split("\n");
+            for (const line of lines) {
+              const ci = line.indexOf(":");
+              if (ci === -1) continue;
+              const key = line.slice(0, ci).trim();
+              let value = line.slice(ci + 1).trim();
+              if ((value.startsWith('"') && value.endsWith('"')) ||
+                  (value.startsWith("'") && value.endsWith("'"))) {
+                value = value.slice(1, -1);
+              }
+              if (/^\d+$/.test(value)) {
+                attributes[key] = parseInt(value, 10);
+              } else {
+                attributes[key] = value;
+              }
+            }
+            const body = content.slice(match[0].length).trim();
+            return { attributes, body };
+          }
+
+          function extractFirstHeading(body) {
+            const match = body.match(/^#\s+(.+)$/m);
+            return match ? match[1].trim() : null;
+          }
+
+          function parseDirName(name) {
+            const si = name.indexOf(": ");
+            if (si !== -1) {
+              return { slug: name.slice(0, si).trim(), title: name };
+            }
+            return {
+              slug: name,
+              title: name.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+            };
+          }
+
+          function extractOrderFromSlug(slug) {
+            const match = slug.match(/[-_](\d+)$/);
+            return match ? parseInt(match[1], 10) : 0;
+          }
+
+          function parseSectionFilename(filename) {
+            const base = filename.replace(/\.md$/, "");
+            const ui = base.indexOf("_");
+            if (ui !== -1) {
+              const prefix = base.slice(0, ui);
+              const title = base.slice(ui + 1);
+              const nums = prefix.split("-").filter((s) => /^\d+$/.test(s));
+              const order = nums.length > 0 ? parseInt(nums[nums.length - 1], 10) : 0;
+              return { slug: prefix, title, order };
+            }
+            const numMatch = base.match(/^(\d+)[-_.]/);
+            return {
+              slug: base,
+              title: base.replace(/^\d+[-_.]/, "").replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+              order: numMatch ? parseInt(numMatch[1], 10) : 0,
+            };
+          }
+
+          // ============================================================
+          // コレクター
+          // ============================================================
+
+          function collectContents(rootDir) {
+            const contents = [];
+            const genres = fs.readdirSync(rootDir, { withFileTypes: true });
+
+            for (const genreEntry of genres) {
+              if (!genreEntry.isDirectory()) continue;
+              const { slug: genreSlug, title: genreTitle } = parseDirName(genreEntry.name);
+
+              contents.push({
+                slug_path: genreSlug,
+                title: genreTitle,
+                genre: genreSlug,
+                tutorial: genreSlug,
+                content_type: "genre",
+                order: extractOrderFromSlug(genreSlug),
+              });
+
+              const genrePath = path.join(rootDir, genreEntry.name);
+              const tutorials = fs.readdirSync(genrePath, { withFileTypes: true });
+
+              for (const tutEntry of tutorials) {
+                if (!tutEntry.isDirectory()) continue;
+                const { slug: tutSlug, title: tutTitle } = parseDirName(tutEntry.name);
+                const tutSlugPath = `${genreSlug}/${tutSlug}`;
+
+                contents.push({
+                  slug_path: tutSlugPath,
+                  title: tutTitle,
+                  genre: genreSlug,
+                  tutorial: tutSlug,
+                  content_type: "tutorial",
+                  order: extractOrderFromSlug(tutSlug),
+                });
+
+                const tutPath = path.join(genrePath, tutEntry.name);
+                const chapters = fs.readdirSync(tutPath, { withFileTypes: true });
+
+                for (const chapEntry of chapters) {
+                  if (!chapEntry.isDirectory()) continue;
+                  const { slug: chapSlug, title: chapTitle } = parseDirName(chapEntry.name);
+                  const chapSlugPath = `${tutSlugPath}/${chapSlug}`;
+
+                  contents.push({
+                    slug_path: chapSlugPath,
+                    title: chapTitle,
+                    genre: genreSlug,
+                    tutorial: tutSlug,
+                    chapter: chapSlug,
+                    content_type: "chapter",
+                    order: extractOrderFromSlug(chapSlug),
+                  });
+
+                  const chapPath = path.join(tutPath, chapEntry.name);
+                  const sections = fs.readdirSync(chapPath, { withFileTypes: true });
+
+                  for (const secEntry of sections) {
+                    if (!secEntry.isFile()) continue;
+                    if (!secEntry.name.endsWith(".md")) continue;
+                    if (secEntry.name === "_index.md") continue;
+
+                    try {
+                      const secPath = path.join(chapPath, secEntry.name);
+                      const raw = fs.readFileSync(secPath, "utf-8");
+                      const { attributes, body } = parseFrontmatter(raw);
+                      const parsed = parseSectionFilename(secEntry.name);
+
+                      const title = attributes.title || extractFirstHeading(body) || parsed.title;
+                      const order = typeof attributes.order === "number" ? attributes.order : parsed.order;
+
+                      contents.push({
+                        slug_path: `${chapSlugPath}/${parsed.slug}`,
+                        title,
+                        body,
+                        genre: genreSlug,
+                        tutorial: tutSlug,
+                        chapter: chapSlug,
+                        section: parsed.slug,
+                        content_type: "section",
+                        order,
+                      });
+                    } catch (err) {
+                      console.warn(`⚠️  Failed to parse "${secEntry.name}": ${err.message}`);
+                    }
+                  }
+                }
+              }
+            }
+
+            return contents;
+          }
+
+          /**
+           * exercises/ ディレクトリからクイズ JSON を再帰収集する
+           *
+           * 構造: exercises/{genre}/{tutorial}/{chapter}/{section}.json
+           * ディレクトリ構造は整理用。メタデータは JSON 内に明示的に記述される。
+           */
+          function collectQuizzes(rootDir) {
+            const quizzes = [];
+            if (!fs.existsSync(rootDir)) return quizzes;
+
+            function walk(dir) {
+              const entries = fs.readdirSync(dir, { withFileTypes: true });
+              for (const entry of entries) {
+                const fullPath = path.join(dir, entry.name);
+                if (entry.isDirectory()) {
+                  walk(fullPath);
+                  continue;
+                }
+                if (!entry.isFile() || !entry.name.endsWith(".json")) continue;
+
+                try {
+                  const raw = fs.readFileSync(fullPath, "utf-8");
+                  const quizData = JSON.parse(raw);
+
+                  const requiredFields = ["genre", "tutorial", "chapter", "section", "slug", "title", "questions"];
+                  const missingFields = requiredFields.filter((f) => !quizData[f]);
+                  if (missingFields.length > 0) {
+                    console.warn(`⚠️  Quiz file "${fullPath}" is missing required fields: ${missingFields.join(", ")}. Skipping.`);
+                    continue;
+                  }
+
+                  const relativePath = path.relative(rootDir, fullPath);
+                  quizzes.push({
+                    file_path: relativePath,
+                    genre: quizData.genre,
+                    tutorial: quizData.tutorial,
+                    chapter: quizData.chapter,
+                    section: quizData.section,
+                    slug: quizData.slug,
+                    title: quizData.title,
+                    questions: quizData.questions,
+                  });
+                } catch (err) {
+                  console.warn(`⚠️  Failed to parse quiz "${fullPath}": ${err.message}`);
+                }
+              }
+            }
+
+            walk(rootDir);
+            return quizzes;
+          }
+
+          /**
+           * mock-projects/ ディレクトリから模擬案件 JSON を収集する
+           *
+           * 構造: mock-projects/{genre}/{project}.json
+           */
+          function collectMockProjects(rootDir) {
+            const mockProjects = [];
+            if (!fs.existsSync(rootDir)) return mockProjects;
+
+            const validGenres = ["engineering", "design"];
+            const genreEntries = fs.readdirSync(rootDir, { withFileTypes: true });
+
+            for (const genreEntry of genreEntries) {
+              if (!genreEntry.isDirectory()) continue;
+
+              const genreName = genreEntry.name;
+              if (!validGenres.includes(genreName)) {
+                console.warn(`⚠️  Unknown genre directory "${genreName}" in mock-projects/. Skipping.`);
+                continue;
+              }
+
+              const genrePath = path.join(rootDir, genreName);
+              const projectEntries = fs.readdirSync(genrePath, { withFileTypes: true });
+
+              for (const projectEntry of projectEntries) {
+                if (!projectEntry.isFile() || !projectEntry.name.endsWith(".json")) continue;
+
+                const fullPath = path.join(genrePath, projectEntry.name);
+                try {
+                  const raw = fs.readFileSync(fullPath, "utf-8");
+                  const projectData = JSON.parse(raw);
+
+                  const requiredFields = ["slug", "title", "genre", "order"];
+                  const missingFields = requiredFields.filter((f) => projectData[f] === undefined || projectData[f] === null);
+                  if (missingFields.length > 0) {
+                    console.warn(`⚠️  Mock project "${fullPath}" is missing required fields: ${missingFields.join(", ")}. Skipping.`);
+                    continue;
+                  }
+
+                  if (projectData.genre !== genreName) {
+                    console.warn(`⚠️  Mock project "${fullPath}" has genre "${projectData.genre}" but is in "${genreName}/" directory. Skipping.`);
+                    continue;
+                  }
+
+                  mockProjects.push({
+                    slug: projectData.slug,
+                    title: projectData.title,
+                    description: projectData.description ?? null,
+                    requirements: projectData.requirements ?? null,
+                    evaluation_items: projectData.evaluation_items ?? [],
+                    genre: projectData.genre,
+                    order: projectData.order,
+                    status: projectData.status ?? "active",
+                  });
+                } catch (err) {
+                  console.warn(`⚠️  Failed to parse mock project "${fullPath}": ${err.message}`);
+                }
+              }
+            }
+
+            return mockProjects;
+          }
+
+          // ============================================================
+          // メイン
+          // ============================================================
+
+          async function main() {
+            console.log(`📂 Scanning "${CURRICULUM_DIR}"...`);
+            const contents = collectContents(CURRICULUM_DIR);
+
+            console.log(`📂 Scanning "${EXERCISES_DIR}"...`);
+            const quizzes = collectQuizzes(EXERCISES_DIR);
+
+            console.log(`📂 Scanning "${MOCK_PROJECTS_DIR}"...`);
+            const mockProjects = collectMockProjects(MOCK_PROJECTS_DIR);
+
+            if (contents.length === 0) {
+              console.warn("⚠️  No contents found. Skipping sync.");
+              return;
+            }
+
+            console.log(`📦 Found ${contents.length} content items.`);
+            const counts = { genre: 0, tutorial: 0, chapter: 0, section: 0 };
+            for (const c of contents) counts[c.content_type]++;
+            console.log(`   Genres: ${counts.genre}, Tutorials: ${counts.tutorial}, Chapters: ${counts.chapter}, Sections: ${counts.section}`);
+
+            if (quizzes.length > 0) {
+              console.log(`🧩 Found ${quizzes.length} quiz file(s).`);
+            }
+
+            if (mockProjects.length > 0) {
+              console.log(`🏗️  Found ${mockProjects.length} mock project(s).`);
+            }
+
+            const url = `${LMS_BASE_URL.replace(/\/$/, "")}/api/admin/sync-curriculums`;
+            console.log(`🚀 Syncing to ${url}...`);
+
+            // コミットメッセージを取得
+            let commitMessage = "";
+            try {
+              const { execSync } = require("child_process");
+              commitMessage = execSync(`git log -1 --format=%s ${process.env.GITHUB_SHA}`, { encoding: "utf-8" }).trim();
+            } catch (err) {
+              console.warn("⚠️  Failed to get commit message:", err.message);
+            }
+
+            const payload = { contents, commit_hash: process.env.GITHUB_SHA, commit_message: commitMessage };
+            if (quizzes.length > 0) {
+              payload.quizzes = quizzes;
+            }
+            if (mockProjects.length > 0) {
+              payload.mock_projects = mockProjects;
+            }
+
+            const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": SYNC_API_KEY,
+              },
+              body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+              console.error("❌ Sync failed:", JSON.stringify(result, null, 2));
+              process.exit(1);
+            }
+
+            console.log("✅ Sync completed!");
+            console.log(`   Contents - Created/Updated: ${result.summary.created}, Archived: ${result.summary.archived}`);
+            if (result.quiz_summary) {
+              console.log(`   Quizzes  - Created/Updated: ${result.quiz_summary.created}, Archived: ${result.quiz_summary.archived}`);
+            }
+            if (result.mock_project_summary) {
+              console.log(`   Projects - Created/Updated: ${result.mock_project_summary.created}, Archived: ${result.mock_project_summary.archived}`);
+            }
+          }
+
+          main().catch((err) => {
+            console.error("❌ Unexpected error:", err.message);
+            process.exit(1);
+          });
+          SCRIPT

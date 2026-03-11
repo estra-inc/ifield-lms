@@ -1,0 +1,22 @@
+{
+  "feature_name": "contents-and-quizzes",
+  "created_at": "2026-02-28T12:00:00Z",
+  "updated_at": "2026-02-28T19:00:00Z",
+  "language": "ja",
+  "phase": "tasks-generated",
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": true
+    }
+  },
+  "ready_for_implementation": true
+}

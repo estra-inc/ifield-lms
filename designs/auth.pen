@@ -1,0 +1,1603 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "y1Fvg",
+      "x": 0,
+      "y": 0,
+      "name": "Login",
+      "width": 1440,
+      "height": 900,
+      "fill": "$--background",
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "05CBK",
+          "name": "LoginCard",
+          "width": 420,
+          "fill": "$--card",
+          "stroke": {
+            "thickness": 1,
+            "fill": "$--border"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 40,
+          "children": [
+            {
+              "type": "frame",
+              "id": "vuvsM",
+              "name": "LogoArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "PK0kv",
+                  "name": "Logo",
+                  "width": 160,
+                  "height": 38,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "./images/ifield-logo_max_blacktext.png",
+                    "mode": "fit"
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "I2ktR",
+                  "name": "title",
+                  "fill": "$--foreground",
+                  "content": "LMS にログイン",
+                  "fontFamily": "Sora",
+                  "fontSize": 20,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "3GWcy",
+                  "name": "sub",
+                  "fill": "$--muted-foreground",
+                  "content": "メールアドレスとパスワードを入力してください",
+                  "fontFamily": "Sora",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "2gWHs",
+              "name": "FormFields",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "pd9gO",
+                  "name": "EmailField",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "sL54O",
+                      "name": "el",
+                      "fill": "$--foreground",
+                      "content": "メールアドレス",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Fc3rQ",
+                      "name": "Input",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "$--card",
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "PsoC4",
+                          "name": "ep",
+                          "fill": "$--muted-foreground",
+                          "content": "name@example.com",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ML9YP",
+                  "name": "PasswordField",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DgBQD",
+                      "name": "PwLabelRow",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Dv9GE",
+                          "name": "plt",
+                          "fill": "$--foreground",
+                          "content": "パスワード",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "1iKpt",
+                          "name": "fgt",
+                          "fill": "$--primary",
+                          "content": "パスワードを忘れた方はこちら",
+                          "fontFamily": "Sora",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xt4rN",
+                      "name": "Input",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "$--card",
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "uzJfO",
+                          "name": "pp",
+                          "fill": "$--muted-foreground",
+                          "content": "••••••••",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Ec6Qp",
+              "name": "ActionArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "kMtRK",
+                  "name": "LoginButton",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "$--primary",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "yAFps",
+                      "name": "btxt",
+                      "fill": "$--primary-foreground",
+                      "content": "ログイン",
+                      "fontFamily": "Sora",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "q5MlX",
+                  "name": "ft",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 340,
+                  "content": "招待メールをお持ちの方はメール内のリンクからアカウントを作成できます",
+                  "textAlign": "center",
+                  "fontFamily": "Sora",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "CnwvZ",
+      "x": 1540,
+      "y": 0,
+      "name": "Invite Setup - Step 1",
+      "width": 1440,
+      "height": 900,
+      "fill": "$--background",
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "tgJ3D",
+          "name": "InviteCard",
+          "width": 420,
+          "fill": "$--card",
+          "stroke": {
+            "thickness": 1,
+            "fill": "$--border"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 40,
+          "children": [
+            {
+              "type": "frame",
+              "id": "f1jp5",
+              "name": "LogoArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "gGu7B",
+                  "name": "Logo",
+                  "width": 160,
+                  "height": 38,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "./images/ifield-logo_max_blacktext.png",
+                    "mode": "fit"
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "lGSck",
+                  "name": "title",
+                  "fill": "$--foreground",
+                  "content": "アカウント設定",
+                  "fontFamily": "Sora",
+                  "fontSize": 20,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "YhDQw",
+                  "name": "sub",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 340,
+                  "content": "招待を受け付けました。プロフィール情報を入力してください。",
+                  "textAlign": "center",
+                  "fontFamily": "Sora",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "eiaQX",
+              "name": "Stepper",
+              "width": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "XPiMw",
+                  "name": "Step1Group",
+                  "width": 100,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "xwNOv",
+                      "name": "Step1Circle",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "$--primary",
+                      "cornerRadius": 16,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "yBtpj",
+                          "name": "s1num",
+                          "fill": "#FFFFFF",
+                          "content": "1",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "YmFHU",
+                      "name": "s1label",
+                      "fill": "$--primary",
+                      "content": "氏名設定",
+                      "fontFamily": "Sora",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kj4HQ",
+                  "name": "Connector",
+                  "width": 60,
+                  "height": 2,
+                  "fill": "$--border"
+                },
+                {
+                  "type": "frame",
+                  "id": "yOqB9",
+                  "name": "Step2Group",
+                  "width": 100,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "658O5",
+                      "name": "Step2Circle",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "$--background",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "thickness": 2,
+                        "fill": "$--border"
+                      },
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "cuIf0",
+                          "name": "s2num",
+                          "fill": "$--muted-foreground",
+                          "content": "2",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "3NGDE",
+                      "name": "s2label",
+                      "fill": "$--muted-foreground",
+                      "content": "パスワード設定",
+                      "fontFamily": "Sora",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "yDxyV",
+              "name": "FormFields",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "IFhoX",
+                  "name": "AvatarField",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "sPREG",
+                      "name": "label",
+                      "fill": "$--foreground",
+                      "content": "プロフィール画像",
+                      "textAlign": "center",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KvHku",
+                      "name": "AvatarUpload",
+                      "width": 80,
+                      "height": 80,
+                      "fill": "$--background",
+                      "cornerRadius": 40,
+                      "stroke": {
+                        "thickness": 2,
+                        "fill": "$--border"
+                      },
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "i5Fps",
+                          "name": "avatarIcon",
+                          "fill": "$--muted-foreground",
+                          "content": "+",
+                          "fontFamily": "Sora",
+                          "fontSize": 24
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "HJ0bm",
+                      "name": "hint",
+                      "fill": "$--muted-foreground",
+                      "content": "クリックして画像をアップロード（任意）",
+                      "fontFamily": "Sora",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7xQWd",
+                  "name": "NameRow",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Aj8xT",
+                      "name": "LastNameField",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "C3ePe",
+                          "name": "label",
+                          "fill": "$--foreground",
+                          "content": "姓",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "eLaGR",
+                          "name": "input",
+                          "width": "fill_container",
+                          "height": 40,
+                          "fill": "$--background",
+                          "cornerRadius": 6,
+                          "stroke": {
+                            "thickness": 1,
+                            "fill": "$--border"
+                          },
+                          "padding": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "JzBME",
+                              "name": "lastNamePh",
+                              "fill": "$--muted-foreground",
+                              "content": "山田",
+                              "fontFamily": "Sora",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "9ICDJ",
+                      "name": "FirstNameField",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "olwBG",
+                          "name": "label",
+                          "fill": "$--foreground",
+                          "content": "名",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "8i08x",
+                          "name": "input",
+                          "width": "fill_container",
+                          "height": 40,
+                          "fill": "$--background",
+                          "cornerRadius": 6,
+                          "stroke": {
+                            "thickness": 1,
+                            "fill": "$--border"
+                          },
+                          "padding": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "xJzII",
+                              "name": "firstNamePh",
+                              "fill": "$--muted-foreground",
+                              "content": "太郎",
+                              "fontFamily": "Sora",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "F5GQu",
+              "name": "ActionArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "j9ksC",
+                  "name": "NextButton",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "$--primary",
+                  "cornerRadius": 6,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "c46hy",
+                      "name": "btnTxt1",
+                      "fill": "#FFFFFF",
+                      "content": "次へ",
+                      "fontFamily": "Sora",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ZEDgV",
+      "x": 4620,
+      "y": 0,
+      "name": "Password Reset Request",
+      "width": 1440,
+      "height": 900,
+      "fill": "$--background",
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "zXenU",
+          "name": "ResetRequestCard",
+          "width": 420,
+          "fill": "$--card",
+          "stroke": {
+            "thickness": 1,
+            "fill": "$--border"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 40,
+          "children": [
+            {
+              "type": "frame",
+              "id": "omDPm",
+              "name": "LogoArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vz4A9",
+                  "name": "Logo",
+                  "width": 160,
+                  "height": 38,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "./images/ifield-logo_max_blacktext.png",
+                    "mode": "fit"
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "Ce0kj",
+                  "name": "title",
+                  "fill": "$--foreground",
+                  "content": "パスワードリセット",
+                  "fontFamily": "Sora",
+                  "fontSize": 20,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "jaSCV",
+                  "name": "sub",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 340,
+                  "content": "登録済みのメールアドレスを入力してください。パスワードリセット用のリンクをお送りします。",
+                  "textAlign": "center",
+                  "fontFamily": "Sora",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "lcaEK",
+              "name": "FormFields",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "8wfNe",
+                  "name": "EmailField",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "7FTQ4",
+                      "name": "label",
+                      "fill": "$--foreground",
+                      "content": "メールアドレス",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SvyED",
+                      "name": "input",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "$--background",
+                      "cornerRadius": 6,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "JyNfU",
+                          "name": "emailPh2",
+                          "fill": "$--muted-foreground",
+                          "content": "name@example.com",
+                          "fontFamily": "Sora",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "7nsa8",
+              "name": "ActionArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "LaibV",
+                  "name": "SendButton",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "$--primary",
+                  "cornerRadius": 6,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hoYSm",
+                      "name": "btnTxt2",
+                      "fill": "#FFFFFF",
+                      "content": "リセットメールを送信",
+                      "fontFamily": "Sora",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "7CmZ6",
+                  "name": "backLink",
+                  "fill": "$--primary",
+                  "content": "ログインに戻る",
+                  "fontFamily": "Sora",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Wl3cH",
+      "x": 6160,
+      "y": 0,
+      "name": "Password Reset Confirm",
+      "width": 1440,
+      "height": 900,
+      "fill": "$--background",
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "tw040",
+          "name": "ResetConfirmCard",
+          "width": 420,
+          "fill": "$--card",
+          "stroke": {
+            "thickness": 1,
+            "fill": "$--border"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 40,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Q4XRJ",
+              "name": "LogoArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "1xB3I",
+                  "name": "Logo",
+                  "width": 160,
+                  "height": 38,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "./images/ifield-logo_max_blacktext.png",
+                    "mode": "fit"
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "mUliE",
+                  "name": "title",
+                  "fill": "$--foreground",
+                  "content": "新しいパスワードを設定",
+                  "fontFamily": "Sora",
+                  "fontSize": 20,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "kngyu",
+                  "name": "sub",
+                  "fill": "$--muted-foreground",
+                  "content": "新しいパスワードを入力してください",
+                  "fontFamily": "Sora",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "7rroF",
+              "name": "FormFields",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Ur3G6",
+                  "name": "NewPasswordField",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hMdiz",
+                      "name": "label",
+                      "fill": "$--foreground",
+                      "content": "新しいパスワード",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UI5W7",
+                      "name": "input",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "$--background",
+                      "cornerRadius": 6,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "eAZIK",
+                          "name": "npPh",
+                          "fill": "$--muted-foreground",
+                          "content": "8文字以上",
+                          "fontFamily": "Sora",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "s4sHS",
+                  "name": "ConfirmPasswordField",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "1o2Kr",
+                      "name": "label",
+                      "fill": "$--foreground",
+                      "content": "新しいパスワード（確認）",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Axkmz",
+                      "name": "input",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "$--background",
+                      "cornerRadius": 6,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ViEbf",
+                          "name": "cpPh3",
+                          "fill": "$--muted-foreground",
+                          "content": "パスワードを再入力",
+                          "fontFamily": "Sora",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "K26dH",
+              "name": "ActionArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EM2JG",
+                  "name": "UpdateButton",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "$--primary",
+                  "cornerRadius": 6,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "0P23m",
+                      "name": "btnTxt3",
+                      "fill": "#FFFFFF",
+                      "content": "パスワードを更新",
+                      "fontFamily": "Sora",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Q9VJM",
+      "x": 7700,
+      "y": 0,
+      "name": "Invite Error",
+      "width": 1440,
+      "height": 900,
+      "fill": "$--background",
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "fDlvo",
+          "name": "ErrorCard",
+          "width": 420,
+          "fill": "$--card",
+          "stroke": {
+            "thickness": 1,
+            "fill": "$--border"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 40,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "khWKE",
+              "name": "LogoArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "kUfZS",
+                  "name": "Logo",
+                  "width": 160,
+                  "height": 38,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "./images/ifield-logo_max_blacktext.png",
+                    "mode": "fit"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "nut6k",
+              "name": "ErrorIconWrap",
+              "width": 64,
+              "height": 64,
+              "fill": "#FEE2E2",
+              "cornerRadius": 32,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "0rEOY",
+                  "name": "errIconInner",
+                  "fill": "$--destructive",
+                  "content": "!",
+                  "fontFamily": "Sora",
+                  "fontSize": 28,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "hfYPR",
+              "name": "MessageArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "yoKvb",
+                  "name": "errTitle",
+                  "fill": "$--foreground",
+                  "content": "招待リンクが無効または期限切れです",
+                  "textAlign": "center",
+                  "fontFamily": "Sora",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "I4jhc",
+                  "name": "errDesc",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 340,
+                  "content": "このリンクは既に使用されたか、有効期限が切れています。管理者に再度招待を依頼してください。",
+                  "textAlign": "center",
+                  "fontFamily": "Sora",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "4vX08",
+              "name": "ActionArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MT5go",
+                  "name": "BackButton",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "$--background",
+                  "cornerRadius": 6,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "$--border"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Qq1Yi",
+                      "name": "btnTxt4",
+                      "fill": "$--foreground",
+                      "content": "ログインページに戻る",
+                      "fontFamily": "Sora",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "toTqh",
+      "x": 3080,
+      "y": 0,
+      "name": "Invite Setup - Step 2",
+      "width": 1440,
+      "height": 900,
+      "fill": "$--background",
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "z2RJg",
+          "name": "InviteCard",
+          "width": 420,
+          "fill": "$--card",
+          "stroke": {
+            "thickness": 1,
+            "fill": "$--border"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 40,
+          "children": [
+            {
+              "type": "frame",
+              "id": "CCX7g",
+              "name": "LogoArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "fDIIe",
+                  "name": "Logo",
+                  "width": 160,
+                  "height": 38,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "./images/ifield-logo_max_blacktext.png",
+                    "mode": "fit"
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "cmqsa",
+                  "name": "title",
+                  "fill": "$--foreground",
+                  "content": "アカウント設定",
+                  "fontFamily": "Sora",
+                  "fontSize": 20,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "Xyuwo",
+                  "name": "sub",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 340,
+                  "content": "ログイン用のパスワードを設定してください。",
+                  "textAlign": "center",
+                  "fontFamily": "Sora",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "fec74",
+              "name": "Stepper",
+              "width": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "WDKgt",
+                  "name": "Step1Group",
+                  "width": 100,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RTTgD",
+                      "name": "Step1Circle",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "$--primary",
+                      "cornerRadius": 16,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IoUaU",
+                          "name": "s1check",
+                          "fill": "#FFFFFF",
+                          "content": "✓",
+                          "fontFamily": "Sora",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "7eU3f",
+                      "name": "s1l2",
+                      "fill": "$--primary",
+                      "content": "氏名設定",
+                      "fontFamily": "Sora",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "1WLeh",
+                  "name": "Connector",
+                  "width": 60,
+                  "height": 2,
+                  "fill": "$--primary"
+                },
+                {
+                  "type": "frame",
+                  "id": "2hc7b",
+                  "name": "Step2Group",
+                  "width": 100,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "VyPaI",
+                      "name": "Step2Circle",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "$--primary",
+                      "cornerRadius": 16,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Xe330",
+                          "name": "s2n2",
+                          "fill": "#FFFFFF",
+                          "content": "2",
+                          "fontFamily": "Sora",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "BM6vm",
+                      "name": "s2lbl2",
+                      "fill": "$--primary",
+                      "content": "パスワード設定",
+                      "fontFamily": "Sora",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "QiPkd",
+              "name": "FormFields",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "fyCkE",
+                  "name": "PasswordField",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "awJrK",
+                      "name": "label",
+                      "fill": "$--foreground",
+                      "content": "パスワード",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "saDqk",
+                      "name": "input",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "$--background",
+                      "cornerRadius": 6,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "91OV9",
+                          "name": "pwPh",
+                          "fill": "$--muted-foreground",
+                          "content": "8文字以上",
+                          "fontFamily": "Sora",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "m7jyU",
+                  "name": "ConfirmPasswordField",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "cY0o5",
+                      "name": "label",
+                      "fill": "$--foreground",
+                      "content": "パスワード（確認）",
+                      "fontFamily": "Sora",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "0qzg3",
+                      "name": "input",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "$--background",
+                      "cornerRadius": 6,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "$--border"
+                      },
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "d5XzF",
+                          "name": "cpPh",
+                          "fill": "$--muted-foreground",
+                          "content": "パスワードを再入力",
+                          "fontFamily": "Sora",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xGl6p",
+              "name": "ActionArea",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QNbjJ",
+                  "name": "CreateButton",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "$--primary",
+                  "cornerRadius": 6,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "WFQyo",
+                      "name": "btnTxt2",
+                      "fill": "#FFFFFF",
+                      "content": "アカウントを作成",
+                      "fontFamily": "Sora",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "3biiu",
+                  "name": "backLink",
+                  "fill": "$--muted-foreground",
+                  "content": "← 戻る",
+                  "fontFamily": "Sora",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "--accent": {
+      "type": "color",
+      "value": "#F3C116"
+    },
+    "--accent-foreground": {
+      "type": "color",
+      "value": "#1A1A1A"
+    },
+    "--background": {
+      "type": "color",
+      "value": "#FAFAFA"
+    },
+    "--border": {
+      "type": "color",
+      "value": "#E5E7EB"
+    },
+    "--card": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "--card-foreground": {
+      "type": "color",
+      "value": "#1A1A1A"
+    },
+    "--destructive": {
+      "type": "color",
+      "value": "#EF4444"
+    },
+    "--font-primary": {
+      "type": "string",
+      "value": "Sora"
+    },
+    "--font-secondary": {
+      "type": "string",
+      "value": "IBM Plex Mono"
+    },
+    "--foreground": {
+      "type": "color",
+      "value": "#1A1A1A"
+    },
+    "--input": {
+      "type": "color",
+      "value": "#E5E7EB"
+    },
+    "--muted": {
+      "type": "color",
+      "value": "#F3F4F6"
+    },
+    "--muted-foreground": {
+      "type": "color",
+      "value": "#6B7280"
+    },
+    "--primary": {
+      "type": "color",
+      "value": "#00B0EC"
+    },
+    "--primary-foreground": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "--ring": {
+      "type": "color",
+      "value": "#00B0EC"
+    },
+    "--secondary": {
+      "type": "color",
+      "value": "#EFF9FE"
+    },
+    "--secondary-foreground": {
+      "type": "color",
+      "value": "#0C1D2E"
+    }
+  }
+}
