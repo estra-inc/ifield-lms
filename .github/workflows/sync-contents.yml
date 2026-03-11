@@ -44,8 +44,8 @@ jobs:
           }
 
           if (!fs.existsSync(CURRICULUM_DIR)) {
-            console.error(`❌ Directory "${CURRICULUM_DIR}" does not exist.`);
-            process.exit(1);
+            console.log(`⚠️  Directory "${CURRICULUM_DIR}" does not exist. Skipping sync.`);
+            process.exit(0);
           }
 
           // ============================================================
