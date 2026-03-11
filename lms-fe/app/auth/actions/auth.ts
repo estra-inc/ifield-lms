@@ -183,15 +183,24 @@ export async function completeInviteSetup(
   }
 
   // profiles テーブルの full_name（+ avatar_url）を更新
-  const updateData: { full_name: string; avatar_url?: string; updated_at: string } = {
+  // adminClient を使用して RLS をバイパス（全ロールで確実に更新）
+  const updateData: {
+    full_name: string
+    last_name: string
+    first_name: string
+    avatar_url?: string
+    updated_at: string
+  } = {
     full_name: fullName,
+    last_name: validatedStep1.data.lastName,
+    first_name: validatedStep1.data.firstName,
     updated_at: new Date().toISOString(),
   }
   if (avatarUrl) {
     updateData.avatar_url = avatarUrl
   }
 
-  const { error: profileError } = await supabase
+  const { error: profileError } = await adminClient
     .from("profiles")
     .update(updateData)
     .eq("id", user.id)

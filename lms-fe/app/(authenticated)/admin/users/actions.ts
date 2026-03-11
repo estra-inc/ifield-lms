@@ -1,6 +1,7 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { headers } from "next/headers"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
@@ -99,11 +100,15 @@ export async function inviteUser(
   }
 
   // Admin API で招待メール送信
+  const headerStore = await headers()
+  const origin = headerStore.get("origin") ?? "http://localhost:3000"
+
   const adminClient = createAdminClient()
   const { error } = await adminClient.auth.admin.inviteUserByEmail(
     validated.data.email,
     {
       data: { role: validated.data.role },
+      redirectTo: `${origin}/auth/callback`,
     }
   )
 
