@@ -61,11 +61,17 @@ export async function startProject(
   }
 
   // 提出予定日の設定（RPC 成功後に assignment を更新）
+  // RPC は SECURITY DEFINER で INSERT するため、直後の UPDATE が RLS で弾かれる場合に備え adminClient を使用
   if (dueDate && data?.assignment_id) {
-    await supabase
+    const adminClient = createAdminClient()
+    const { error: dueDateError } = await adminClient
       .from("project_assignments")
       .update({ due_date: dueDate })
       .eq("id", data.assignment_id)
+
+    if (dueDateError) {
+      console.error("startProject due_date update error:", dueDateError.message)
+    }
   }
 
   // 成功: revalidatePath で詳細ページを再検証
@@ -123,11 +129,27 @@ export async function updateDueDate(
     }
   }
 
-  const { error: updateError } = await supabase
+  // 所有者確認
+  const { data: assignment } = await supabase
+    .from("project_assignments")
+    .select("id")
+    .eq("id", assignmentId)
+    .eq("user_id", user.id)
+    .maybeSingle()
+
+  if (!assignment) {
+    return {
+      success: false,
+      message: "この操作を行う権限がありません。",
+    }
+  }
+
+  // adminClient で更新（RLS による UPDATE 失敗を回避）
+  const adminClient = createAdminClient()
+  const { error: updateError } = await adminClient
     .from("project_assignments")
     .update({ due_date: dueDate })
     .eq("id", assignmentId)
-    .eq("user_id", user.id)
 
   if (updateError) {
     console.error("updateDueDate error:", updateError.message)
