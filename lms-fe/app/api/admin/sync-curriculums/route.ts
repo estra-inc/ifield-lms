@@ -375,7 +375,7 @@ export async function POST(request: Request): Promise<NextResponse<SyncResponse>
   // 2. ペイロードバリデーション（gzip 対応）
   let body: unknown
   try {
-    const contentEncoding = request.headers.get("content-encoding")
+    const contentEncoding = request.headers.get("x-content-encoding")
     if (contentEncoding === "gzip") {
       const buffer = Buffer.from(await request.arrayBuffer())
       const decompressed = gunzipSync(buffer)

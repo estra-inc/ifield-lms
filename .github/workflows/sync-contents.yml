@@ -392,8 +392,8 @@ jobs:
             const response = await fetch(url, {
               method: "POST",
               headers: {
-                "Content-Type": "application/json",
-                "Content-Encoding": "gzip",
+                "Content-Type": "application/octet-stream",
+                "x-content-encoding": "gzip",
                 "x-api-key": SYNC_API_KEY,
               },
               body: compressed,
