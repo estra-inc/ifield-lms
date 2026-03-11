@@ -384,13 +384,19 @@ jobs:
               payload.mock_projects = mockProjects;
             }
 
+            const zlib = require("zlib");
+            const jsonBody = JSON.stringify(payload);
+            const compressed = zlib.gzipSync(Buffer.from(jsonBody));
+            console.log(`   Payload: ${(jsonBody.length / 1024 / 1024).toFixed(2)} MB -> gzip: ${(compressed.length / 1024 / 1024).toFixed(2)} MB`);
+
             const response = await fetch(url, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                "Content-Encoding": "gzip",
                 "x-api-key": SYNC_API_KEY,
               },
-              body: JSON.stringify(payload),
+              body: compressed,
             });
 
             const result = await response.json();

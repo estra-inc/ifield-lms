@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { gunzipSync } from "zlib"
+
+// Next.js App Router: Route Segment Config
+export const maxDuration = 60
 
 /**
  * コンテンツ同期リクエストのアイテム型
@@ -368,10 +372,17 @@ export async function POST(request: Request): Promise<NextResponse<SyncResponse>
     )
   }
 
-  // 2. ペイロードバリデーション
+  // 2. ペイロードバリデーション（gzip 対応）
   let body: unknown
   try {
-    body = await request.json()
+    const contentEncoding = request.headers.get("content-encoding")
+    if (contentEncoding === "gzip") {
+      const buffer = Buffer.from(await request.arrayBuffer())
+      const decompressed = gunzipSync(buffer)
+      body = JSON.parse(decompressed.toString("utf-8"))
+    } else {
+      body = await request.json()
+    }
   } catch {
     return NextResponse.json(
       {
