@@ -939,6 +939,13 @@ export type Database = {
     }
     Views: Record<string, never>
     Functions: {
+      approve_content_version: {
+        Args: {
+          p_version_id: string
+          p_approved_by: string
+        }
+        Returns: undefined
+      }
       finalize_grading: {
         Args: {
           p_submission_id: string
@@ -951,6 +958,41 @@ export type Database = {
           score: number
           submission_id: string
         }
+      }
+      search_contents: {
+        Args: {
+          search_query: string
+        }
+        Returns: Record<string, unknown>[]
+      }
+      start_project: {
+        Args: {
+          p_user_id: string
+          p_project_id: string
+        }
+        Returns: Record<string, unknown>
+      }
+      sync_content_version: {
+        Args: {
+          p_commit_hash: string
+          p_contents: Record<string, unknown>[]
+          p_commit_message: string
+        }
+        Returns: Record<string, unknown>
+      }
+      sync_mock_project_data: {
+        Args: {
+          p_version_id: string
+          p_mock_projects: Record<string, unknown>[]
+        }
+        Returns: Record<string, unknown>
+      }
+      sync_quiz_data: {
+        Args: {
+          p_version_id: string
+          p_quizzes: Record<string, unknown>[]
+        }
+        Returns: Record<string, unknown>
       }
     }
     Enums: Record<string, never>
