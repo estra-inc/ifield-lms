@@ -54,7 +54,7 @@ export function SubmitDialog({
         <DialogHeader>
           <DialogTitle>成果物提出</DialogTitle>
           <DialogDescription>
-            GitHub リポジトリの URL を入力して成果物を提出してください。
+            URLまたはファイルを添付して成果物を提出してください。
           </DialogDescription>
         </DialogHeader>
         <SubmitForm

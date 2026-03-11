@@ -29,7 +29,8 @@ export default async function SubmissionDetailPage({ params }: PageProps) {
     .select(
       `
       id,
-      github_url,
+      submission_url,
+      submission_files,
       status,
       score,
       feedback_comment,
@@ -54,7 +55,8 @@ export default async function SubmissionDetailPage({ params }: PageProps) {
 
   type SubmissionData = {
     id: string
-    github_url: string
+    submission_url: string | null
+    submission_files: { name: string; url: string }[] | null
     status: string
     score: number | null
     feedback_comment: string | null
@@ -155,16 +157,36 @@ export default async function SubmissionDetailPage({ params }: PageProps) {
                     : typed.status}
           </Badge>
         </div>
-        <div className="pt-1">
-          <a
-            href={typed.github_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-sm text-primary underline-offset-4 hover:underline"
-          >
-            {typed.github_url}
-          </a>
-        </div>
+        {typed.submission_url && (
+          <div className="flex flex-col gap-1 pt-1">
+            {typed.submission_url.split("\n").filter(Boolean).map((url, i) => (
+              <a
+                key={i}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-sm text-primary underline-offset-4 hover:underline"
+              >
+                {url}
+              </a>
+            ))}
+          </div>
+        )}
+        {typed.submission_files && typed.submission_files.length > 0 && (
+          <div className="flex flex-col gap-1 pt-1">
+            {typed.submission_files.map((file, i) => (
+              <a
+                key={i}
+                href={file.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-sm text-primary underline-offset-4 hover:underline"
+              >
+                {file.name}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
 
       <GradedResultView

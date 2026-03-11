@@ -570,7 +570,8 @@ export type Database = {
         Row: {
           id: string
           assignment_id: string
-          github_url: string
+          submission_url: string | null
+          submission_files: { name: string; url: string }[]
           status: "submitted" | "grading" | "graded" | "rejected"
           score: number | null
           result_data: Record<string, unknown> | null
@@ -581,7 +582,8 @@ export type Database = {
         Insert: {
           id?: string
           assignment_id: string
-          github_url: string
+          submission_url?: string | null
+          submission_files?: { name: string; url: string }[]
           status?: "submitted" | "grading" | "graded" | "rejected"
           score?: number | null
           result_data?: Record<string, unknown> | null
@@ -592,7 +594,8 @@ export type Database = {
         Update: {
           id?: string
           assignment_id?: string
-          github_url?: string
+          submission_url?: string | null
+          submission_files?: { name: string; url: string }[]
           status?: "submitted" | "grading" | "graded" | "rejected"
           score?: number | null
           result_data?: Record<string, unknown> | null

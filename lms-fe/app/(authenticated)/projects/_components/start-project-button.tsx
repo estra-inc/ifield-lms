@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Play, AlertTriangle, Loader2 } from "lucide-react"
+import { Play, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -29,13 +29,11 @@ import { startProject } from "@/app/(authenticated)/projects/actions"
 interface StartProjectButtonProps {
   projectId: string
   currentTerm: string | null
-  hasActiveAssignment: boolean
 }
 
 export function StartProjectButton({
   projectId,
   currentTerm,
-  hasActiveAssignment,
 }: StartProjectButtonProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -83,16 +81,9 @@ export function StartProjectButton({
 
   return (
     <>
-      {hasActiveAssignment && (
-        <p className="font-mono text-xs text-destructive">
-          <AlertTriangle className="mr-1 inline-block size-3.5" />
-          他の案件が進行中のため着手できません
-        </p>
-      )}
-
       <Button
         onClick={handleStart}
-        disabled={hasActiveAssignment || isPending}
+        disabled={isPending}
         className="gap-2"
       >
         {isPending ? (

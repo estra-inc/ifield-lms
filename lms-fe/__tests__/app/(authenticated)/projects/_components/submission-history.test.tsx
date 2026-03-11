@@ -70,7 +70,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
       {
         id: "sub-1",
         assignment_id: "assignment-1",
-        github_url: "https://github.com/user/repo1",
+        submission_url: "https://github.com/user/repo1",
         status: "submitted",
         score: null,
         result_data: null,
@@ -80,7 +80,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
       {
         id: "sub-2",
         assignment_id: "assignment-1",
-        github_url: "https://github.com/user/repo2",
+        submission_url: "https://github.com/user/repo2",
         status: "graded",
         score: 85,
         result_data: null,
@@ -116,7 +116,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
       {
         id: "sub-1",
         assignment_id: "assignment-1",
-        github_url: "https://github.com/user/repo1",
+        submission_url: "https://github.com/user/repo1",
         status: "submitted",
         score: null,
         result_data: null,
@@ -126,7 +126,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
       {
         id: "sub-2",
         assignment_id: "assignment-1",
-        github_url: "https://github.com/user/repo2",
+        submission_url: "https://github.com/user/repo2",
         status: "grading",
         score: null,
         result_data: null,
@@ -136,7 +136,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
       {
         id: "sub-3",
         assignment_id: "assignment-1",
-        github_url: "https://github.com/user/repo3",
+        submission_url: "https://github.com/user/repo3",
         status: "graded",
         score: 90,
         result_data: null,
@@ -146,7 +146,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
       {
         id: "sub-4",
         assignment_id: "assignment-1",
-        github_url: "https://github.com/user/repo4",
+        submission_url: "https://github.com/user/repo4",
         status: "rejected",
         score: null,
         result_data: null,
@@ -174,7 +174,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
       {
         id: "sub-1",
         assignment_id: "assignment-1",
-        github_url: "https://github.com/user/repo1",
+        submission_url: "https://github.com/user/repo1",
         status: "submitted",
         score: null,
         result_data: null,
@@ -249,7 +249,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
     const submissions = Array.from({ length: 5 }, (_, i) => ({
       id: `sub-${i}`,
       assignment_id: "assignment-1",
-      github_url: `https://github.com/user/repo${i}`,
+      submission_url: `https://github.com/user/repo${i}`,
       status: "submitted",
       score: null,
       result_data: null,
@@ -277,7 +277,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
       {
         id: "sub-1",
         assignment_id: "assignment-1",
-        github_url: "https://github.com/user/repo1",
+        submission_url: "https://github.com/user/repo1",
         status: "submitted",
         score: null,
         result_data: null,
@@ -305,7 +305,7 @@ describe("SubmissionHistory (Task 9.1)", () => {
     const submissions = Array.from({ length: 5 }, (_, i) => ({
       id: `sub-${i}`,
       assignment_id: "assignment-1",
-      github_url: `https://github.com/user/repo${i}`,
+      submission_url: `https://github.com/user/repo${i}`,
       status: "submitted",
       score: null,
       result_data: null,

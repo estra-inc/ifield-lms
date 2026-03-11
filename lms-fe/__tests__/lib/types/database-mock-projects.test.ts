@@ -191,7 +191,8 @@ describe("Database 型定義 - project_submissions テーブル", () => {
       const row: Database["public"]["Tables"]["project_submissions"]["Row"] = {
         id: "submission-uuid",
         assignment_id: "assignment-uuid",
-        github_url: "https://github.com/user/repo",
+        submission_url: "https://github.com/user/repo",
+        submission_files: [],
         status: "submitted",
         score: null,
         result_data: null,
@@ -201,7 +202,7 @@ describe("Database 型定義 - project_submissions テーブル", () => {
       }
 
       expect(row.id).toBe("submission-uuid")
-      expect(row.github_url).toBe("https://github.com/user/repo")
+      expect(row.submission_url).toBe("https://github.com/user/repo")
       expect(row.status).toBe("submitted")
       expect(row.score).toBeNull()
       expect(row.result_data).toBeNull()
@@ -222,7 +223,8 @@ describe("Database 型定義 - project_submissions テーブル", () => {
       const row: Database["public"]["Tables"]["project_submissions"]["Row"] = {
         id: "submission-uuid",
         assignment_id: "assignment-uuid",
-        github_url: "https://github.com/user/repo",
+        submission_url: "https://github.com/user/repo",
+        submission_files: [{ name: "design.fig", url: "https://storage.example.com/design.fig" }],
         status: "graded",
         score: 85,
         result_data: { feedback: "よくできました" },
@@ -241,7 +243,6 @@ describe("Database 型定義 - project_submissions テーブル", () => {
     it("必須フィールドのみでインサートオブジェクトが作成できる", () => {
       const insert: Database["public"]["Tables"]["project_submissions"]["Insert"] = {
         assignment_id: "assignment-uuid",
-        github_url: "https://github.com/user/repo",
       }
 
       expect(insert.assignment_id).toBe("assignment-uuid")

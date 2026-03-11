@@ -53,15 +53,6 @@ export async function startProject(
   })
 
   if (error) {
-    // 排他制御違反
-    if (error.message.includes("USER_HAS_ACTIVE_PROJECT")) {
-      return {
-        success: false,
-        message: "他の案件が進行中のため着手できません。",
-      }
-    }
-
-    // その他のエラー
     console.error("startProject RPC error:", error.message)
     return {
       success: false,
@@ -153,19 +144,21 @@ export interface SubmitWorkResult {
 /**
  * submitWork Server Action
  *
- * 成果物（GitHub URL）を提出する。
+ * 成果物を提出する。URL（任意）+ ファイル（任意・複数可）。
  * 認証チェックと grading 中の排他制御（サーバーサイド二重防御）を行う。
  *
  * Task 8.1
  * Requirements: 5.3, 5.8, 6.5, 6.6
  *
  * @param assignmentId - 提出先の assignment ID
- * @param githubUrl - 提出する GitHub URL
+ * @param submissionUrl - 提出 URL（任意）
+ * @param submissionFiles - 提出ファイル情報（任意・複数可）
  * @returns SubmitWorkResult - 成功/失敗、メッセージ
  */
 export async function submitWork(
   assignmentId: string,
-  githubUrl: string
+  submissionUrl?: string | null,
+  submissionFiles?: { name: string; url: string }[] | null
 ): Promise<SubmitWorkResult> {
   const supabase = await createClient()
 
@@ -203,7 +196,8 @@ export async function submitWork(
     .from("project_submissions")
     .insert({
       assignment_id: assignmentId,
-      github_url: githubUrl,
+      submission_url: submissionUrl || null,
+      submission_files: submissionFiles ?? [],
       status: "submitted",
     })
     .select()

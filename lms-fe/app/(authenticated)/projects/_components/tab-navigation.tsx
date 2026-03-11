@@ -17,6 +17,7 @@ export type TabKey = "progress" | "requirements" | "tasks" | "history" | "evalua
 const DEFAULT_TABS: { key: TabKey; label: string }[] = [
   { key: "progress", label: "進捗" },
   { key: "requirements", label: "案件要件" },
+  { key: "evaluation", label: "評価項目" },
   { key: "tasks", label: "タスク管理" },
   { key: "history", label: "提出履歴" },
 ]

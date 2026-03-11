@@ -79,7 +79,7 @@ export async function SubmissionHistory({
 
   const { data: submissions, count, error } = await supabase
     .from("project_submissions")
-    .select("id, assignment_id, github_url, status, score, result_data, created_at, updated_at", {
+    .select("id, assignment_id, submission_url, submission_files, status, score, result_data, created_at, updated_at", {
       count: "exact",
     })
     .eq("assignment_id", assignmentId)
@@ -113,7 +113,14 @@ export async function SubmissionHistory({
             <div className="flex items-center justify-between gap-3">
               <div className="flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm text-primary truncate">
-                  {submission.github_url}
+                  {(() => {
+                    const urls = submission.submission_url?.split("\n").filter(Boolean) ?? []
+                    const fileCount = ((submission.submission_files as { name: string }[] | null) ?? []).length
+                    const parts: string[] = []
+                    if (urls.length > 0) parts.push(urls.length === 1 ? urls[0] : `${urls.length}件のリンク`)
+                    if (fileCount > 0) parts.push(`${fileCount}件のファイル`)
+                    return parts.join(" / ") || "提出物なし"
+                  })()}
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs text-muted-foreground">

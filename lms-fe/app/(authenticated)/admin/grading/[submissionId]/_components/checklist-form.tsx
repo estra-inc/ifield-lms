@@ -35,7 +35,8 @@ export interface ChecklistFormProps {
   submissionId: string
   studentName: string
   projectTitle: string
-  githubUrl: string
+  submissionUrl: string | null
+  submissionFiles: { name: string; url: string }[]
   categories: EvaluationCategory[]
   initialEvaluations: EvaluationState
   initialFeedbackComment: string

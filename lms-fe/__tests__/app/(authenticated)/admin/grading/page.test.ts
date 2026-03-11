@@ -115,7 +115,7 @@ describe("未採点提出一覧ページ", () => {
     it("提出データをリスト表示用の形式に変換すべき", () => {
       const submissionRow = {
         id: "sub-001",
-        github_url: "https://github.com/user/repo",
+        submission_url: "https://github.com/user/repo",
         status: "submitted" as const,
         created_at: "2026-03-01T10:00:00Z",
         assignment: {
@@ -128,7 +128,6 @@ describe("未採点提出一覧ページ", () => {
         id: submissionRow.id,
         studentName: submissionRow.assignment.user.full_name,
         projectTitle: submissionRow.assignment.project.title,
-        githubUrl: submissionRow.github_url,
         submittedAt: submissionRow.created_at,
         status: submissionRow.status,
         genre: submissionRow.assignment.project.genre,
@@ -137,7 +136,6 @@ describe("未採点提出一覧ページ", () => {
       expect(listItem.id).toBe("sub-001")
       expect(listItem.studentName).toBe("山田 太郎")
       expect(listItem.projectTitle).toBe("模擬案件A")
-      expect(listItem.githubUrl).toBe("https://github.com/user/repo")
       expect(listItem.status).toBe("submitted")
       expect(listItem.genre).toBe("engineering")
     })

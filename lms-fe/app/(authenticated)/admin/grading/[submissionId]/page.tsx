@@ -55,7 +55,8 @@ export default async function GradingPage({ params }: PageProps) {
     .select(
       `
       id,
-      github_url,
+      submission_url,
+      submission_files,
       status,
       score,
       feedback_comment,
@@ -85,7 +86,8 @@ export default async function GradingPage({ params }: PageProps) {
   // 型変換
   type SubmissionData = {
     id: string
-    github_url: string
+    submission_url: string | null
+    submission_files: { name: string; url: string }[] | null
     status: string
     score: number | null
     feedback_comment: string | null
@@ -107,7 +109,8 @@ export default async function GradingPage({ params }: PageProps) {
   const assignment = typedSubmission.project_assignments
   const studentName = assignment.profiles.full_name ?? "名前未設定"
   const projectTitle = assignment.mock_projects.title
-  const githubUrl = typedSubmission.github_url
+  const submissionUrl = typedSubmission.submission_url
+  const submissionFiles = typedSubmission.submission_files ?? []
   const categories = normalizeEvaluationItems(
     assignment.mock_projects.evaluation_items as unknown[]
   )
@@ -167,18 +170,49 @@ export default async function GradingPage({ params }: PageProps) {
               <span className="font-medium">案件:</span>
               <span>{projectTitle}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <ExternalLink className="h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">GitHub:</span>
-              <a
-                href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary underline underline-offset-4 hover:text-primary/80"
-              >
-                {githubUrl}
-              </a>
-            </div>
+            {submissionUrl && (
+              <div className="flex flex-col gap-1 text-sm">
+                <div className="flex items-center gap-2">
+                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">URL:</span>
+                </div>
+                <ol className="flex flex-col gap-0.5 pl-6 list-decimal list-inside">
+                  {submissionUrl.split("\n").filter(Boolean).map((url, i) => (
+                    <li key={i}>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline underline-offset-4 hover:text-primary/80"
+                      >
+                        {url}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {submissionFiles.length > 0 && (
+              <div className="flex flex-col gap-1 text-sm">
+                <div className="flex items-center gap-2">
+                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">提出ファイル:</span>
+                </div>
+                <div className="flex flex-col gap-0.5 pl-6">
+                  {submissionFiles.map((file, i) => (
+                    <a
+                      key={i}
+                      href={file.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline underline-offset-4 hover:text-primary/80"
+                    >
+                      {file.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -279,18 +313,49 @@ export default async function GradingPage({ params }: PageProps) {
             <span className="font-medium">案件:</span>
             <span>{projectTitle}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <ExternalLink className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">GitHub:</span>
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary underline underline-offset-4 hover:text-primary/80"
-            >
-              {githubUrl}
-            </a>
-          </div>
+          {submissionUrl && (
+            <div className="flex flex-col gap-1 text-sm">
+              <div className="flex items-center gap-2">
+                <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">URL:</span>
+              </div>
+              <ol className="flex flex-col gap-0.5 pl-6 list-decimal list-inside">
+                {submissionUrl.split("\n").filter(Boolean).map((url, i) => (
+                  <li key={i}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline underline-offset-4 hover:text-primary/80"
+                    >
+                      {url}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+          {submissionFiles.length > 0 && (
+            <div className="flex flex-col gap-1 text-sm">
+              <div className="flex items-center gap-2">
+                <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">提出ファイル:</span>
+              </div>
+              <div className="flex flex-col gap-0.5 pl-6">
+                {submissionFiles.map((file, i) => (
+                  <a
+                    key={i}
+                    href={file.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline underline-offset-4 hover:text-primary/80"
+                  >
+                    {file.name}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
           {isDraft && (
             <Badge
               variant="outline"
@@ -307,7 +372,8 @@ export default async function GradingPage({ params }: PageProps) {
         submissionId={submissionId}
         studentName={studentName}
         projectTitle={projectTitle}
-        githubUrl={githubUrl}
+        submissionUrl={submissionUrl}
+        submissionFiles={submissionFiles}
         categories={categories}
         initialEvaluations={initialEvaluations}
         initialFeedbackComment={initialFeedbackComment}

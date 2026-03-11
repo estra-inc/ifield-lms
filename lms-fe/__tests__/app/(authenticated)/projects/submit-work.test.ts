@@ -103,7 +103,7 @@ function setupSubmissionQueries(
                     data: {
                       id: "sub-new-1",
                       assignment_id: TEST_ASSIGNMENT_ID,
-                      github_url: TEST_GITHUB_URL,
+                      submission_url: TEST_GITHUB_URL,
                       status: "submitted",
                     },
                     error: null,

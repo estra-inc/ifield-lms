@@ -65,7 +65,7 @@ describe("採点画面ページ", () => {
       const submissionId = "sub-001"
       const expectedQuery = {
         table: "project_submissions",
-        columns: ["id", "github_url", "status", "assignment_id"],
+        columns: ["id", "submission_url", "submission_files", "status", "assignment_id"],
         filter: { id: submissionId },
       }
 
@@ -151,16 +151,17 @@ describe("採点画面ページ", () => {
   })
 
   describe("表示情報", () => {
-    it("受講生名、案件タイトル、GitHub URL を表示データとして構成すべき", () => {
+    it("受講生名、案件タイトル、提出URLを表示データとして構成すべき", () => {
       const displayData = {
         studentName: "山田 太郎",
         projectTitle: "ECサイト模擬案件",
-        githubUrl: "https://github.com/yamada/ec-site",
+        submissionUrl: "https://github.com/yamada/ec-site",
+        submissionFiles: [],
       }
 
       expect(displayData.studentName).toBe("山田 太郎")
       expect(displayData.projectTitle).toBe("ECサイト模擬案件")
-      expect(displayData.githubUrl).toContain("github.com")
+      expect(displayData.submissionUrl).toContain("github.com")
     })
   })
 })

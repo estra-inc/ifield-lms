@@ -18,7 +18,6 @@ interface SubmissionListItem {
   id: string
   studentName: string
   projectTitle: string
-  githubUrl: string
   submittedAt: string
   status: "submitted" | "grading"
   genre: string
@@ -56,7 +55,7 @@ export default async function GradingListPage({ searchParams }: PageProps) {
     .select(
       `
       id,
-      github_url,
+      submission_url,
       status,
       created_at,
       assignment:project_assignments!inner (
@@ -82,7 +81,7 @@ export default async function GradingListPage({ searchParams }: PageProps) {
   // ジャンルフィルタ（JOIN 後にアプリ層でフィルタ）
   type SubmissionRow = {
     id: string
-    github_url: string
+    submission_url: string | null
     status: string
     created_at: string
     assignment: {
@@ -102,7 +101,6 @@ export default async function GradingListPage({ searchParams }: PageProps) {
     id: row.id,
     studentName: row.assignment.user.full_name ?? "名前未設定",
     projectTitle: row.assignment.project.title,
-    githubUrl: row.github_url,
     submittedAt: row.created_at,
     status: row.status as "submitted" | "grading",
     genre: row.assignment.project.genre,
@@ -228,7 +226,7 @@ export default async function GradingListPage({ searchParams }: PageProps) {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <ExternalLink className="h-4 w-4" />
-                    <span className="hidden sm:inline">GitHub</span>
+                    <span className="hidden sm:inline">詳細</span>
                   </div>
                 </CardContent>
               </Card>

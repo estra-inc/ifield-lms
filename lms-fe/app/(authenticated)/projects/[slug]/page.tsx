@@ -3,7 +3,6 @@ import { redirect, notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import {
   deriveProjectStatus,
-  isProjectActive,
   type ProjectStatusInput,
 } from "@/lib/utils/project-status"
 import { renderMarkdown } from "@/lib/markdown/render-markdown"
@@ -257,39 +256,6 @@ export default async function ProjectDetailPage({
   }
   const projectStatus = deriveProjectStatus(statusInput)
 
-  // 他の案件で進行中かどうかチェック（フロント側排他チェック）
-  const { data: allAssignments } = await supabase
-    .from("project_assignments")
-    .select("id, project_id, status")
-    .eq("user_id", user.id)
-
-  let hasActiveAssignment = false
-  if (allAssignments) {
-    for (const a of allAssignments) {
-      if (a.project_id === project.id) continue // 現在の案件は除外
-
-      // この assignment の最新 submission をチェック
-      const { data: otherSub } = await supabase
-        .from("project_submissions")
-        .select("id, status")
-        .eq("assignment_id", a.id)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .single()
-
-      const otherStatusInput: ProjectStatusInput = {
-        assignment: { id: a.id, status: a.status },
-        latestSubmission: otherSub ?? null,
-      }
-      const otherStatus = deriveProjectStatus(otherStatusInput)
-
-      if (isProjectActive(otherStatus)) {
-        hasActiveAssignment = true
-        break
-      }
-    }
-  }
-
   // Lock/Unlock 判定
   const isLocked = !assignment
   const activeTab: TabKey = VALID_TABS.includes(tab as TabKey)
@@ -302,6 +268,21 @@ export default async function ProjectDetailPage({
   if (!isLocked && project.requirements) {
     const { content: rendered } = await renderMarkdown(project.requirements)
     renderedRequirements = rendered
+  }
+
+  // 評価項目の準備（Unlock 状態のみ）
+  const categories = !isLocked
+    ? normalizeEvaluationItems((project.evaluation_items ?? []) as unknown[])
+    : []
+
+  const groupedCategories = new Map<
+    string,
+    { category_medium: string; items: { id: string; label: string; point: number }[] }[]
+  >()
+  for (const cat of categories) {
+    const existing = groupedCategories.get(cat.category_large) ?? []
+    existing.push(cat)
+    groupedCategories.set(cat.category_large, existing)
   }
 
   return (
@@ -336,7 +317,6 @@ export default async function ProjectDetailPage({
           <StartProjectButton
             projectId={project.id}
             currentTerm={profile?.current_term ?? null}
-            hasActiveAssignment={hasActiveAssignment}
           />
         </div>
       ) : (
@@ -372,6 +352,128 @@ export default async function ProjectDetailPage({
                 ) : (
                   <p className="font-mono text-sm text-muted-foreground">
                     要件は設定されていません。
+                  </p>
+                )}
+              </div>
+            )}
+
+            {activeTab === "evaluation" && (
+              <div className="space-y-4">
+                <h2 className="font-[family-name:var(--font-primary)] text-lg font-semibold text-foreground">
+                  評価項目
+                </h2>
+                {categories.length > 0 ? (
+                  <>
+                    {/* カテゴリ概要テーブル */}
+                    <div className="overflow-x-auto rounded-lg border border-border bg-card">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-border bg-muted/50">
+                            <th className="px-4 py-2.5 text-left font-medium text-muted-foreground">カテゴリ</th>
+                            <th className="px-4 py-2.5 text-right font-medium text-muted-foreground">項目数</th>
+                            <th className="px-4 py-2.5 text-right font-medium text-muted-foreground">配点</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Array.from(groupedCategories.entries()).map(([largeCat, mediumCats]) => {
+                            const itemCount = mediumCats.reduce((sum, mc) => sum + mc.items.length, 0)
+                            const points = mediumCats.reduce(
+                              (sum, mc) => sum + mc.items.reduce((s, item) => s + item.point, 0),
+                              0
+                            )
+                            return (
+                              <tr key={largeCat} className="border-b border-border last:border-b-0">
+                                <td className="px-4 py-2.5 font-medium">{largeCat}</td>
+                                <td className="px-4 py-2.5 text-right tabular-nums">{itemCount}</td>
+                                <td className="px-4 py-2.5 text-right tabular-nums">{points}pt</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                        <tfoot>
+                          <tr className="border-t border-border bg-muted/30">
+                            <td className="px-4 py-2.5 font-semibold">合計</td>
+                            <td className="px-4 py-2.5 text-right font-semibold tabular-nums">
+                              {Array.from(groupedCategories.values()).reduce(
+                                (sum, mcs) => sum + mcs.reduce((s, mc) => s + mc.items.length, 0), 0
+                              )}
+                            </td>
+                            <td className="px-4 py-2.5 text-right font-semibold tabular-nums">
+                              {Array.from(groupedCategories.values()).reduce(
+                                (sum, mcs) => sum + mcs.reduce((s, mc) => s + mc.items.reduce((p, item) => p + item.point, 0), 0), 0
+                              )}pt
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+
+                  <div className="rounded-lg border border-border bg-card p-6">
+                    <Accordion
+                      type="multiple"
+                      defaultValue={Array.from(groupedCategories.keys())}
+                    >
+                      {Array.from(groupedCategories.entries()).map(
+                        ([largeCat, mediumCats]) => {
+                          const totalItems = mediumCats.reduce(
+                            (sum, mc) => sum + mc.items.length,
+                            0
+                          )
+                          const totalPoints = mediumCats.reduce(
+                            (sum, mc) =>
+                              sum + mc.items.reduce((s, item) => s + item.point, 0),
+                            0
+                          )
+
+                          return (
+                            <AccordionItem key={largeCat} value={largeCat}>
+                              <AccordionTrigger className="text-base font-semibold">
+                                <div className="flex items-center gap-3">
+                                  <span>{largeCat}</span>
+                                  <Badge variant="secondary" className="text-xs">
+                                    {totalItems}項目 / {totalPoints}pt
+                                  </Badge>
+                                </div>
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                <div className="flex flex-col gap-4 pl-2">
+                                  {mediumCats.map((medCat) => (
+                                    <div
+                                      key={`${largeCat}-${medCat.category_medium}`}
+                                    >
+                                      <h4 className="mb-2 text-sm font-medium text-muted-foreground">
+                                        {medCat.category_medium}
+                                      </h4>
+                                      <div className="flex flex-col gap-1.5 pl-2">
+                                        {medCat.items.map((item) => (
+                                          <div
+                                            key={item.id}
+                                            className="flex items-center gap-3 px-2 py-1"
+                                          >
+                                            <span className="size-1.5 shrink-0 rounded-full bg-muted-foreground/40" />
+                                            <span className="flex-1 text-sm">
+                                              {item.label}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground tabular-nums">
+                                              {item.point}pt
+                                            </span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          )
+                        }
+                      )}
+                    </Accordion>
+                  </div>
+                  </>
+                ) : (
+                  <p className="font-mono text-sm text-muted-foreground">
+                    評価項目は設定されていません。
                   </p>
                 )}
               </div>

@@ -301,11 +301,13 @@ describe("mock_projects 関連テーブル マイグレーション SQL (Task 1.
       )
     })
 
-    it("github_url カラムが TEXT NOT NULL である", () => {
+    it("github_url カラムが TEXT NOT NULL である（元のスキーマ、マイグレーションで submission_url にリネーム済み）", () => {
       const block = sql.match(
         /CREATE\s+TABLE\s+(?:public\.)?project_submissions\s*\([^;]+\)/is
       )
       expect(block).not.toBeNull()
+      // 元のスキーマでは github_url TEXT NOT NULL として定義
+      // 20260311180000 マイグレーションで submission_url にリネーム + NOT NULL 解除
       expect(block![0]).toMatch(/github_url\s+TEXT\s+NOT\s+NULL/i)
     })
 
