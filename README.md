@@ -70,6 +70,223 @@ npm run dev
 | `GOOGLE_REDIRECT_URI` | Google OAuth リダイレクト URI |
 | `GOOGLE_TOKEN_ENCRYPTION_KEY` | Google トークン暗号化キー |
 
+## ER 図
+
+```mermaid
+erDiagram
+    profiles {
+        uuid id PK
+        text full_name
+        text last_name
+        text first_name
+        text email
+        text avatar_url
+        text role
+        text current_term
+        date graduation_date
+        text default_genre
+    }
+
+    content_versions {
+        uuid id PK
+        text commit_hash
+        text commit_message
+        text status
+        jsonb changes_summary
+        uuid approved_by FK
+    }
+
+    contents {
+        uuid id PK
+        text slug_path UK
+        text title
+        text body
+        text genre
+        text tutorial
+        text chapter
+        text section
+        text content_type
+        int order
+        text status
+        uuid version_id FK
+    }
+
+    content_progress {
+        uuid id PK
+        uuid user_id FK
+        uuid content_id FK
+        timestamptz completed_at
+    }
+
+    quizzes {
+        uuid id PK
+        text genre
+        text tutorial
+        text chapter
+        text section
+        text slug
+        text title
+        jsonb questions
+        text status
+        uuid version_id FK
+    }
+
+    quiz_logs {
+        uuid id PK
+        uuid user_id FK
+        uuid quiz_id FK
+        int score
+        int total_questions
+        jsonb answers
+    }
+
+    mock_projects {
+        uuid id PK
+        text slug UK
+        text title
+        text description
+        text requirements
+        jsonb evaluation_items
+        text genre
+        int order
+        text status
+        uuid version_id FK
+    }
+
+    project_assignments {
+        uuid id PK
+        uuid user_id FK
+        uuid project_id FK
+        text status
+        date due_date
+    }
+
+    project_submissions {
+        uuid id PK
+        uuid assignment_id FK
+        text submission_url
+        jsonb submission_files
+        text status
+        int score
+        text feedback_comment
+    }
+
+    project_tasks {
+        uuid id PK
+        uuid assignment_id FK
+        text title
+        text status
+        int order
+        uuid created_by FK
+    }
+
+    project_evaluations {
+        uuid id PK
+        uuid submission_id FK
+        uuid grader_id FK
+        text status
+        int score
+        text feedback_comment
+    }
+
+    project_evaluation_details {
+        uuid id PK
+        uuid evaluation_id FK
+        text item_id
+        text category_large
+        text category_medium
+        text item_label
+        int point
+        boolean is_ok
+    }
+
+    daily_reports {
+        uuid id PK
+        uuid user_id FK
+        date report_date
+        numeric actual_hours
+        text content
+        boolean liked_by_manager
+    }
+
+    monthly_goals {
+        uuid id PK
+        uuid user_id FK
+        text year_month
+        numeric target_hours
+    }
+
+    weekly_goals {
+        uuid id PK
+        uuid user_id FK
+        date start_date
+        date end_date
+        numeric target_hours
+    }
+
+    coaching_sessions {
+        uuid id PK
+        uuid user_id FK
+        uuid coach_id FK
+        date session_date
+        time start_time
+        time end_time
+        text genre
+        text status
+        text google_event_id
+        text google_meet_url
+    }
+
+    coaching_credits {
+        uuid id PK
+        uuid user_id FK
+        int amount
+        text reason
+        uuid reference_id FK
+        uuid granted_by FK
+    }
+
+    coach_assignments {
+        uuid id PK
+        uuid user_id FK
+        uuid coach_id FK
+        text genre
+    }
+
+    system_integrations {
+        uuid id PK
+        text service_name UK
+        text encrypted_refresh_token
+        jsonb business_hours
+    }
+
+    profiles ||--o{ content_progress : "tracks"
+    profiles ||--o{ daily_reports : "writes"
+    profiles ||--o{ monthly_goals : "sets"
+    profiles ||--o{ weekly_goals : "sets"
+    profiles ||--o{ project_assignments : "starts"
+    profiles ||--o{ quiz_logs : "attempts"
+    profiles ||--o{ coaching_sessions : "books"
+    profiles ||--o{ coaching_credits : "has"
+    profiles ||--o{ coach_assignments : "assigned"
+
+    content_versions ||--o{ contents : "contains"
+    content_versions ||--o{ quizzes : "contains"
+    content_versions ||--o{ mock_projects : "contains"
+    profiles ||--o{ content_versions : "approves"
+
+    contents ||--o{ content_progress : "completed"
+    quizzes ||--o{ quiz_logs : "logged"
+
+    mock_projects ||--o{ project_assignments : "assigned"
+    project_assignments ||--o{ project_submissions : "submits"
+    project_assignments ||--o{ project_tasks : "has"
+    project_submissions ||--o| project_evaluations : "evaluated"
+    project_evaluations ||--o{ project_evaluation_details : "details"
+
+    coaching_sessions ||--o{ coaching_credits : "referenced"
+```
+
 ## 関連リポジトリ
 
 - [ifield-curriculums](https://github.com/estra-inc/ifield-curriculums) - 教材・演習問題・模擬案件コンテンツ
