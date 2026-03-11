@@ -231,21 +231,30 @@ export default async function ProjectDetailPage({
     .eq("project_id", project.id)
     .single()
 
-  // 最新 submission を取得
+  // 全 submissions を取得（統計算出用）
+  let allSubmissions: { id: string; status: string; score: number | null; created_at: string }[] = []
   let latestSubmission: { id: string; status: string; created_at: string } | null = null
   if (assignment) {
-    const { data: sub } = await supabase
+    const { data: subs } = await supabase
       .from("project_submissions")
-      .select("id, status, created_at")
+      .select("id, status, score, created_at")
       .eq("assignment_id", assignment.id)
       .order("created_at", { ascending: false })
-      .limit(1)
-      .single()
 
-    if (sub) {
-      latestSubmission = sub
+    allSubmissions = subs ?? []
+    if (allSubmissions.length > 0) {
+      latestSubmission = allSubmissions[0]
     }
   }
+
+  // 提出統計
+  const submissionCount = allSubmissions.length
+  const rejectedCount = allSubmissions.filter((s) => s.status === "rejected").length
+  const gradedCount = allSubmissions.filter((s) => s.status === "graded").length
+  const gradedScores = allSubmissions
+    .filter((s) => s.status === "graded" && s.score !== null)
+    .map((s) => s.score!)
+  const bestScore = gradedScores.length > 0 ? Math.max(...gradedScores) : null
 
   // 着手状況を導出
   const statusInput: ProjectStatusInput = {
@@ -337,6 +346,10 @@ export default async function ProjectDetailPage({
                 isArchived={isArchived}
                 currentPage={Math.max(1, parseInt(page ?? "1", 10) || 1)}
                 slug={slug}
+                submissionCount={submissionCount}
+                rejectedCount={rejectedCount}
+                gradedCount={gradedCount}
+                bestScore={bestScore}
               />
             )}
 

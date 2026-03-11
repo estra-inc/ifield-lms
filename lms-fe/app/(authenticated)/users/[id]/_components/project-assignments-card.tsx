@@ -130,6 +130,15 @@ export function ProjectAssignmentsCard({
     )
   }
 
+  // 統計算出
+  const submissionCount = submissions.length
+  const rejectedCount = submissions.filter((s) => s.status === "rejected").length
+  const gradedCount = submissions.filter((s) => s.status === "graded").length
+  const gradedScores = submissions
+    .filter((s) => s.status === "graded" && s.score !== null)
+    .map((s) => s.score!)
+  const bestScore = gradedScores.length > 0 ? Math.max(...gradedScores) : null
+
   // 採点中（submitted, grading）
   const inProgress = submissions.filter(
     (s) => s.status === "submitted" || s.status === "grading"
@@ -143,6 +152,28 @@ export function ProjectAssignmentsCard({
   return (
     <Card className="flex flex-col gap-4 p-6">
       <h3 className="text-base font-bold tracking-tight">模擬案件</h3>
+
+      {/* 提出統計 */}
+      <div className="grid grid-cols-4 gap-4 rounded-lg border border-border bg-muted/30 p-4">
+        <div className="space-y-1">
+          <p className="font-mono text-xs text-muted-foreground">提出回数</p>
+          <p className="font-mono text-sm font-medium">{submissionCount}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-mono text-xs text-muted-foreground">差し戻し数</p>
+          <p className="font-mono text-sm font-medium">{rejectedCount}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-mono text-xs text-muted-foreground">採点完了数</p>
+          <p className="font-mono text-sm font-medium">{gradedCount}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-mono text-xs text-muted-foreground">最高得点</p>
+          <p className="font-mono text-sm font-medium">
+            {bestScore !== null ? `${bestScore}点` : "-"}
+          </p>
+        </div>
+      </div>
 
       {/* 採点中セクション */}
       <div className="flex flex-col gap-2">

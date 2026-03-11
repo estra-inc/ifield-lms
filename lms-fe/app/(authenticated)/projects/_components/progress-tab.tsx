@@ -24,6 +24,10 @@ interface ProgressTabProps {
   isArchived: boolean
   currentPage: number
   slug: string
+  submissionCount: number
+  rejectedCount: number
+  gradedCount: number
+  bestScore: number | null
 }
 
 function formatDate(dateString: string | null): string {
@@ -46,6 +50,10 @@ export function ProgressTab({
   isArchived,
   currentPage,
   slug,
+  submissionCount,
+  rejectedCount,
+  gradedCount,
+  bestScore,
 }: ProgressTabProps) {
   return (
     <div className="space-y-6">
@@ -67,6 +75,32 @@ export function ProgressTab({
               <p className="font-mono text-xs text-muted-foreground">最新提出日</p>
               <p className="font-mono text-sm font-medium" data-testid="latest-submission-date">
                 {formatDate(latestSubmissionDate)}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 提出統計カード */}
+      <Card>
+        <CardContent>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="space-y-1">
+              <p className="font-mono text-xs text-muted-foreground">提出回数</p>
+              <p className="font-mono text-sm font-medium">{submissionCount}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="font-mono text-xs text-muted-foreground">差し戻し数</p>
+              <p className="font-mono text-sm font-medium">{rejectedCount}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="font-mono text-xs text-muted-foreground">採点完了数</p>
+              <p className="font-mono text-sm font-medium">{gradedCount}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="font-mono text-xs text-muted-foreground">最高得点</p>
+              <p className="font-mono text-sm font-medium">
+                {bestScore !== null ? `${bestScore}点` : "-"}
               </p>
             </div>
           </div>
