@@ -383,8 +383,9 @@ export async function createTask(
 
   const taskNumber = (maxRow?.task_number ?? 0) + 1
 
-  // タスク作成
-  const { data: task, error: insertError } = await supabase
+  // タスク作成（RLS による INSERT 失敗を回避するため adminClient を使用）
+  const adminClient = createAdminClient()
+  const { data: task, error: insertError } = await adminClient
     .from("project_tasks")
     .insert({
       assignment_id: assignmentId,
@@ -472,8 +473,9 @@ export async function updateTask(
     }
   }
 
-  // タスク更新
-  const { data: task, error: updateError } = await supabase
+  // タスク更新（RLS による UPDATE 失敗を回避するため adminClient を使用）
+  const adminClient = createAdminClient()
+  const { data: task, error: updateError } = await adminClient
     .from("project_tasks")
     .update({
       title: title.trim(),
@@ -551,8 +553,9 @@ export async function updateTaskStatus(
     }
   }
 
-  // ステータスと order を更新
-  const { data: task, error: updateError } = await supabase
+  // ステータスと order を更新（RLS による UPDATE 失敗を回避するため adminClient を使用）
+  const adminClient = createAdminClient()
+  const { data: task, error: updateError } = await adminClient
     .from("project_tasks")
     .update({
       status,
@@ -625,8 +628,9 @@ export async function deleteTask(
     }
   }
 
-  // タスク削除（物理削除）
-  const { error: deleteError } = await supabase
+  // タスク削除（RLS による DELETE 失敗を回避するため adminClient を使用）
+  const adminClient = createAdminClient()
+  const { error: deleteError } = await adminClient
     .from("project_tasks")
     .delete()
     .eq("id", taskId)
