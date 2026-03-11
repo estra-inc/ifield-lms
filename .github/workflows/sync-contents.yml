@@ -6,16 +6,23 @@ on:
   workflow_dispatch:
 
 env:
-  CURRICULUM_DIR: curriculums
-  EXERCISES_DIR: exercises
-  MOCK_PROJECTS_DIR: mock-projects
+  CURRICULUM_DIR: ifield-curriculums/curriculums
+  EXERCISES_DIR: ifield-curriculums/exercises
+  MOCK_PROJECTS_DIR: ifield-curriculums/mock-projects
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout LMS repository
         uses: actions/checkout@v4
+
+      - name: Checkout curriculum repository
+        uses: actions/checkout@v4
+        with:
+          repository: estra-inc/ifield-curriculums
+          path: ifield-curriculums
+          ssh-key: ${{ secrets.CURRICULUM_DEPLOY_KEY }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
