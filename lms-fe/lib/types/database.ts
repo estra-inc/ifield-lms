@@ -966,20 +966,35 @@ export type Database = {
         Args: {
           search_query: string
         }
-        Returns: Record<string, unknown>[]
+        Returns: {
+          id: string
+          title: string
+          snippet: string
+          genre: string
+          tutorial: string
+          chapter: string
+          section: string
+          genre_title: string
+          tutorial_title: string
+          chapter_title: string
+          score: number
+        }[]
       }
       start_project: {
         Args: {
           p_user_id: string
           p_project_id: string
         }
-        Returns: Record<string, unknown>
+        Returns: {
+          assignment_id: string
+          term_changed: boolean
+        }
       }
       sync_content_version: {
         Args: {
           p_commit_hash: string
           p_contents: Record<string, unknown>[]
-          p_commit_message: string
+          p_commit_message: string | null
         }
         Returns: Record<string, unknown>
       }

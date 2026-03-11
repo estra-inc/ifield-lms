@@ -107,15 +107,18 @@ export function extractTocItems(markdownBody: string): TocItem[] {
 /**
  * 見出しに id 属性を付与する rehype プラグイン
  */
-function rehypeHeadingIds(tocItems: TocItem[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function rehypeHeadingIds(tocItems: TocItem[]): any {
   const headingIdMap = new Map<string, string>()
   for (const item of tocItems) {
     headingIdMap.set(item.text, item.id)
   }
 
   return () => {
-    return (tree: { children: Array<{ type: string; tagName?: string; children?: Array<{ type: string; value?: string }>; properties?: Record<string, unknown> }> }) => {
-      function visit(node: { type: string; tagName?: string; children?: Array<{ type: string; value?: string; children?: unknown[] }>; properties?: Record<string, unknown> }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (tree: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      function visit(node: any) {
         if (node.type === "element" && (node.tagName === "h2" || node.tagName === "h3")) {
           const text = extractTextFromHast(node.children ?? [])
           const id = headingIdMap.get(text) ?? slugify(text)
@@ -124,11 +127,11 @@ function rehypeHeadingIds(tocItems: TocItem[]) {
         }
         if (node.children && Array.isArray(node.children)) {
           for (const child of node.children) {
-            visit(child as typeof node)
+            visit(child)
           }
         }
       }
-      visit(tree as unknown as { type: string; children?: Array<{ type: string; value?: string; children?: unknown[] }>; properties?: Record<string, unknown> })
+      visit(tree)
     }
   }
 }
