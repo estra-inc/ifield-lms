@@ -4,14 +4,14 @@ import { z } from "zod"
  * ユーザー招待フォーム用バリデーションスキーマ
  *
  * - email: 必須、メール形式
- * - role: user または manager（super_admin は招待時に選択不可）
+ * - role: user / manager / super_admin
  */
 export const inviteUserSchema = z.object({
   email: z
     .string()
     .min(1, { message: "メールアドレスを入力してください" })
     .email({ message: "メールアドレスの形式が正しくありません" }),
-  role: z.enum(["user", "manager"], {
+  role: z.enum(["user", "manager", "super_admin"], {
     error: "ロールを選択してください",
   }),
 })

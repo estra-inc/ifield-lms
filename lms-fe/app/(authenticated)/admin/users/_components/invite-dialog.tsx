@@ -44,6 +44,7 @@ import { SubmitButton } from "@/components/ui/submit-button"
 const INVITE_ROLE_OPTIONS = [
   { value: "user", label: "受講生 (User)" },
   { value: "manager", label: "マネージャー (Manager)" },
+  { value: "super_admin", label: "スーパー管理者 (Super Admin)" },
 ] as const
 
 export function InviteDialog() {
