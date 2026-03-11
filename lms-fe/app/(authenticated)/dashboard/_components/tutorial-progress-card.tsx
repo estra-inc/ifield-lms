@@ -26,7 +26,7 @@ export function TutorialProgressCard({
   progressHref = "/contents/progress",
 }: TutorialProgressCardProps) {
   return (
-    <Card className="rounded-none border-border shadow-none">
+    <Card className="border-border shadow-none">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="font-[family-name:var(--font-primary)] text-base tracking-tight">
           教材進捗

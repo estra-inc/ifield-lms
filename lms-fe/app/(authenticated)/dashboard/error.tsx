@@ -34,7 +34,7 @@ export default function DashboardError({
       </div>
       <button
         onClick={reset}
-        className="rounded-none border border-primary bg-primary px-6 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        className="rounded-md border border-primary bg-primary px-6 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
       >
         再試行
       </button>

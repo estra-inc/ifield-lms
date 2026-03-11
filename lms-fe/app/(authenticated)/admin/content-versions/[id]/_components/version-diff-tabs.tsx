@@ -39,15 +39,15 @@ const CHANGE_TYPE_BADGE_CONFIG: Record<
 > = {
   added: {
     label: "追加",
-    className: "rounded-none bg-green-100 text-green-800 hover:bg-green-100",
+    className: "bg-green-100 text-green-800 hover:bg-green-100",
   },
   updated: {
     label: "更新",
-    className: "rounded-none bg-[#7FCEF4]/20 text-[#00B0EC] hover:bg-[#7FCEF4]/20",
+    className: "bg-[#7FCEF4]/20 text-[#00B0EC] hover:bg-[#7FCEF4]/20",
   },
   deleted: {
     label: "削除",
-    className: "rounded-none bg-red-100 text-red-800 hover:bg-red-100",
+    className: "bg-red-100 text-red-800 hover:bg-red-100",
   },
 }
 
@@ -82,7 +82,7 @@ export function VersionDiffTabs({ tabs, versionId }: VersionDiffTabsProps) {
             <TabsTrigger
               key={tab.label}
               value={tab.label}
-              className="rounded-none font-[family-name:var(--font-primary)] text-sm px-4"
+              className="font-[family-name:var(--font-primary)] text-sm px-4"
             >
               {tab.label}
               {summaryText && (
@@ -98,7 +98,7 @@ export function VersionDiffTabs({ tabs, versionId }: VersionDiffTabsProps) {
       {tabs.map((tab) => (
         <TabsContent key={tab.label} value={tab.label}>
           {tab.items.length > 0 ? (
-            <div className="rounded-none border border-border">
+            <div className="rounded-lg border border-border">
               <Table>
                 <TableHeader>
                   <TableRow className="h-11 bg-muted">
@@ -148,7 +148,7 @@ export function VersionDiffTabs({ tabs, versionId }: VersionDiffTabsProps) {
                               asChild
                               variant="ghost"
                               size="sm"
-                              className="rounded-none h-8 px-2 font-[family-name:var(--font-primary)] text-[#00B0EC] hover:text-[#00B0EC]/80"
+                              className="h-8 px-2 font-[family-name:var(--font-primary)] text-[#00B0EC] hover:text-[#00B0EC]/80"
                             >
                               <Link
                                 href={buildPreviewLink(item.path, versionId)}
@@ -167,7 +167,7 @@ export function VersionDiffTabs({ tabs, versionId }: VersionDiffTabsProps) {
               </Table>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-16 text-muted-foreground border border-border rounded-none">
+            <div className="flex flex-col items-center justify-center py-16 text-muted-foreground rounded-lg border border-border">
               <p className="font-[family-name:var(--font-primary)] text-sm">
                 {tab.emptyMessage ?? "変更はありません"}
               </p>

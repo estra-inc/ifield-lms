@@ -67,12 +67,12 @@ export function ApproveButton({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="rounded-none font-[family-name:var(--font-primary)]">
+        <Button className="font-[family-name:var(--font-primary)]">
           <CircleCheckIcon className="size-4 mr-1" />
           承認して公開
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="rounded-none">
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="font-[family-name:var(--font-primary)]">
             コンテンツを公開しますか？
@@ -86,17 +86,17 @@ export function ApproveButton({
         {changesSummary && (
           <div className="flex flex-wrap gap-2 py-2">
             {changesSummary.added > 0 && (
-              <Badge className="rounded-none bg-green-100 text-green-800 hover:bg-green-100">
+              <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
                 +{changesSummary.added}件 追加
               </Badge>
             )}
             {changesSummary.updated > 0 && (
-              <Badge className="rounded-none bg-blue-100 text-blue-800 hover:bg-blue-100">
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
                 {changesSummary.updated}件 更新
               </Badge>
             )}
             {changesSummary.deleted > 0 && (
-              <Badge className="rounded-none bg-red-100 text-red-800 hover:bg-red-100">
+              <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
                 {changesSummary.deleted}件 削除
               </Badge>
             )}
@@ -105,13 +105,13 @@ export function ApproveButton({
 
         <AlertDialogFooter>
           <AlertDialogCancel
-            className="rounded-none font-[family-name:var(--font-primary)]"
+            className="font-[family-name:var(--font-primary)]"
             disabled={isPending}
           >
             キャンセル
           </AlertDialogCancel>
           <Button
-            className="rounded-none font-[family-name:var(--font-primary)]"
+            className="font-[family-name:var(--font-primary)]"
             onClick={handleApprove}
             disabled={isPending}
           >

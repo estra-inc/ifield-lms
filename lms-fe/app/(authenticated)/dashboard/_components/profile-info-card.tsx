@@ -60,7 +60,7 @@ export function ProfileInfoCard({
   const roleLabel = ROLE_LABELS[role] ?? role
 
   return (
-    <Card className="gap-2 rounded-none border-border py-4 shadow-none">
+    <Card className="gap-2 border-border py-4 shadow-none">
       <CardHeader className="px-4 pb-0">
         <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
           基本情報

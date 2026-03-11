@@ -30,7 +30,7 @@ export function GoalMetricCard({
 }: GoalMetricCardProps) {
   if (target === null || percentage === null) {
     return (
-      <Card className="rounded-none border-border shadow-none">
+      <Card className="border-border shadow-none">
         <CardHeader className="pb-2">
           <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
             {label}
@@ -54,7 +54,7 @@ export function GoalMetricCard({
   const cappedValue = Math.min(percentage, 100)
 
   return (
-    <Card className="rounded-none border-border shadow-none">
+    <Card className="border-border shadow-none">
       <CardHeader className="pb-2">
         <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
           {label}

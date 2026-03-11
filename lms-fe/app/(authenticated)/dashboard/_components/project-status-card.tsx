@@ -74,7 +74,7 @@ export function ProjectStatusCard({ data }: ProjectStatusCardProps) {
   const hasCompleted = data.recentCompleted.length > 0
 
   return (
-    <Card className="rounded-none border-border shadow-none">
+    <Card className="border-border shadow-none">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="font-[family-name:var(--font-primary)] text-base tracking-tight">
           模擬案件

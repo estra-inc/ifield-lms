@@ -39,15 +39,15 @@ const STATUS_BADGE_CONFIG: Record<
 > = {
   draft: {
     label: "draft",
-    className: "rounded-none bg-yellow-500 text-white hover:bg-yellow-500",
+    className: "bg-yellow-500 text-white hover:bg-yellow-500",
   },
   active: {
     label: "active",
-    className: "rounded-none bg-green-600 text-white hover:bg-green-600",
+    className: "bg-green-600 text-white hover:bg-green-600",
   },
   archived: {
     label: "archived",
-    className: "rounded-none",
+    className: "",
     variant: "outline",
   },
 }
@@ -153,13 +153,13 @@ export default async function ContentVersionsPage({
       {/* バージョンカードグリッド */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Active バージョンカード */}
-        <Card className="rounded-none border-border">
+        <Card className="border-border">
           <CardHeader className="border-b border-border">
             <div className="flex items-center gap-3">
               <CardTitle className="font-[family-name:var(--font-primary)] text-base">
                 公開中バージョン
               </CardTitle>
-              <Badge className="rounded-none bg-green-600 text-white hover:bg-green-600">
+              <Badge className="bg-green-600 text-white hover:bg-green-600">
                 active
               </Badge>
             </div>
@@ -208,14 +208,14 @@ export default async function ContentVersionsPage({
         </Card>
 
         {/* Draft バージョンカード */}
-        <Card className="rounded-none border-border">
+        <Card className="border-border">
           <CardHeader className="border-b border-border">
             <div className="flex items-center gap-3">
               <CardTitle className="font-[family-name:var(--font-primary)] text-base">
                 未承認バージョン
               </CardTitle>
               {draftVersion && (
-                <Badge className="rounded-none bg-yellow-500 text-white hover:bg-yellow-500">
+                <Badge className="bg-yellow-500 text-white hover:bg-yellow-500">
                   draft
                 </Badge>
               )}
@@ -283,7 +283,7 @@ export default async function ContentVersionsPage({
                   <Button
                     asChild
                     variant="outline"
-                    className="rounded-none font-[family-name:var(--font-primary)]"
+                    className="font-[family-name:var(--font-primary)]"
                   >
                     <Link href={`/admin/content-versions/${draftVersion.id}`}>
                       変更を確認
@@ -291,7 +291,7 @@ export default async function ContentVersionsPage({
                   </Button>
                   <Button
                     asChild
-                    className="rounded-none font-[family-name:var(--font-primary)]"
+                    className="font-[family-name:var(--font-primary)]"
                   >
                     <Link href={`/admin/content-versions/${draftVersion.id}`}>
                       承認して公開
@@ -315,7 +315,7 @@ export default async function ContentVersionsPage({
         </h2>
 
         {historyVersions && historyVersions.length > 0 ? (
-          <div className="rounded-none border border-border">
+          <div className="rounded-lg border border-border">
             <Table>
               <TableHeader>
                 <TableRow className="h-11 bg-muted">
@@ -430,7 +430,7 @@ export default async function ContentVersionsPage({
                       asChild
                       variant="outline"
                       size="sm"
-                      className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                      className="font-[family-name:var(--font-primary)] h-8 px-3"
                     >
                       <Link
                         href={
@@ -447,7 +447,7 @@ export default async function ContentVersionsPage({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                      className="font-[family-name:var(--font-primary)] h-8 px-3"
                       disabled
                     >
                       <ChevronLeftIcon className="size-4 mr-1" />
@@ -464,7 +464,7 @@ export default async function ContentVersionsPage({
                       asChild
                       variant="outline"
                       size="sm"
-                      className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                      className="font-[family-name:var(--font-primary)] h-8 px-3"
                     >
                       <Link
                         href={`/admin/content-versions?page=${page + 1}`}
@@ -477,7 +477,7 @@ export default async function ContentVersionsPage({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                      className="font-[family-name:var(--font-primary)] h-8 px-3"
                       disabled
                     >
                       次へ
@@ -489,7 +489,7 @@ export default async function ContentVersionsPage({
             )}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground border border-border rounded-none">
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground rounded-lg border border-border">
             <HistoryIcon className="size-10 mb-3 opacity-40" />
             <p className="font-[family-name:var(--font-primary)] text-sm">
               バージョン履歴はありません

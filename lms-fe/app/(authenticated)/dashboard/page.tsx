@@ -415,7 +415,7 @@ export default async function DashboardPage() {
       {/* Task 1.2: 無効化バナー */}
       {isBanned && (
         <div
-          className="rounded-none border border-destructive bg-destructive/10 px-4 py-3 text-sm text-destructive"
+          className="rounded-lg border border-destructive bg-destructive/10 px-4 py-3 text-sm text-destructive"
           role="alert"
         >
           アカウントが無効化されています。詳細は管理者にお問い合わせください。

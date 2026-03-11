@@ -19,7 +19,7 @@ interface CoachingCardProps {
 
 export function CoachingCard({ data }: CoachingCardProps) {
   return (
-    <Card className="rounded-none border-border shadow-none">
+    <Card className="border-border shadow-none">
       <CardHeader className="pb-2">
         <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
           コーチング

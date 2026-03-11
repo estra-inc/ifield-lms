@@ -118,7 +118,7 @@ export default async function ManagerUsersPage({ searchParams }: PageProps) {
 
       {/* サマリーカード行 */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card className="rounded-none border-border shadow-none">
+        <Card className="border-border shadow-none">
           <CardHeader className="pb-2">
             <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
               受講生数
@@ -133,7 +133,7 @@ export default async function ManagerUsersPage({ searchParams }: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-none border-border shadow-none">
+        <Card className="border-border shadow-none">
           <CardHeader className="pb-2">
             <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
               受講中
@@ -148,7 +148,7 @@ export default async function ManagerUsersPage({ searchParams }: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-none border-border shadow-none">
+        <Card className="border-border shadow-none">
           <CardHeader className="pb-2">
             <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
               未開始

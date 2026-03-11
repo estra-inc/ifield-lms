@@ -20,7 +20,7 @@ interface DailyReportCardProps {
 
 export function DailyReportCard({ status }: DailyReportCardProps) {
   return (
-    <Card className="rounded-none border-border shadow-none">
+    <Card className="border-border shadow-none">
       <CardHeader>
         <CardTitle className="font-[family-name:var(--font-primary)] text-base tracking-tight">
           今日の日報

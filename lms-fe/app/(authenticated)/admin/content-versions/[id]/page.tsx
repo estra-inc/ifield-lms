@@ -32,15 +32,15 @@ const STATUS_BADGE_CONFIG: Record<
 > = {
   draft: {
     label: "draft",
-    className: "rounded-none bg-yellow-500 text-white hover:bg-yellow-500",
+    className: "bg-yellow-500 text-white hover:bg-yellow-500",
   },
   active: {
     label: "active",
-    className: "rounded-none bg-green-600 text-white hover:bg-green-600",
+    className: "bg-green-600 text-white hover:bg-green-600",
   },
   archived: {
     label: "archived",
-    className: "rounded-none",
+    className: "",
     variant: "outline",
   },
 }
@@ -405,7 +405,7 @@ export default async function ContentVersionDetailPage({
             asChild
             variant="ghost"
             size="sm"
-            className="rounded-none h-8 px-2"
+            className="h-8 px-2"
           >
             <Link href="/admin/content-versions">
               <ArrowLeftIcon className="size-4" />
@@ -434,7 +434,7 @@ export default async function ContentVersionDetailPage({
           <Button
             asChild
             variant="outline"
-            className="rounded-none font-[family-name:var(--font-primary)]"
+            className="font-[family-name:var(--font-primary)]"
           >
             <Link href={fullPreviewLink} target="_blank">
               全体プレビュー
@@ -451,7 +451,7 @@ export default async function ContentVersionDetailPage({
       </div>
 
       {/* バージョン情報カード */}
-      <Card className="rounded-none border-border">
+      <Card className="border-border">
         <CardHeader className="border-b border-border">
           <CardTitle className="font-[family-name:var(--font-primary)] text-base">
             バージョン情報

@@ -218,7 +218,7 @@ export function SessionTable({ sessions }: SessionTableProps) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 gap-1 rounded-none text-destructive hover:text-destructive font-[family-name:var(--font-primary)]"
+                      className="h-7 gap-1 text-destructive hover:text-destructive font-[family-name:var(--font-primary)]"
                       onClick={() => setCancelTarget(session)}
                     >
                       <X className="size-3.5" />

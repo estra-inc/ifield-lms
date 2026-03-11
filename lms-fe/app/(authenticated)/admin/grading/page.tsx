@@ -127,7 +127,7 @@ export default async function GradingListPage({ searchParams }: PageProps) {
 
       {/* サマリーカード行 */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card className="rounded-none border-border shadow-none">
+        <Card className="border-border shadow-none">
           <CardHeader className="pb-2">
             <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
               未採点
@@ -142,7 +142,7 @@ export default async function GradingListPage({ searchParams }: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-none border-border shadow-none">
+        <Card className="border-border shadow-none">
           <CardHeader className="pb-2">
             <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
               採点中
@@ -157,7 +157,7 @@ export default async function GradingListPage({ searchParams }: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-none border-border shadow-none">
+        <Card className="border-border shadow-none">
           <CardHeader className="pb-2">
             <CardTitle className="font-[family-name:var(--font-primary)] text-xs font-semibold tracking-wide text-muted-foreground">
               合計
@@ -178,7 +178,7 @@ export default async function GradingListPage({ searchParams }: PageProps) {
 
       {/* 提出物リスト */}
       {submissions.length === 0 ? (
-        <Card className="rounded-none border-border shadow-none">
+        <Card className="border-border shadow-none">
           <CardContent className="flex flex-col items-center justify-center py-16 text-center">
             <Inbox className="mb-4 h-12 w-12 text-muted-foreground/50" />
             <p className="text-lg font-medium text-muted-foreground">
@@ -197,7 +197,7 @@ export default async function GradingListPage({ searchParams }: PageProps) {
               href={`/admin/grading/${submission.id}`}
               className="group block"
             >
-              <Card className="rounded-none border-border shadow-none transition-colors group-hover:border-primary/30">
+              <Card className="border-border shadow-none transition-colors group-hover:border-primary/30">
                 <CardContent className="flex items-center justify-between py-4">
                   <div className="flex items-center gap-4">
                     <FileText className="h-5 w-5 text-muted-foreground" />

@@ -180,7 +180,7 @@ export default async function AdminCoachingPage({
 
       {/* 統計カードグリッド */}
       <div className="grid gap-6 md:grid-cols-3">
-        <Card className="rounded-none border-border">
+        <Card className="border-border">
           <CardHeader className="pb-2">
             <CardTitle className="font-[family-name:var(--font-primary)] text-sm font-medium text-muted-foreground">
               累計コーチング付与数
@@ -193,7 +193,7 @@ export default async function AdminCoachingPage({
           </CardContent>
         </Card>
 
-        <Card className="rounded-none border-border">
+        <Card className="border-border">
           <CardHeader className="pb-2">
             <CardTitle className="font-[family-name:var(--font-primary)] text-sm font-medium text-muted-foreground">
               有効コーチング枠数
@@ -206,7 +206,7 @@ export default async function AdminCoachingPage({
           </CardContent>
         </Card>
 
-        <Card className="rounded-none border-border">
+        <Card className="border-border">
           <CardHeader className="pb-2">
             <CardTitle className="font-[family-name:var(--font-primary)] text-sm font-medium text-muted-foreground">
               実施済みコーチング数
@@ -238,7 +238,7 @@ export default async function AdminCoachingPage({
                   asChild
                   variant={statusFilter === opt.key ? "default" : "outline"}
                   size="sm"
-                  className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                  className="font-[family-name:var(--font-primary)] h-8 px-3"
                 >
                   <Link href={buildHref({ status: opt.key })}>{opt.label}</Link>
                 </Button>
@@ -259,14 +259,14 @@ export default async function AdminCoachingPage({
                   name="q"
                   placeholder="受講生名で検索"
                   defaultValue={nameQuery ?? ""}
-                  className="rounded-none font-[family-name:var(--font-primary)] h-8 w-[200px] pl-8 text-sm"
+                  className="font-[family-name:var(--font-primary)] h-8 w-[200px] pl-8 text-sm"
                 />
               </div>
               <Button
                 type="submit"
                 variant="outline"
                 size="sm"
-                className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                className="font-[family-name:var(--font-primary)] h-8 px-3"
               >
                 検索
               </Button>
@@ -275,7 +275,7 @@ export default async function AdminCoachingPage({
                   asChild
                   variant="ghost"
                   size="sm"
-                  className="rounded-none font-[family-name:var(--font-primary)] h-8 px-2 text-muted-foreground"
+                  className="font-[family-name:var(--font-primary)] h-8 px-2 text-muted-foreground"
                 >
                   <Link href={(() => {
                     const qp = new URLSearchParams()
@@ -307,7 +307,7 @@ export default async function AdminCoachingPage({
                 type="date"
                 name="from"
                 defaultValue={dateFrom ?? ""}
-                className="rounded-none font-[family-name:var(--font-secondary)] h-8 w-[150px] text-sm"
+                className="font-[family-name:var(--font-secondary)] h-8 w-[150px] text-sm"
               />
             </div>
             <span className="font-[family-name:var(--font-primary)] text-sm text-muted-foreground pb-1">〜</span>
@@ -319,14 +319,14 @@ export default async function AdminCoachingPage({
                 type="date"
                 name="to"
                 defaultValue={dateTo ?? ""}
-                className="rounded-none font-[family-name:var(--font-secondary)] h-8 w-[150px] text-sm"
+                className="font-[family-name:var(--font-secondary)] h-8 w-[150px] text-sm"
               />
             </div>
             <Button
               type="submit"
               variant="outline"
               size="sm"
-              className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+              className="font-[family-name:var(--font-primary)] h-8 px-3"
             >
               絞り込み
             </Button>
@@ -335,7 +335,7 @@ export default async function AdminCoachingPage({
                 asChild
                 variant="ghost"
                 size="sm"
-                className="rounded-none font-[family-name:var(--font-primary)] h-8 px-2 text-muted-foreground"
+                className="font-[family-name:var(--font-primary)] h-8 px-2 text-muted-foreground"
               >
                 <Link href={(() => {
                   const qp = new URLSearchParams()
@@ -353,7 +353,7 @@ export default async function AdminCoachingPage({
         </div>
 
         {sessions && sessions.length > 0 ? (
-          <div className="rounded-none border border-border">
+          <div className="rounded-lg border border-border">
             <SessionTable
               sessions={sessions.map((session) => {
                 const userProfile = (session as Record<string, unknown>).profiles as { full_name: string | null } | null
@@ -383,7 +383,7 @@ export default async function AdminCoachingPage({
                       asChild
                       variant="outline"
                       size="sm"
-                      className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                      className="font-[family-name:var(--font-primary)] h-8 px-3"
                     >
                       <Link href={buildHref({ page: page - 1 })}>
                         <ChevronLeftIcon className="size-4 mr-1" />
@@ -394,7 +394,7 @@ export default async function AdminCoachingPage({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                      className="font-[family-name:var(--font-primary)] h-8 px-3"
                       disabled
                     >
                       <ChevronLeftIcon className="size-4 mr-1" />
@@ -411,7 +411,7 @@ export default async function AdminCoachingPage({
                       asChild
                       variant="outline"
                       size="sm"
-                      className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                      className="font-[family-name:var(--font-primary)] h-8 px-3"
                     >
                       <Link href={buildHref({ page: page + 1 })}>
                         次へ
@@ -422,7 +422,7 @@ export default async function AdminCoachingPage({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-none font-[family-name:var(--font-primary)] h-8 px-3"
+                      className="font-[family-name:var(--font-primary)] h-8 px-3"
                       disabled
                     >
                       次へ
@@ -434,7 +434,7 @@ export default async function AdminCoachingPage({
             )}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground border border-border rounded-none">
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground rounded-lg border border-border">
             <CalendarCheck className="size-10 mb-3 opacity-40" />
             <p className="font-[family-name:var(--font-primary)] text-sm">
               コーチングセッションはありません

@@ -32,7 +32,7 @@ const CHART_COLORS = [
 export function SkillReportCard({ data }: SkillReportCardProps) {
   if (!data.hasData) {
     return (
-      <Card className="rounded-none border-border shadow-none">
+      <Card className="border-border shadow-none">
         <CardHeader>
           <CardTitle className="font-[family-name:var(--font-primary)] text-base tracking-tight">
             スキルレポート
@@ -56,7 +56,7 @@ export function SkillReportCard({ data }: SkillReportCardProps) {
   }))
 
   return (
-    <Card className="rounded-none border-border shadow-none">
+    <Card className="border-border shadow-none">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle className="font-[family-name:var(--font-primary)] text-base tracking-tight">
