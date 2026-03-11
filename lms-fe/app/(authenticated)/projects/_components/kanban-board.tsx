@@ -45,6 +45,7 @@ import { createClient } from "@/lib/supabase/client"
 
 export interface KanbanTask {
   id: string
+  taskNumber: number
   title: string
   description: string | null
   status: TaskStatus
@@ -161,6 +162,7 @@ export function KanbanBoard({
           ...prev,
           {
             id: result.task!.id,
+            taskNumber: result.task!.taskNumber,
             title: result.task!.title,
             description: result.task!.description,
             status: result.task!.status,
@@ -362,6 +364,7 @@ export function KanbanBoard({
                       )}
                       <div className="min-w-0 flex-1">
                         <p className="font-mono text-sm font-medium text-foreground">
+                          <span className="mr-1.5 text-xs text-muted-foreground">#{task.taskNumber}</span>
                           {task.title}
                         </p>
                         {task.description && (

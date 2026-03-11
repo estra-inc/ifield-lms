@@ -619,6 +619,7 @@ export type Database = {
         Row: {
           id: string
           assignment_id: string
+          task_number: number
           title: string
           description: string | null
           status: "backlog" | "todo" | "in_progress" | "done"
@@ -630,6 +631,7 @@ export type Database = {
         Insert: {
           id?: string
           assignment_id: string
+          task_number: number
           title: string
           description?: string | null
           status?: "backlog" | "todo" | "in_progress" | "done"
@@ -641,6 +643,7 @@ export type Database = {
         Update: {
           id?: string
           assignment_id?: string
+          task_number?: number
           title?: string
           description?: string | null
           status?: "backlog" | "todo" | "in_progress" | "done"

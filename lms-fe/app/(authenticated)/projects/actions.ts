@@ -251,6 +251,7 @@ export interface TaskResult {
   message: string
   task?: {
     id: string
+    taskNumber: number
     title: string
     description: string | null
     status: TaskStatus
@@ -349,6 +350,17 @@ export async function createTask(
 
   const order = existingTasks?.length ?? 0
 
+  // task_number を算出（assignment 内の MAX + 1、削除されても欠番にしない）
+  const { data: maxRow } = await supabase
+    .from("project_tasks")
+    .select("task_number")
+    .eq("assignment_id", assignmentId)
+    .order("task_number", { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  const taskNumber = (maxRow?.task_number ?? 0) + 1
+
   // タスク作成
   const { data: task, error: insertError } = await supabase
     .from("project_tasks")
@@ -359,8 +371,9 @@ export async function createTask(
       status,
       order,
       created_by: user.id,
+      task_number: taskNumber,
     })
-    .select("id, title, description, status, order")
+    .select("id, task_number, title, description, status, order")
     .single()
 
   if (insertError || !task) {
@@ -378,6 +391,7 @@ export async function createTask(
     message: "タスクを作成しました。",
     task: {
       id: task.id,
+      taskNumber: task.task_number,
       title: task.title,
       description: task.description,
       status: task.status as TaskStatus,
@@ -445,7 +459,7 @@ export async function updateTask(
       updated_at: new Date().toISOString(),
     })
     .eq("id", taskId)
-    .select("id, title, description, status, order")
+    .select("id, task_number, title, description, status, order")
     .single()
 
   if (updateError || !task) {
@@ -463,6 +477,7 @@ export async function updateTask(
     message: "タスクを更新しました。",
     task: {
       id: task.id,
+      taskNumber: task.task_number,
       title: task.title,
       description: task.description,
       status: task.status as TaskStatus,
@@ -523,7 +538,7 @@ export async function updateTaskStatus(
       updated_at: new Date().toISOString(),
     })
     .eq("id", taskId)
-    .select("id, title, description, status, order")
+    .select("id, task_number, title, description, status, order")
     .single()
 
   if (updateError || !task) {
@@ -541,6 +556,7 @@ export async function updateTaskStatus(
     message: "タスクのステータスを更新しました。",
     task: {
       id: task.id,
+      taskNumber: task.task_number,
       title: task.title,
       description: task.description,
       status: task.status as TaskStatus,

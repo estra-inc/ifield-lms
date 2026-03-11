@@ -28,7 +28,7 @@ export async function TasksTab({
   // assignment に紐づくタスクを取得
   const { data: tasks, error } = await supabase
     .from("project_tasks")
-    .select("id, title, description, status, order, created_by")
+    .select("id, task_number, title, description, status, order, created_by")
     .eq("assignment_id", assignmentId)
     .order("order", { ascending: true })
 
@@ -44,6 +44,7 @@ export async function TasksTab({
   // KanbanTask 型に変換
   const initialTasks: KanbanTask[] = (tasks ?? []).map((t) => ({
     id: t.id,
+    taskNumber: t.task_number,
     title: t.title,
     description: t.description,
     status: t.status as KanbanTask["status"],
