@@ -44,7 +44,7 @@ export async function fetchProgressDetail(
         .eq("content_type", "chapter")
         .eq("status", "active")
         .eq("version_id", versionId)
-        .order("order", { ascending: true }),
+        .order("chapter", { ascending: true }),
       client
         .from("contents")
         .select("id, tutorial, chapter, title")
@@ -52,6 +52,7 @@ export async function fetchProgressDetail(
         .eq("content_type", "section")
         .eq("status", "active")
         .eq("version_id", versionId)
+        .order("chapter", { ascending: true })
         .order("order", { ascending: true }),
       client
         .from("content_progress")
