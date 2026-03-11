@@ -122,7 +122,7 @@ export default async function QuizPage({
       ? [
           {
             label: chapterData.title,
-            href: `/contents/${tutorial}/${chapter}`,
+            href: `/contents/${tutorial}/${chapter}${genreQuery}`,
           },
         ]
       : []),

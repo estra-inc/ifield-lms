@@ -163,7 +163,7 @@ export default async function ContentDetailPage({
       ? [
           {
             label: chapterData.title,
-            href: `/contents/${tutorial}/${chapter}`,
+            href: `/contents/${tutorial}/${chapter}${genreQuery}`,
           },
         ]
       : []),
