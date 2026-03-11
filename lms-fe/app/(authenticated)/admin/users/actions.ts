@@ -124,10 +124,10 @@ export async function inviteUser(
       }
     }
 
-    console.error("inviteUser error:", error.message)
+    console.error("inviteUser error:", error.message, error.status)
     return {
       success: false,
-      message: "招待メールの送信に失敗しました。もう一度お試しください。",
+      message: `招待メールの送信に失敗しました: ${error.message}`,
     }
   }
 
