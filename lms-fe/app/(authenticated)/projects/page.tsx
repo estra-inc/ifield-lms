@@ -159,6 +159,7 @@ export default async function ProjectsPage({
             <ProjectCard
               key={project.id}
               slug={project.slug}
+              genre={selectedGenre}
               title={project.title}
               description={project.description}
               status={project.projectStatus}

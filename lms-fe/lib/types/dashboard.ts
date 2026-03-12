@@ -61,6 +61,7 @@ export interface CoachingData {
 export interface ProjectItem {
   projectSlug: string
   projectTitle: string
+  projectGenre: string
   status: ProjectStatus
   latestScore: number | null
 }

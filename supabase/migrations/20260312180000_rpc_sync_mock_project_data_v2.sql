@@ -1,8 +1,27 @@
--- sync_mock_project_data RPC 関数の更新: 値比較による正確な差分検出
--- 修正内容:
--- 1. 既存レコードの更新カウント時に実際のフィールド値を比較し、変更がある場合のみ v_updated をカウント
--- 2. 変更された項目の詳細（slug, genre, change_type）を items 配列として返却
+-- 模擬案件テーブルの UNIQUE 制約変更 + sync RPC 修正
+--
+-- 問題:
+-- 1. UNIQUE(slug) 制約のため、同じ slug で異なる genre（engineering / design）の
+--    模擬案件が共存できない（例: bookshelf が engineering と design に存在）
+-- 2. sync_mock_project_data RPC が slug のみでマッチするため、後から処理された
+--    genre で上書きされ、片方の genre の案件が消失する
+-- 3. RPC が値の変更有無を比較せず、既存レコードを常に updated としてカウントする
+--    ため、差分ビューに常に模擬案件の差分が表示される
+--
+-- 修正:
+-- 1. UNIQUE(slug) → UNIQUE(slug, genre) に変更
+-- 2. sync_mock_project_data RPC を (slug, genre) でマッチ + 値比較に更新
+-- 3. 変更された項目の詳細（slug, genre, change_type）を items 配列として返却
 
+-- ===========================================
+-- 1. UNIQUE 制約の変更
+-- ===========================================
+ALTER TABLE public.mock_projects DROP CONSTRAINT mock_projects_slug_key;
+ALTER TABLE public.mock_projects ADD CONSTRAINT mock_projects_slug_genre_key UNIQUE (slug, genre);
+
+-- ===========================================
+-- 2. sync_mock_project_data RPC の差し替え
+-- ===========================================
 CREATE OR REPLACE FUNCTION public.sync_mock_project_data(
   p_version_id UUID,
   p_mock_projects JSONB
@@ -60,7 +79,7 @@ BEGIN
   END IF;
 
   -- =========================================
-  -- 3. 案件データを UPSERT（値比較付き）
+  -- 3. 案件データを UPSERT（slug + genre でマッチ、値比較付き）
   -- =========================================
   v_upserted_ids := ARRAY[]::UUID[];
 
@@ -77,12 +96,12 @@ BEGIN
       status TEXT
     )
   LOOP
-    -- 既存レコードの取得（slug をキーとする）
+    -- 既存レコードの取得（slug + genre をキーとする）
     SELECT id, title, description, requirements, evaluation_items,
            genre, "order", status
     INTO v_existing
     FROM mock_projects
-    WHERE slug = v_project.slug;
+    WHERE slug = v_project.slug AND genre = v_project.genre;
 
     IF v_existing.id IS NOT NULL THEN
       -- 実際のフィールド値を比較
@@ -91,7 +110,6 @@ BEGIN
         OR v_existing.description IS DISTINCT FROM v_project.description
         OR v_existing.requirements IS DISTINCT FROM v_project.requirements
         OR v_existing.evaluation_items IS DISTINCT FROM COALESCE(v_project.evaluation_items, '[]'::JSONB)
-        OR v_existing.genre IS DISTINCT FROM v_project.genre
         OR v_existing."order" IS DISTINCT FROM COALESCE(v_project."order", 0)
         OR v_existing.status IS DISTINCT FROM COALESCE(v_project.status, 'active');
 
@@ -101,7 +119,6 @@ BEGIN
           description = v_project.description,
           requirements = v_project.requirements,
           evaluation_items = COALESCE(v_project.evaluation_items, '[]'::JSONB),
-          genre = v_project.genre,
           "order" = COALESCE(v_project."order", 0),
           status = COALESCE(v_project.status, 'active'),
           version_id = p_version_id,

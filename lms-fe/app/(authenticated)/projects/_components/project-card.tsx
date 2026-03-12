@@ -13,6 +13,7 @@ import type { ProjectStatus } from "@/lib/utils/project-status"
 
 interface ProjectCardProps {
   slug: string
+  genre: string
   title: string
   description: string | null
   status: ProjectStatus
@@ -45,6 +46,7 @@ function getStatusBadgeVariant(
 
 export function ProjectCard({
   slug,
+  genre,
   title,
   description,
   status,
@@ -52,7 +54,7 @@ export function ProjectCard({
 }: ProjectCardProps) {
   return (
     <Link
-      href={`/projects/${slug}`}
+      href={`/projects/${slug}?genre=${genre}`}
       className="block rounded-lg border border-border bg-card p-5 transition-colors hover:bg-muted/50"
     >
       <div className="flex flex-col gap-3">

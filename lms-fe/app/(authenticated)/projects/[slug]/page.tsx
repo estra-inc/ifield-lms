@@ -32,7 +32,7 @@ import { SubmissionHistory } from "../_components/submission-history"
 
 interface ProjectDetailPageProps {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ tab?: string; page?: string }>
+  searchParams: Promise<{ tab?: string; page?: string; genre?: string }>
 }
 
 const VALID_TABS: TabKey[] = ["progress", "requirements", "tasks", "history", "evaluation"]
@@ -48,7 +48,7 @@ export default async function ProjectDetailPage({
   }
 
   const { slug } = await params
-  const { tab, page } = await searchParams
+  const { tab, page, genre: genreParam } = await searchParams
 
   // ユーザーのプロファイル取得（current_term, role）
   const profile = await getUserProfile(user.id)
@@ -56,11 +56,13 @@ export default async function ProjectDetailPage({
   const isSuperAdmin = profile?.role === "super_admin"
   const isReadOnly = isSuperAdmin || profile?.role === "manager"
 
-  // 案件をslugで取得
+  // 案件をslugで取得（genre で絞り込み: URL パラメータ → ユーザーのデフォルトジャンル）
+  const targetGenre = (genreParam || profile?.default_genre || "engineering") as "engineering" | "design"
   const { data: project, error: projectError } = await supabase
     .from("mock_projects")
     .select("id, slug, title, description, requirements, evaluation_items, genre, status")
     .eq("slug", slug)
+    .eq("genre", targetGenre)
     .single()
 
   if (projectError || !project) {

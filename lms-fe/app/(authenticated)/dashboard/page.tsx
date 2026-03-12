@@ -156,7 +156,7 @@ export default async function DashboardPage() {
     // Q9: 模擬案件
     supabase
       .from("project_assignments")
-      .select("id, mock_projects(slug, title), project_submissions(id, status, score, created_at)")
+      .select("id, mock_projects(slug, title, genre), project_submissions(id, status, score, created_at)")
       .eq("user_id", user.id),
 
     // Q10: コーチ割り当て
@@ -296,7 +296,7 @@ export default async function DashboardPage() {
   // 模擬案件の分類
   type AssignmentRow = {
     id: string
-    mock_projects: { slug: string; title: string } | null
+    mock_projects: { slug: string; title: string; genre: string } | null
     project_submissions: {
       id: string
       status: string
@@ -321,6 +321,7 @@ export default async function DashboardPage() {
       return {
         projectSlug: a.mock_projects?.slug ?? "",
         projectTitle: a.mock_projects?.title ?? "",
+        projectGenre: a.mock_projects?.genre ?? "",
         status,
         latestScore: latest?.score ?? null,
         isActive: isProjectActive(status),

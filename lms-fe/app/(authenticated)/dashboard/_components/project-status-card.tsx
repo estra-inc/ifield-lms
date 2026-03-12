@@ -54,7 +54,7 @@ function ProjectRow({
       }`}
     >
       <Link
-        href={`/projects/${project.projectSlug}`}
+        href={`/projects/${project.projectSlug}?genre=${project.projectGenre}`}
         className="font-[family-name:var(--font-primary)] text-[13px] font-medium text-foreground hover:text-primary hover:underline"
       >
         {project.projectTitle}
