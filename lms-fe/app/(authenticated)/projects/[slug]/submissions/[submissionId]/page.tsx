@@ -158,33 +158,41 @@ export default async function SubmissionDetailPage({ params }: PageProps) {
           </Badge>
         </div>
         {typed.submission_url && (
-          <div className="flex flex-col gap-1 pt-1">
-            {typed.submission_url.split("\n").filter(Boolean).map((url, i) => (
-              <a
-                key={i}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-sm text-primary underline-offset-4 hover:underline"
-              >
-                {url}
-              </a>
-            ))}
+          <div className="pt-1">
+            <p className="font-mono text-xs text-muted-foreground mb-1">リンク</p>
+            <ol className="list-decimal pl-5 space-y-1">
+              {typed.submission_url.split("\n").filter(Boolean).map((url, i) => (
+                <li key={i} className="font-mono text-sm">
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline-offset-4 hover:underline break-all"
+                  >
+                    {url}
+                  </a>
+                </li>
+              ))}
+            </ol>
           </div>
         )}
         {typed.submission_files && typed.submission_files.length > 0 && (
-          <div className="flex flex-col gap-1 pt-1">
-            {typed.submission_files.map((file, i) => (
-              <a
-                key={i}
-                href={file.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-sm text-primary underline-offset-4 hover:underline"
-              >
-                {file.name}
-              </a>
-            ))}
+          <div className="pt-1">
+            <p className="font-mono text-xs text-muted-foreground mb-1">ファイル</p>
+            <ol className="list-decimal pl-5 space-y-1">
+              {typed.submission_files.map((file, i) => (
+                <li key={i} className="font-mono text-sm">
+                  <a
+                    href={file.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline-offset-4 hover:underline"
+                  >
+                    {file.name}
+                  </a>
+                </li>
+              ))}
+            </ol>
           </div>
         )}
       </div>
