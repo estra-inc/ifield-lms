@@ -103,14 +103,22 @@ export async function GET(request: NextRequest) {
       }
 
       // コーチの Google Calendar ビジースロット取得
-      let busySlots: { start: string; end: string }[] = []
+      let busySlots: { start: string; end: string }[] | null = null
       try {
-        const result = await getGoogleCalendarBusySlots(assignment.coach_id, timeMin, timeMax)
-        if (result) {
-          busySlots = result
-        }
+        busySlots = await getGoogleCalendarBusySlots(assignment.coach_id, timeMin, timeMax)
       } catch (error) {
         console.error("available-slots: Failed to get busy slots for coach:", error)
+      }
+
+      // コーチが Google 未連携の場合は空き枠を返さない
+      if (busySlots === null) {
+        return NextResponse.json({
+          slots: [],
+          slotDurationMinutes: slotDuration,
+          assignmentStatus: "assigned" as const,
+          coachName: check.fullName,
+          noGoogleIntegration: true,
+        })
       }
 
       // 有効なコーチ → そのコーチの予約済みセッションで空き枠算出
