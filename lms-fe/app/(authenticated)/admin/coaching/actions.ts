@@ -100,3 +100,44 @@ export async function adminCancelSession(
     message: `コーチングセッションをキャンセルしました。${refundMsg}`,
   }
 }
+
+/**
+ * Super Admin による他管理者の Google Calendar 連携解除 Server Action
+ */
+export async function adminDisconnectGoogleCalendar(
+  adminId: string
+): Promise<Result> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { success: false, message: "認証されていません。" }
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single()
+
+  if (!profile || profile.role !== "super_admin") {
+    return { success: false, message: "権限がありません。" }
+  }
+
+  const adminClient = createAdminClient()
+
+  const { error } = await adminClient
+    .from("google_calendar_connections")
+    .delete()
+    .eq("admin_id", adminId)
+
+  if (error) {
+    console.error("adminDisconnectGoogleCalendar: error:", error.message)
+    return { success: false, message: "連携解除に失敗しました。" }
+  }
+
+  revalidatePath("/admin/coaching")
+  return { success: true, message: "Google Calendar 連携を解除しました。" }
+}

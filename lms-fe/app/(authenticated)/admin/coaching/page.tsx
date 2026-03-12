@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ChevronLeftIcon, ChevronRightIcon, CalendarCheck, XIcon, SearchIcon } from "lucide-react"
 import { SessionTable } from "./_components/session-table"
+import { GoogleCalendarConnections, type CalendarConnection } from "./_components/google-calendar-connections"
 
 const PER_PAGE = 15
 
@@ -89,6 +90,32 @@ export default async function AdminCoachingPage({
     .from("coaching_sessions")
     .select("id", { count: "exact", head: true })
     .eq("status", "completed")
+
+  // Google Calendar 連携状況
+  const { data: calendarConnections } = await adminClient
+    .from("google_calendar_connections")
+    .select("admin_id, connected_at")
+
+  // 連携済み管理者のプロフィールを取得
+  const connectedAdminIds = (calendarConnections ?? []).map((c) => c.admin_id)
+  let calendarConnectionList: CalendarConnection[] = []
+  if (connectedAdminIds.length > 0) {
+    const { data: connectedProfiles } = await adminClient
+      .from("profiles")
+      .select("id, full_name, default_genre")
+      .in("id", connectedAdminIds)
+      .eq("role", "super_admin")
+
+    const connMap = new Map(
+      (calendarConnections ?? []).map((c) => [c.admin_id, c.connected_at])
+    )
+    calendarConnectionList = (connectedProfiles ?? []).map((p) => ({
+      adminId: p.id,
+      fullName: p.full_name ?? "不明",
+      genre: p.default_genre ?? "",
+      connectedAt: connMap.get(p.id) ?? "",
+    }))
+  }
 
   // --- フィルタ ---
   const statusFilter = (params.status ?? "all") as FilterKey
@@ -219,6 +246,18 @@ export default async function AdminCoachingPage({
           </CardContent>
         </Card>
       </div>
+
+      {/* Google Calendar 連携状況 */}
+      <Card className="border-border">
+        <CardHeader className="pb-3">
+          <CardTitle className="font-[family-name:var(--font-primary)] text-base font-semibold text-foreground">
+            Google Calendar 連携状況
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <GoogleCalendarConnections connections={calendarConnectionList} />
+        </CardContent>
+      </Card>
 
       {/* セッション一覧セクション */}
       <div className="flex flex-col gap-4">
