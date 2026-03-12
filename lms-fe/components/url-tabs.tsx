@@ -2,7 +2,7 @@
 
 import { useTransition } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
-import { Loader2 } from "lucide-react"
+import { LoadingIndicator } from "@/components/ui/loading-screen"
 
 interface Tab {
   key: string
@@ -81,7 +81,7 @@ export function UrlTabs({
       <div className="relative min-h-[200px]">
         {isPending && (
           <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/60">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
+            <LoadingIndicator size="sm" />
           </div>
         )}
         <div className={isPending ? "pointer-events-none opacity-40 transition-opacity" : "transition-opacity"}>
