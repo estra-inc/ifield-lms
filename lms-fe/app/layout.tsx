@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Sora, IBM_Plex_Mono } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body
         className={`${sora.variable} ${ibmPlexMono.variable} font-primary antialiased`}
       >
+        <NextTopLoader color="#00B0EC" height={2} showSpinner={false} />
         <TooltipProvider>{children}</TooltipProvider>
         <Toaster />
       </body>

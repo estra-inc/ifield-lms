@@ -3,9 +3,9 @@ import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import { resolveVersionId } from "@/lib/supabase/content-version"
 import { ProgressSummaryCards } from "./_components/progress-summary-cards"
 import { TutorialCard } from "./_components/tutorial-card"
-import { ContentsTabs } from "./_components/contents-tabs"
 import { QuizListTab } from "./_components/quiz-list-tab"
 import { GenreSelectDynamic as GenreSelect } from "./_components/genre-select-dynamic"
+import { UrlTabs } from "@/components/url-tabs"
 import {
   calculateTutorialProgress,
   calculateGenreProgressSummary,
@@ -53,19 +53,27 @@ export default async function ContentsPage({ searchParams }: ContentsPageProps) 
         {!isReadOnly && (
           <ProgressSummaryCards summary={summary} genreLabel={genreLabel} />
         )}
-        <ContentsTabs activeTab={activeTab} genre={selectedGenre} />
-        <div className="flex items-center justify-end">
-          <GenreSelect currentGenre={selectedGenre} defaultGenre={defaultGenre} />
-        </div>
-        {activeTab === "quizzes" ? (
-          <QuizListTab genre={selectedGenre} />
-        ) : (
-          <div className="py-12 text-center">
-            <p className="font-mono text-sm text-muted-foreground">
-              このジャンルにはまだチュートリアルがありません。
-            </p>
+        <UrlTabs
+          tabs={[
+            { key: "materials", label: "教材" },
+            { key: "quizzes", label: "演習問題" },
+          ]}
+          activeTab={activeTab}
+          preserveParams={["genre"]}
+        >
+          <div className="flex items-center justify-end pb-4">
+            <GenreSelect currentGenre={selectedGenre} defaultGenre={defaultGenre} />
           </div>
-        )}
+          {activeTab === "quizzes" ? (
+            <QuizListTab genre={selectedGenre} />
+          ) : (
+            <div className="py-12 text-center">
+              <p className="font-mono text-sm text-muted-foreground">
+                このジャンルにはまだチュートリアルがありません。
+              </p>
+            </div>
+          )}
+        </UrlTabs>
       </div>
     )
   }
@@ -144,35 +152,40 @@ export default async function ContentsPage({ searchParams }: ContentsPageProps) 
         <ProgressSummaryCards summary={summary} genreLabel={genreLabel} />
       )}
 
-      {/* タブ */}
-      <ContentsTabs activeTab={activeTab} genre={selectedGenre} />
+      {/* タブ + タブコンテンツ */}
+      <UrlTabs
+        tabs={[
+          { key: "materials", label: "教材" },
+          { key: "quizzes", label: "演習問題" },
+        ]}
+        activeTab={activeTab}
+        preserveParams={["genre"]}
+      >
+        {/* フィルタ行: ジャンルプルダウン（右寄せ） */}
+        <div className="flex items-center justify-end pb-4">
+          <GenreSelect currentGenre={selectedGenre} defaultGenre={defaultGenre} />
+        </div>
 
-      {/* フィルタ行: ジャンルプルダウン（右寄せ） */}
-      <div className="flex items-center justify-end">
-        <GenreSelect currentGenre={selectedGenre} defaultGenre={defaultGenre} />
-      </div>
-
-      {/* タブコンテンツ */}
-      {activeTab === "quizzes" ? (
-        <QuizListTab genre={selectedGenre} />
-      ) : (
-        <>
-          {/* チュートリアルカードグリッド */}
-          {tutorialsWithProgress.length > 0 ? (
-            <div className="grid grid-cols-3 gap-4">
-              {tutorialsWithProgress.map((tutorial) => (
-                <TutorialCard key={tutorial.id} tutorial={tutorial} />
-              ))}
-            </div>
-          ) : (
-            <div className="py-12 text-center">
-              <p className="font-mono text-sm text-muted-foreground">
-                このジャンルにはまだチュートリアルがありません。
-              </p>
-            </div>
-          )}
-        </>
-      )}
+        {activeTab === "quizzes" ? (
+          <QuizListTab genre={selectedGenre} />
+        ) : (
+          <>
+            {tutorialsWithProgress.length > 0 ? (
+              <div className="grid grid-cols-3 gap-4">
+                {tutorialsWithProgress.map((tutorial) => (
+                  <TutorialCard key={tutorial.id} tutorial={tutorial} />
+                ))}
+              </div>
+            ) : (
+              <div className="py-12 text-center">
+                <p className="font-mono text-sm text-muted-foreground">
+                  このジャンルにはまだチュートリアルがありません。
+                </p>
+              </div>
+            )}
+          </>
+        )}
+      </UrlTabs>
     </div>
   )
 }

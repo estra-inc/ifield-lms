@@ -111,11 +111,8 @@ export default async function ProjectDetailPage({
           )}
         </div>
 
-        {/* タブ */}
-        <TabNavigation activeTab={adminActiveTab} tabs={adminTabs} />
-
-        {/* タブコンテンツ */}
-        <div>
+        {/* タブ + タブコンテンツ */}
+        <TabNavigation activeTab={adminActiveTab} tabs={adminTabs}>
           {adminActiveTab === "requirements" && (
             <div className="space-y-4">
               <h2 className="font-[family-name:var(--font-primary)] text-lg font-semibold text-foreground">
@@ -208,7 +205,7 @@ export default async function ProjectDetailPage({
               )}
             </div>
           )}
-        </div>
+        </TabNavigation>
       </div>
     )
   }
@@ -323,10 +320,7 @@ export default async function ProjectDetailPage({
       ) : (
         /* Unlock 状態: タブ構成 */
         <div className="space-y-6">
-          <TabNavigation activeTab={activeTab} />
-
-          {/* タブコンテンツ */}
-          <div>
+          <TabNavigation activeTab={activeTab}>
             {activeTab === "progress" && (
               <ProgressTab
                 assignmentId={assignment!.id}
@@ -504,7 +498,7 @@ export default async function ProjectDetailPage({
                 />
               </div>
             )}
-          </div>
+          </TabNavigation>
         </div>
       )}
     </div>
