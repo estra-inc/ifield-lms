@@ -309,67 +309,18 @@ export default async function ContentVersionDetailPage({
   }
 
   // ==========================================================
-  // MOCK-PROJECTS DIFF（mock_projects テーブル）
-  // slug をキーにバージョン間で比較。title/description/requirements で更新検出。
+  // MOCK-PROJECTS DIFF（mock_project_changes_summary の items から取得）
+  // mock_projects はバージョン間で移動されるため、version_id ベースの比較は不可。
+  // 同期時に RPC が計算した items を使用する。
   // ==========================================================
   let mockProjectDiffItems: DiffItem[] = []
 
-  const buildProjectPath = (p: { genre: string; slug: string }) =>
-    `${p.genre}/${p.slug}`
-
-  const { data: versionProjects } = await supabase
-    .from("mock_projects")
-    .select("slug, genre, title, description, requirements")
-    .eq("version_id", version.id)
-
-  if (comparisonVersionId) {
-    const { data: comparisonProjects } = await supabase
-      .from("mock_projects")
-      .select("slug, genre, title, description, requirements")
-      .eq("version_id", comparisonVersionId)
-
-    const versionProjectMap = new Map(
-      (versionProjects ?? []).map((p) => [p.slug, p])
-    )
-    const comparisonProjectMap = new Map(
-      (comparisonProjects ?? []).map((p) => [p.slug, p])
-    )
-
-    // Added
-    for (const [slug, vProj] of versionProjectMap) {
-      if (!comparisonProjectMap.has(slug)) {
-        mockProjectDiffItems.push({ path: buildProjectPath(vProj), changeType: "added" })
-      }
-    }
-
-    // Updated
-    for (const [slug, vProj] of versionProjectMap) {
-      const cProj = comparisonProjectMap.get(slug)
-      if (cProj) {
-        const changed =
-          vProj.title !== cProj.title ||
-          vProj.description !== cProj.description ||
-          vProj.requirements !== cProj.requirements
-        if (changed) {
-          mockProjectDiffItems.push({ path: buildProjectPath(vProj), changeType: "updated" })
-        }
-      }
-    }
-
-    // Deleted
-    for (const [slug, cProj] of comparisonProjectMap) {
-      if (!versionProjectMap.has(slug)) {
-        mockProjectDiffItems.push({ path: buildProjectPath(cProj), changeType: "deleted" })
-      }
-    }
-  } else if (
-    version.status === "draft" &&
-    (versionProjects ?? []).length > 0
-  ) {
-    // Draft + active なし: 全て追加
-    mockProjectDiffItems = (versionProjects ?? []).map((p) => ({
-      path: buildProjectPath(p),
-      changeType: "added" as const,
+  // mock_project_changes_summary に items が含まれている場合はそれを使用
+  const mockProjectItems = (mockProjectChangesSummary as { items?: { slug: string; genre: string; change_type: string }[] } | null)?.items
+  if (mockProjectItems && mockProjectItems.length > 0) {
+    mockProjectDiffItems = mockProjectItems.map((item) => ({
+      path: `${item.genre}/${item.slug}`,
+      changeType: item.change_type as ChangeType,
     }))
   }
 
