@@ -22,3 +22,6 @@ CREATE POLICY "super_admin_read_all_google_connections" ON public.google_calenda
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'super_admin')
   );
+
+-- authenticated ロールにテーブルアクセス権を付与
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.google_calendar_connections TO authenticated;
