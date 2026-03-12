@@ -47,16 +47,24 @@ export default async function SettingsPage() {
 
   const isSuperAdmin = resolvedProfile.role === "super_admin"
 
-  // --- Super Admin の場合、system_integrations データもフェッチ ---
-  let systemIntegration = null
+  // --- Super Admin の場合、Google連携ステータスと system_integrations を個別にフェッチ ---
+  let googleConnection: { connected_at: string } | null = null
+  let systemIntegration: { business_hours: import("@/lib/types/database").BusinessHours | import("@/lib/types/database").GenreBusinessHours } | null = null
   if (isSuperAdmin) {
-    const { data } = await supabase
+    const { data: googleConn } = await supabase
+      .from("google_calendar_connections")
+      .select("connected_at")
+      .eq("admin_id", user.id)
+      .maybeSingle()
+
+    const { data: sysIntegration } = await supabase
       .from("system_integrations")
-      .select("*")
+      .select("business_hours")
       .eq("service_name", "google_calendar")
       .single()
 
-    systemIntegration = data
+    googleConnection = googleConn
+    systemIntegration = sysIntegration
   }
 
   // --- ユーザー情報の構築 ---
@@ -103,8 +111,8 @@ export default async function SettingsPage() {
           <TabsContent value="system" className="mt-6">
             <div className="flex flex-col gap-4 max-w-3xl">
               <GoogleCalendarSection
-                isConnected={!!systemIntegration?.connected_at}
-                connectedAt={systemIntegration?.connected_at ?? null}
+                isConnected={!!googleConnection?.connected_at}
+                connectedAt={googleConnection?.connected_at ?? null}
               />
               <BusinessHoursSection
                 initialBusinessHours={

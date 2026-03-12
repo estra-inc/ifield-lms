@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const busySlots = await getGoogleCalendarBusySlots(timeMin, timeMax)
+    const busySlots = await getGoogleCalendarBusySlots(user.id, timeMin, timeMax)
 
     if (busySlots === null) {
       return NextResponse.json({ busy: [], connected: false })

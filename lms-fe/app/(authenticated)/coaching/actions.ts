@@ -252,7 +252,7 @@ export async function bookSession(
   const studentName = profile?.full_name ?? "受講生"
   const genreLabel = genre === "design" ? "デザイン" : "エンジニアリング"
   const coachLabel = selectedCoachName ? ` - ${selectedCoachName}` : ""
-  const calendarResult = await createCalendarEvent({
+  const calendarResult = await createCalendarEvent(selectedCoachId, {
     summary: `i-field ${studentName}様 コーチング（${genreLabel}）${coachLabel}`,
     description: `受講生: ${studentName}\nジャンル: ${genreLabel}\nコーチ: ${selectedCoachName ?? "未定"}\nセッションID: ${session.id}`,
     startDateTime: `${date}T${startTime}:00+09:00`,
@@ -314,7 +314,7 @@ export async function cancelSession(
   // セッション取得 & 所有権確認
   const { data: session, error: fetchError } = await adminClient
     .from("coaching_sessions")
-    .select("id, user_id, status, google_event_id")
+    .select("id, user_id, status, google_event_id, coach_id")
     .eq("id", sessionId)
     .single()
 
@@ -357,8 +357,8 @@ export async function cancelSession(
   })
 
   // Google Calendar イベント削除
-  if (session.google_event_id) {
-    await deleteCalendarEvent(session.google_event_id)
+  if (session.google_event_id && session.coach_id) {
+    await deleteCalendarEvent(session.coach_id, session.google_event_id)
   }
 
   revalidatePath("/coaching")

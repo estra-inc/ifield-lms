@@ -49,6 +49,20 @@ async function getAccessToken(refreshToken: string): Promise<string> {
   return data.access_token
 }
 
+/**
+ * 指定管理者の暗号化リフレッシュトークンを google_calendar_connections から取得する。
+ */
+async function getRefreshTokenForAdmin(adminId: string): Promise<string | null> {
+  const supabase = createAdminClient()
+  const { data } = await supabase
+    .from("google_calendar_connections")
+    .select("encrypted_refresh_token")
+    .eq("admin_id", adminId)
+    .single()
+
+  return data?.encrypted_refresh_token ?? null
+}
+
 /** Google Calendar の予定情報 */
 export interface CalendarBusySlot {
   start: string // ISO 8601
@@ -58,11 +72,13 @@ export interface CalendarBusySlot {
 /**
  * Google Calendar FreeBusy API を呼び出して、指定期間の予定ありスロットを取得する。
  *
+ * @param adminId 管理者のユーザーID
  * @param timeMin 開始日時 (ISO 8601)
  * @param timeMax 終了日時 (ISO 8601)
  * @returns 予定ありスロットの配列。連携未設定の場合は null。
  */
 export async function getGoogleCalendarBusySlots(
+  adminId: string,
   timeMin: string,
   timeMax: string
 ): Promise<CalendarBusySlot[] | null> {
@@ -71,24 +87,13 @@ export async function getGoogleCalendarBusySlots(
     throw new Error("GOOGLE_TOKEN_ENCRYPTION_KEY is not set")
   }
 
-  // DB から暗号化トークンを取得
-  const supabase = createAdminClient()
-  const { data, error } = await supabase
-    .from("system_integrations")
-    .select("encrypted_refresh_token")
-    .eq("service_name", "google_calendar")
-    .single()
-
-  if (error) {
-    throw new Error(`DB query error: ${error.message}`)
-  }
-
-  if (!data?.encrypted_refresh_token) {
-    throw new Error("No encrypted_refresh_token found")
+  const encryptedToken = await getRefreshTokenForAdmin(adminId)
+  if (!encryptedToken) {
+    return null
   }
 
   // トークン復号 → アクセストークン取得
-  const refreshToken = decryptToken(data.encrypted_refresh_token, encryptionKey)
+  const refreshToken = decryptToken(encryptedToken, encryptionKey)
   const accessToken = await getAccessToken(refreshToken)
 
   // FreeBusy API 呼び出し
@@ -120,6 +125,39 @@ export async function getGoogleCalendarBusySlots(
   return busySlots
 }
 
+/**
+ * 複数管理者のビジースロットを並列取得する。
+ *
+ * @param adminIds 管理者IDの配列
+ * @param timeMin 開始日時 (ISO 8601)
+ * @param timeMax 終了日時 (ISO 8601)
+ * @returns adminId → CalendarBusySlot[] の Map。連携未設定の管理者はMapに含まれない。
+ */
+export async function getGoogleCalendarBusySlotsForAdmins(
+  adminIds: string[],
+  timeMin: string,
+  timeMax: string
+): Promise<Map<string, CalendarBusySlot[]>> {
+  const results = new Map<string, CalendarBusySlot[]>()
+
+  const settled = await Promise.allSettled(
+    adminIds.map(async (adminId) => {
+      const slots = await getGoogleCalendarBusySlots(adminId, timeMin, timeMax)
+      return { adminId, slots }
+    })
+  )
+
+  for (const result of settled) {
+    if (result.status === "fulfilled" && result.value.slots !== null) {
+      results.set(result.value.adminId, result.value.slots)
+    } else if (result.status === "rejected") {
+      console.error("getGoogleCalendarBusySlotsForAdmins: error:", result.reason)
+    }
+  }
+
+  return results
+}
+
 /** Google Calendar イベント作成パラメータ */
 export interface CreateCalendarEventParams {
   summary: string
@@ -137,9 +175,11 @@ export type CreateCalendarEventResult =
 /**
  * Google Calendar にイベントを作成する。
  *
+ * @param adminId 管理者のユーザーID
  * エラー時は reason 付きの失敗結果を返す（例外は投げない）。
  */
 export async function createCalendarEvent(
+  adminId: string,
   params: CreateCalendarEventParams
 ): Promise<CreateCalendarEventResult> {
   const encryptionKey = process.env.GOOGLE_TOKEN_ENCRYPTION_KEY
@@ -149,22 +189,16 @@ export async function createCalendarEvent(
     return { ok: false, reason }
   }
 
-  const supabase = createAdminClient()
-  const { data, error } = await supabase
-    .from("system_integrations")
-    .select("encrypted_refresh_token")
-    .eq("service_name", "google_calendar")
-    .single()
-
-  if (error || !data?.encrypted_refresh_token) {
+  const encryptedToken = await getRefreshTokenForAdmin(adminId)
+  if (!encryptedToken) {
     const reason = "Google Calendar が連携されていません。設定画面から連携してください"
-    console.error(`createCalendarEvent: ${reason}`, error?.message)
+    console.error(`createCalendarEvent: ${reason}`)
     return { ok: false, reason }
   }
 
   let accessToken: string
   try {
-    const refreshToken = decryptToken(data.encrypted_refresh_token, encryptionKey)
+    const refreshToken = decryptToken(encryptedToken, encryptionKey)
     accessToken = await getAccessToken(refreshToken)
   } catch (e) {
     const reason = `Google 認証トークンの更新に失敗しました: ${e instanceof Error ? e.message : String(e)}`
@@ -226,28 +260,24 @@ export async function createCalendarEvent(
 /**
  * Google Calendar のイベントを削除する。
  *
+ * @param adminId 管理者のユーザーID
+ * @param eventId Google Calendar イベントID
  * @returns 削除成功時は true、失敗時は false。
  */
-export async function deleteCalendarEvent(eventId: string): Promise<boolean> {
+export async function deleteCalendarEvent(adminId: string, eventId: string): Promise<boolean> {
   const encryptionKey = process.env.GOOGLE_TOKEN_ENCRYPTION_KEY
   if (!encryptionKey) {
     console.error("deleteCalendarEvent: GOOGLE_TOKEN_ENCRYPTION_KEY is not set")
     return false
   }
 
-  const supabase = createAdminClient()
-  const { data, error } = await supabase
-    .from("system_integrations")
-    .select("encrypted_refresh_token")
-    .eq("service_name", "google_calendar")
-    .single()
-
-  if (error || !data?.encrypted_refresh_token) {
-    console.error("deleteCalendarEvent: No token found")
+  const encryptedToken = await getRefreshTokenForAdmin(adminId)
+  if (!encryptedToken) {
+    console.error("deleteCalendarEvent: No token found for admin", adminId)
     return false
   }
 
-  const refreshToken = decryptToken(data.encrypted_refresh_token, encryptionKey)
+  const refreshToken = decryptToken(encryptedToken, encryptionKey)
   const accessToken = await getAccessToken(refreshToken)
 
   const res = await fetch(

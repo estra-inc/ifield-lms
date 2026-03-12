@@ -413,8 +413,8 @@ export async function initiateGoogleOAuth(): Promise<OAuthUrlResult> {
 /**
  * Google Calendar 連携解除 Server Action
  *
- * Super Admin のみ実行可能。system_integrations テーブルの
- * encrypted_refresh_token と connected_at を NULL に更新する。
+ * Super Admin のみ実行可能。google_calendar_connections テーブルから
+ * 自分の行を削除する。
  */
 export async function disconnectGoogle(
   _prevState: ActionResult,
@@ -426,16 +426,12 @@ export async function disconnectGoogle(
     return authResult.error
   }
 
-  // Admin Client で system_integrations を更新（RLS をバイパス）
+  // Admin Client で google_calendar_connections から自分の行を削除
   const adminClient = createAdminClient()
   const { error } = await adminClient
-    .from("system_integrations")
-    .update({
-      encrypted_refresh_token: null,
-      connected_at: null,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("service_name", "google_calendar")
+    .from("google_calendar_connections")
+    .delete()
+    .eq("admin_id", authResult.userId)
 
   if (error) {
     console.error("disconnectGoogle error:", error.message)

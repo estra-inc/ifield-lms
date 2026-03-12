@@ -912,6 +912,40 @@ export type Database = {
           },
         ]
       }
+      google_calendar_connections: {
+        Row: {
+          id: string
+          admin_id: string
+          encrypted_refresh_token: string
+          connected_at: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          admin_id: string
+          encrypted_refresh_token: string
+          connected_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          admin_id?: string
+          encrypted_refresh_token?: string
+          connected_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_calendar_connections_admin_id_fkey"
+            columns: ["admin_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       system_integrations: {
         Row: {
           id: string

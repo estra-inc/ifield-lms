@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { getGoogleCalendarBusySlots } from "@/lib/google-calendar"
+import { getGoogleCalendarBusySlots, getGoogleCalendarBusySlotsForAdmins } from "@/lib/google-calendar"
 import { computeAvailableSlots, formatDateStr, getBusinessHoursForGenre, toJST } from "@/lib/utils/coaching-slots"
 import { isCoachActive, getActiveCoaches } from "@/lib/utils/coach-helpers"
 import type { BusinessHours, CoachingGenre, GenreBusinessHours } from "@/lib/types/database"
@@ -14,9 +14,10 @@ import type { BusinessHours, CoachingGenre, GenreBusinessHours } from "@/lib/typ
  * genre パラメータで指定されたジャンルの稼働時間枠を使用する。
  *
  * コーチマッチング対応:
- * - 割り当て済み: 担当コーチの予約済みスロットのみで空き算出
+ * - 割り当て済み: 担当コーチのカレンダー + 予約済みスロットで空き算出
  * - 未割り当て: 全コーチの空き枠を集約（1人でも空いていればOK）
  * - 離脱/無効化: 空スロット + departed ステータス
+ * - 全コーチが Google 未連携: 空配列 + noGoogleIntegration フラグ
  */
 export async function GET(request: NextRequest) {
   try {
@@ -71,17 +72,6 @@ export async function GET(request: NextRequest) {
     const timeMin = startDate.toISOString()
     const timeMax = endDate.toISOString()
 
-    // Google Calendar busy スロットを取得
-    let busySlots: { start: string; end: string }[] = []
-    try {
-      const result = await getGoogleCalendarBusySlots(timeMin, timeMax)
-      if (result) {
-        busySlots = result
-      }
-    } catch (error) {
-      console.error("available-slots: Failed to get busy slots:", error)
-    }
-
     const normalizedHours: BusinessHours = {
       ...businessHours,
       bookingLeadDays: leadDays,
@@ -110,6 +100,17 @@ export async function GET(request: NextRequest) {
           assignmentStatus: "departed" as const,
           previousCoachName: check.fullName ?? "不明",
         })
+      }
+
+      // コーチの Google Calendar ビジースロット取得
+      let busySlots: { start: string; end: string }[] = []
+      try {
+        const result = await getGoogleCalendarBusySlots(assignment.coach_id, timeMin, timeMax)
+        if (result) {
+          busySlots = result
+        }
+      } catch (error) {
+        console.error("available-slots: Failed to get busy slots for coach:", error)
       }
 
       // 有効なコーチ → そのコーチの予約済みセッションで空き枠算出
@@ -148,6 +149,31 @@ export async function GET(request: NextRequest) {
 
     const coachIds = activeCoaches.map((c) => c.id)
 
+    // Google Calendar 連携済みコーチを特定
+    const { data: connections } = await adminClient
+      .from("google_calendar_connections")
+      .select("admin_id")
+      .in("admin_id", coachIds)
+
+    const connectedCoachIds = new Set((connections ?? []).map((c) => c.admin_id))
+
+    // 全コーチが Google 未連携の場合
+    if (connectedCoachIds.size === 0) {
+      return NextResponse.json({
+        slots: [],
+        slotDurationMinutes: slotDuration,
+        assignmentStatus: "unassigned" as const,
+        noGoogleIntegration: true,
+      })
+    }
+
+    // 連携済みコーチのビジースロットを並列取得
+    const busySlotsMap = await getGoogleCalendarBusySlotsForAdmins(
+      Array.from(connectedCoachIds),
+      timeMin,
+      timeMax
+    )
+
     // 全コーチの予約済みセッションを取得
     const { data: allBookings } = await adminClient
       .from("coaching_sessions")
@@ -168,14 +194,29 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // 全候補スロットを取得
-    const candidateSlots = computeAvailableSlots(normalizedHours, busySlots, [])
+    // 各連携済みコーチ個別に候補スロットを算出し、1人でも空いていればOK
+    // ビジースロット無し（未連携）コーチは候補から除外
+    const allCandidateSlots = new Map<string, { date: string; startTime: string; endTime: string }>()
 
-    // 各スロットについて、少なくとも1人のコーチが空いているかチェック
-    const availableSlots = candidateSlots.filter((slot) => {
-      const slotKey = `${slot.date}_${slot.startTime}`
-      return coachIds.some((coachId) => !coachBookedMap.get(coachId)?.has(slotKey))
-    })
+    for (const coachId of coachIds) {
+      // 未連携コーチは除外
+      if (!connectedCoachIds.has(coachId)) continue
+
+      const coachBusy = busySlotsMap.get(coachId) ?? []
+      const coachCandidates = computeAvailableSlots(normalizedHours, coachBusy, [])
+
+      for (const slot of coachCandidates) {
+        const slotKey = `${slot.date}_${slot.startTime}`
+        // このコーチがこのスロットで予約済みでなければ利用可能
+        if (!coachBookedMap.get(coachId)?.has(slotKey)) {
+          allCandidateSlots.set(slotKey, slot)
+        }
+      }
+    }
+
+    const availableSlots = Array.from(allCandidateSlots.values()).sort(
+      (a, b) => `${a.date}_${a.startTime}`.localeCompare(`${b.date}_${b.startTime}`)
+    )
 
     return NextResponse.json({
       slots: availableSlots,

@@ -34,7 +34,7 @@ function encryptToken(plaintext: string, keyHex: string): string {
  * 2. Cookie に保存した state と照合し CSRF を検証
  * 3. 認可コードをアクセストークン + リフレッシュトークンに交換
  * 4. リフレッシュトークンを AES-256-GCM で暗号化
- * 5. system_integrations テーブルに暗号化トークンと connected_at を保存
+ * 5. google_calendar_connections テーブルに暗号化トークンと connected_at を UPSERT
  * 6. /settings へリダイレクト（成功時）、または /settings?error=... へリダイレクト（失敗時）
  */
 export async function GET(request: NextRequest) {
@@ -140,16 +140,16 @@ export async function GET(request: NextRequest) {
     // --- リフレッシュトークンを暗号化 ---
     const encrypted_refresh_token = encryptToken(refreshToken, encryptionKey)
 
-    // --- system_integrations テーブルに保存 ---
+    // --- google_calendar_connections テーブルに UPSERT ---
     const adminClient = createAdminClient()
     const { error: dbError } = await adminClient
-      .from("system_integrations")
-      .update({
+      .from("google_calendar_connections")
+      .upsert({
+        admin_id: user.id,
         encrypted_refresh_token,
         connected_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      })
-      .eq("service_name", "google_calendar")
+      }, { onConflict: "admin_id" })
 
     if (dbError) {
       console.error("Google OAuth callback: DB update failed:", dbError.message)
