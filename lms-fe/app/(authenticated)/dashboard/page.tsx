@@ -98,7 +98,6 @@ export default async function DashboardPage() {
     coachingCreditsResult,
     coachingSessionResult,
     assignmentsResult,
-    skillReportResult,
     coachAssignmentResult,
   ] = await Promise.all([
     // Q1: active バージョン ID（キャッシュ済み）
@@ -160,25 +159,7 @@ export default async function DashboardPage() {
       .select("id, mock_projects(slug, title), project_submissions(id, status, score, created_at)")
       .eq("user_id", user.id),
 
-    // Q10: スキルレポート
-    supabase
-      .from("project_assignments")
-      .select(`
-        project_submissions(
-          status,
-          created_at,
-          project_evaluations(
-            status,
-            project_evaluation_details(
-              category_large,
-              is_ok
-            )
-          )
-        )
-      `)
-      .eq("user_id", user.id),
-
-    // Q11: コーチ割り当て
+    // Q10: コーチ割り当て
     supabase
       .from("coach_assignments")
       .select("genre, coach_id")
@@ -357,48 +338,48 @@ export default async function DashboardPage() {
       .map(({ isActive: _isActive, ...rest }) => rest),
   }
 
-  // スキルレポート集計
-  type SkillAssignment = {
-    project_submissions: {
-      status: string
-      created_at: string
-      project_evaluations: {
-        status: string
-        project_evaluation_details: {
-          category_large: string
-          is_ok: boolean
-        }[]
-      } | null
-    }[]
+  // スキルレポート集計（全採点済み案件の平均達成率）
+  // Q9 のデータから graded submission ID を案件ごとに最新1件ずつ取得
+  const gradedSubIds: string[] = []
+  for (const a of assignments) {
+    const graded = (a.project_submissions ?? [])
+      .filter((s) => s.status === "graded")
+      .sort(
+        (x, y) =>
+          new Date(y.created_at).getTime() - new Date(x.created_at).getTime()
+      )
+    if (graded[0]) gradedSubIds.push(graded[0].id)
   }
-  const skillAssignments = (skillReportResult.data ?? []) as unknown as SkillAssignment[]
 
   const categoryMap = new Map<string, { ok: number; total: number }>()
-  for (const assignment of skillAssignments) {
-    const submissions = assignment.project_submissions ?? []
-    const gradedSubmissions = submissions
-      .filter(
-        (s) =>
-          s.status === "graded" &&
-          s.project_evaluations?.status === "finalized"
-      )
-      .sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      )
-    const latestSubmission = gradedSubmissions[0]
-    if (!latestSubmission) continue
 
-    const evaluation = latestSubmission.project_evaluations!
-    for (const detail of evaluation.project_evaluation_details ?? []) {
-      const existing = categoryMap.get(detail.category_large) ?? {
-        ok: 0,
-        total: 0,
+  if (gradedSubIds.length > 0) {
+    // finalized 評価を取得
+    const { data: evaluations } = await adminClient
+      .from("project_evaluations")
+      .select("id")
+      .eq("status", "finalized")
+      .in("submission_id", gradedSubIds)
+
+    const evalIds = (evaluations ?? []).map((e) => e.id)
+
+    if (evalIds.length > 0) {
+      // 全評価の詳細を一括取得
+      const { data: details } = await adminClient
+        .from("project_evaluation_details")
+        .select("category_large, is_ok")
+        .in("evaluation_id", evalIds)
+
+      for (const detail of details ?? []) {
+        const existing = categoryMap.get(detail.category_large) ?? {
+          ok: 0,
+          total: 0,
+        }
+        categoryMap.set(detail.category_large, {
+          ok: existing.ok + (detail.is_ok ? 1 : 0),
+          total: existing.total + 1,
+        })
       }
-      categoryMap.set(detail.category_large, {
-        ok: existing.ok + (detail.is_ok ? 1 : 0),
-        total: existing.total + 1,
-      })
     }
   }
 
