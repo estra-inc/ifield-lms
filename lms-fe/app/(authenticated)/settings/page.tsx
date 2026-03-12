@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import {
   Tabs,
   TabsList,
@@ -22,62 +22,27 @@ import { BusinessHoursSection } from "./_components/business-hours-section"
  */
 export default async function SettingsPage() {
   // --- 認証チェック ---
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user, supabase } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
   }
 
   // --- プロフィール情報フェッチ ---
-  // last_name/first_name カラム未追加の場合にもフォールバックで対応
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("last_name, first_name, full_name, avatar_url, role, default_genre")
-    .eq("id", user.id)
-    .single()
+  const profile = await getUserProfile(user.id)
 
-  let resolvedProfile: {
-    last_name: string
-    first_name: string
-    full_name: string
-    avatar_url: string | null
-    role: string
-    default_genre: string | null
+  if (!profile) {
+    redirect("/auth/login")
   }
 
-  if (profileError || !profile) {
-    // last_name/first_name カラム未追加の場合のフォールバック
-    const { data: fallbackProfile } = await supabase
-      .from("profiles")
-      .select("full_name, avatar_url, role")
-      .eq("id", user.id)
-      .single()
-
-    if (!fallbackProfile) {
-      redirect("/auth/login")
-    }
-
-    const nameParts = fallbackProfile.full_name?.split(" ") ?? []
-    resolvedProfile = {
-      last_name: nameParts[0] ?? "",
-      first_name: nameParts.slice(1).join(" ") ?? "",
-      full_name: fallbackProfile.full_name ?? "",
-      avatar_url: fallbackProfile.avatar_url,
-      role: fallbackProfile.role,
-      default_genre: null,
-    }
-  } else {
-    resolvedProfile = {
-      last_name: profile.last_name ?? "",
-      first_name: profile.first_name ?? "",
-      full_name: profile.full_name ?? "",
-      avatar_url: profile.avatar_url,
-      role: profile.role,
-      default_genre: profile.default_genre ?? null,
-    }
+  const nameParts = profile.full_name?.split(" ") ?? []
+  const resolvedProfile = {
+    last_name: nameParts[0] ?? "",
+    first_name: nameParts.slice(1).join(" ") ?? "",
+    full_name: profile.full_name ?? "",
+    avatar_url: profile.avatar_url,
+    role: profile.role,
+    default_genre: profile.default_genre ?? null,
   }
 
   const isSuperAdmin = resolvedProfile.role === "super_admin"

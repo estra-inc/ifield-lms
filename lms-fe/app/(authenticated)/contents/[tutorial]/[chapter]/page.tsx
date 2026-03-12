@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation"
 import Link from "next/link"
 import { CheckCircle } from "lucide-react"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import { resolveVersionId } from "@/lib/supabase/content-version"
 import { ContentBreadcrumb } from "@/app/(authenticated)/contents/_components/content-breadcrumb"
 
@@ -25,22 +25,14 @@ export default async function ChapterDetailPage({
 }: ChapterDetailPageProps) {
   const { tutorial, chapter } = await params
   const resolvedSearchParams = await searchParams
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user, supabase } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
   }
 
   // ロール取得
-  const { data: userProfile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single()
+  const userProfile = await getUserProfile(user.id)
 
   const isReadOnly =
     userProfile?.role === "super_admin" || userProfile?.role === "manager"

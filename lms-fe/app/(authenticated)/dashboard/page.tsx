@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile, getCachedActiveVersionId } from "@/lib/supabase/cached-queries"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { getActiveVersionId } from "@/lib/supabase/content-version"
 import { formatLocalDate } from "@/lib/utils/week-helpers"
 import { deriveProjectStatus, isProjectActive } from "@/lib/utils/project-status"
 import { GoalMetricCard } from "./_components/goal-progress-card"
@@ -58,22 +57,14 @@ function getWeekRange(mondayStr: string) {
 /* ─── ページコンポーネント ─── */
 
 export default async function DashboardPage() {
-  // --- Task 1.1: 認証チェックとロール判定 ---
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user, supabase } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
   }
 
-  // profiles からロール・ジャンル・名前・基本情報を1回のクエリで取得
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, default_genre, full_name, avatar_url, email, current_term, created_at")
-    .eq("id", user.id)
-    .single()
+  // cache() でリクエスト内重複排除される（layout.tsx と共有）
+  const profile = await getUserProfile(user.id)
 
   if (!profile) {
     redirect("/auth/login")
@@ -87,14 +78,7 @@ export default async function DashboardPage() {
     redirect("/admin/grading")
   }
 
-  // --- Task 1.2: アカウント無効化バナー ---
-  const adminClient = createAdminClient()
-  const { data: authUser } = await adminClient.auth.admin.getUserById(user.id)
-
-  const bannedUntil = authUser?.user?.banned_until ?? null
-  const isBanned = !!bannedUntil && new Date(bannedUntil) > new Date()
-
-  // --- Task 2.1: 並列データ取得 ---
+  // --- 全独立クエリを一括並列実行 ---
   const now = new Date()
   const today = formatLocalDate(now)
   const currentYearMonth = getCurrentYearMonth()
@@ -102,11 +86,11 @@ export default async function DashboardPage() {
   const monthRange = getMonthRange(currentYearMonth)
   const weekRange = getWeekRange(currentMonday)
 
-  // コンテンツバージョン解決
-  const activeVersionId = await getActiveVersionId(supabase)
+  const adminClient = createAdminClient()
 
-  // 並列クエリ（コンテンツ系以外）
   const [
+    activeVersionId,
+    authUserResult,
     monthlyGoalResult,
     weeklyGoalResult,
     monthReportsResult,
@@ -115,8 +99,15 @@ export default async function DashboardPage() {
     coachingSessionResult,
     assignmentsResult,
     skillReportResult,
+    coachAssignmentResult,
   ] = await Promise.all([
-    // Q2: 月次目標
+    // Q1: active バージョン ID（キャッシュ済み）
+    getCachedActiveVersionId(),
+
+    // Q2: ban 状態チェック（admin API）
+    adminClient.auth.admin.getUserById(user.id),
+
+    // Q3: 月次目標
     supabase
       .from("monthly_goals")
       .select("target_hours")
@@ -124,7 +115,7 @@ export default async function DashboardPage() {
       .eq("year_month", currentYearMonth)
       .maybeSingle(),
 
-    // Q3: 週次目標
+    // Q4: 週次目標
     supabase
       .from("weekly_goals")
       .select("target_hours")
@@ -132,7 +123,7 @@ export default async function DashboardPage() {
       .eq("start_date", currentMonday)
       .maybeSingle(),
 
-    // Q4: 当月の日報
+    // Q5: 当月の日報
     supabase
       .from("daily_reports")
       .select("actual_hours, report_date, content")
@@ -140,19 +131,19 @@ export default async function DashboardPage() {
       .gte("report_date", monthRange.start)
       .lte("report_date", monthRange.end),
 
-    // Q7: 完了済みセクション
+    // Q6: 完了済みセクション
     supabase
       .from("content_progress")
       .select("content_id")
       .eq("user_id", user.id),
 
-    // Q8: コーチングクレジット残高
+    // Q7: コーチングクレジット残高
     supabase
       .from("coaching_credits")
       .select("amount")
       .eq("user_id", user.id),
 
-    // Q9: 次回コーチングセッション
+    // Q8: 次回コーチングセッション
     supabase
       .from("coaching_sessions")
       .select("session_date, start_time, end_time, genre")
@@ -163,13 +154,13 @@ export default async function DashboardPage() {
       .order("start_time", { ascending: true })
       .limit(1),
 
-    // Q10: 模擬案件
+    // Q9: 模擬案件
     supabase
       .from("project_assignments")
       .select("id, mock_projects(slug, title), project_submissions(id, status, score, created_at)")
       .eq("user_id", user.id),
 
-    // Q11: スキルレポート（ネストセレクト）— submission の status も取得
+    // Q10: スキルレポート
     supabase
       .from("project_assignments")
       .select(`
@@ -186,15 +177,21 @@ export default async function DashboardPage() {
         )
       `)
       .eq("user_id", user.id),
+
+    // Q11: コーチ割り当て
+    supabase
+      .from("coach_assignments")
+      .select("genre, coach_id")
+      .eq("user_id", user.id),
   ])
 
-  // コーチ割り当て取得
-  const { data: coachAssignmentData } = await supabase
-    .from("coach_assignments")
-    .select("genre, coach_id")
-    .eq("user_id", user.id)
+  // ban 状態
+  const bannedUntil = authUserResult.data?.user?.banned_until ?? null
+  const isBanned = !!bannedUntil && new Date(bannedUntil) > new Date()
 
+  // コーチ名解決（必要な場合のみ1クエリ）
   let coachLabel: string | null = null
+  const coachAssignmentData = coachAssignmentResult.data
   if (coachAssignmentData && coachAssignmentData.length > 0) {
     const coachIds = [...new Set(coachAssignmentData.map((a) => a.coach_id))]
     const { data: coachProfiles } = await adminClient
@@ -212,13 +209,12 @@ export default async function DashboardPage() {
       .join("、")
   }
 
-  // Q5 + Q6: 教材クエリ（ジャンルとバージョンが存在する場合のみ）
+  // 教材クエリ（ジャンルとバージョンが存在する場合のみ）
   let sectionsData: { id: string; tutorial: string; title: string; slug_path: string; genre: string }[] = []
   let tutorialsData: { tutorial: string; title: string; slug_path: string; genre: string }[] = []
 
   if (profile.default_genre && activeVersionId) {
     const [sectionsResult, tutorialsResult] = await Promise.all([
-      // Q5: 教材セクション一覧
       supabase
         .from("contents")
         .select("id, tutorial, title, slug_path, genre")
@@ -226,8 +222,6 @@ export default async function DashboardPage() {
         .eq("content_type", "section")
         .eq("status", "active")
         .eq("version_id", activeVersionId),
-
-      // Q6: チュートリアル一覧
       supabase
         .from("contents")
         .select("tutorial, title, slug_path, genre")
@@ -242,7 +236,7 @@ export default async function DashboardPage() {
     tutorialsData = (tutorialsResult.data ?? []) as typeof tutorialsData
   }
 
-  // --- Task 2.2: データ整形 ---
+  // --- データ整形 ---
 
   // 目標達成率の算出
   const reports = monthReportsResult.data ?? []
@@ -333,7 +327,6 @@ export default async function DashboardPage() {
 
   const allProjectItems: (ProjectItem & { isActive: boolean })[] = assignments.map(
     (a) => {
-      // 最新の submission を取得
       const sorted = [...(a.project_submissions ?? [])].sort(
         (x, y) => new Date(y.created_at).getTime() - new Date(x.created_at).getTime()
       )
@@ -365,8 +358,6 @@ export default async function DashboardPage() {
   }
 
   // スキルレポート集計
-  // project_evaluations は submission_id に UNIQUE 制約があるため1対1（オブジェクト）で返る
-  // 各 assignment の最新の提出（graded）の evaluation のみを分母にする
   type SkillAssignment = {
     project_submissions: {
       status: string
@@ -385,7 +376,6 @@ export default async function DashboardPage() {
   const categoryMap = new Map<string, { ok: number; total: number }>()
   for (const assignment of skillAssignments) {
     const submissions = assignment.project_submissions ?? []
-    // graded（採点済み）の提出のみを対象とし、最新の1件だけを使用
     const gradedSubmissions = submissions
       .filter(
         (s) =>
@@ -426,10 +416,8 @@ export default async function DashboardPage() {
     hasData: categories.length > 0,
   }
 
-  // --- Task 6.1: カードコンポーネントの統合とレスポンシブレイアウト ---
   return (
     <div className="flex flex-col gap-6 p-6 md:p-8">
-      {/* Task 1.2: 無効化バナー */}
       {isBanned && (
         <div
           className="rounded-lg border border-destructive bg-destructive/10 px-4 py-3 text-sm text-destructive"
@@ -439,7 +427,6 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* ヘッダー */}
       <div>
         <h1 className="font-[family-name:var(--font-primary)] text-2xl font-bold tracking-[-1px]">
           ダッシュボード
@@ -449,7 +436,6 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* メトリクスカード行: 基本情報 + 月次目標 + 週次目標 */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <ProfileInfoCard
           avatarUrl={profile.avatar_url}
@@ -474,9 +460,7 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* 3カラムレイアウト: 教材進捗(2col) + 日報/コーチング/模擬案件(1col) */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {/* 左カラム: 教材進捗（2カラム分） */}
         <div className="md:col-span-2">
           <TutorialProgressCard
             items={tutorialProgress}
@@ -484,7 +468,6 @@ export default async function DashboardPage() {
           />
         </div>
 
-        {/* 右カラム: 日報 + コーチング + 模擬案件 */}
         <div className="flex flex-col gap-4">
           <DailyReportCard status={dailyReport} />
           <CoachingCard data={coaching} />
@@ -492,7 +475,6 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* フル幅: スキルレポート */}
       <SkillReportCard data={skillReport} />
     </div>
   )

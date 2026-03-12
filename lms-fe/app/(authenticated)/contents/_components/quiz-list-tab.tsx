@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
-import { getActiveVersionId } from "@/lib/supabase/content-version"
+import { getCachedActiveVersionId } from "@/lib/supabase/cached-queries"
 import {
   QuizListClient,
   type GroupedTutorial,
@@ -21,7 +21,7 @@ interface QuizListTabProps {
 export async function QuizListTab({ genre }: QuizListTabProps) {
   const supabase = await createClient()
 
-  const activeVersionId = await getActiveVersionId(supabase)
+  const activeVersionId = await getCachedActiveVersionId()
 
   if (!activeVersionId) {
     return (

@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { BookOpen } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
-import { getActiveVersionId } from "@/lib/supabase/content-version"
+import { getCachedActiveVersionId } from "@/lib/supabase/cached-queries"
 
 interface SectionQuizButtonProps {
   tutorial: string
@@ -34,7 +34,7 @@ export async function SectionQuizButton({
     return null
   }
 
-  const activeVersionId = await getActiveVersionId(supabase)
+  const activeVersionId = await getCachedActiveVersionId()
 
   if (!activeVersionId) {
     return null

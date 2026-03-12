@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import {
   deriveProjectStatus,
   isProjectActive,
@@ -26,22 +26,14 @@ interface ProjectsPageProps {
 export default async function ProjectsPage({
   searchParams,
 }: ProjectsPageProps) {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user, supabase } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
   }
 
   // ユーザーのデフォルトジャンルとロールを取得
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("default_genre, role")
-    .eq("id", user.id)
-    .single()
+  const profile = await getUserProfile(user.id)
 
   const defaultGenre = profile?.default_genre ?? "engineering"
   const isSuperAdmin = profile?.role === "super_admin"

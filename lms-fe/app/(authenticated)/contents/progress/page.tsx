@@ -1,24 +1,16 @@
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
-import { getActiveVersionId } from "@/lib/supabase/content-version"
+import { getAuthUser, getUserProfile, getCachedActiveVersionId } from "@/lib/supabase/cached-queries"
 import { fetchProgressDetail } from "../_lib/progress-detail"
 import { ProgressDetailView } from "../_components/progress-detail-view"
 
 export default async function ContentsProgressPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user, supabase } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("default_genre")
-    .eq("id", user.id)
-    .single()
+  const profile = await getUserProfile(user.id)
 
   const genre = profile?.default_genre
   if (!genre) {
@@ -31,7 +23,7 @@ export default async function ContentsProgressPage() {
     )
   }
 
-  const activeVersionId = await getActiveVersionId(supabase)
+  const activeVersionId = await getCachedActiveVersionId()
   if (!activeVersionId) {
     return (
       <ProgressDetailView

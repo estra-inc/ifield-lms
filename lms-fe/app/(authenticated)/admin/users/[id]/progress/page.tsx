@@ -1,7 +1,6 @@
 import { notFound, redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile, getCachedActiveVersionId } from "@/lib/supabase/cached-queries"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { getActiveVersionId } from "@/lib/supabase/content-version"
 import { fetchProgressDetail } from "@/app/(authenticated)/contents/_lib/progress-detail"
 import { ProgressDetailView } from "@/app/(authenticated)/contents/_components/progress-detail-view"
 
@@ -12,39 +11,25 @@ interface PageProps {
 export default async function AdminUserProgressPage({ params }: PageProps) {
   const { id } = await params
 
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user } = await getAuthUser()
+  if (!user) redirect("/auth/login")
 
-  if (!user) {
-    redirect("/auth/login")
-  }
-
-  const { data: currentProfile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single()
-
-  if (!currentProfile || currentProfile.role !== "super_admin") {
-    redirect("/dashboard")
-  }
+  const currentProfile = await getUserProfile(user.id)
+  if (!currentProfile || currentProfile.role !== "super_admin") redirect("/dashboard")
 
   const adminClient = createAdminClient()
 
-  const { data: profile } = await adminClient
-    .from("profiles")
-    .select("default_genre, full_name")
-    .eq("id", id)
-    .single()
+  // ユーザープロフィールとバージョンIDを並列取得
+  const [targetProfileResult, activeVersionId] = await Promise.all([
+    adminClient.from("profiles").select("default_genre, full_name").eq("id", id).single(),
+    getCachedActiveVersionId(),
+  ])
 
-  if (!profile) {
-    notFound()
-  }
+  const profile = targetProfileResult.data
+  if (!profile) notFound()
 
   const genre = profile.default_genre
-  if (!genre) {
+  if (!genre || !activeVersionId) {
     return (
       <ProgressDetailView
         tutorials={[]}
@@ -54,23 +39,7 @@ export default async function AdminUserProgressPage({ params }: PageProps) {
     )
   }
 
-  const activeVersionId = await getActiveVersionId(adminClient)
-  if (!activeVersionId) {
-    return (
-      <ProgressDetailView
-        tutorials={[]}
-        backHref={`/admin/users/${id}`}
-        backLabel="教材進捗詳細"
-      />
-    )
-  }
-
-  const tutorials = await fetchProgressDetail(
-    adminClient,
-    id,
-    genre,
-    activeVersionId
-  )
+  const tutorials = await fetchProgressDetail(adminClient, id, genre, activeVersionId)
 
   return (
     <ProgressDetailView

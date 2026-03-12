@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import { resolveVersionId } from "@/lib/supabase/content-version"
 import { ProgressSummaryCards } from "./_components/progress-summary-cards"
 import { TutorialCard } from "./_components/tutorial-card"
@@ -23,22 +23,14 @@ interface ContentsPageProps {
  * URL searchParams でジャンルフィルタリングを管理する。
  */
 export default async function ContentsPage({ searchParams }: ContentsPageProps) {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user, supabase } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
   }
 
-  // ユーザーのデフォルトジャンルとロールを取得
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("default_genre, role")
-    .eq("id", user.id)
-    .single()
+  // cache() でリクエスト内重複排除される（layout.tsx と共有）
+  const profile = await getUserProfile(user.id)
 
   const defaultGenre = profile?.default_genre ?? "engineering"
   const isSuperAdmin = profile?.role === "super_admin"
@@ -48,7 +40,7 @@ export default async function ContentsPage({ searchParams }: ContentsPageProps) 
   const activeTab = params.tab ?? "materials"
   const genreLabel = selectedGenre === "engineering" ? "エンジニアリング" : "デザイン"
 
-  // バージョン ID を解決（version_id パラメータ指定時は Super Admin のみプレビュー可能）
+  // バージョン ID を解決
   const activeVersionId = await resolveVersionId(supabase, params)
 
   // active バージョンが存在しない場合はコンテンツなしとして扱う
@@ -78,43 +70,41 @@ export default async function ContentsPage({ searchParams }: ContentsPageProps) 
     )
   }
 
-  // チュートリアル一覧を取得（active バージョンのみ、指定ジャンル）
-  const { data: tutorials } = await supabase
-    .from("contents")
-    .select("id, slug_path, title, genre, tutorial")
-    .eq("version_id", activeVersionId)
-    .eq("content_type", "tutorial")
-    .eq("genre", selectedGenre)
-    .order("order")
+  // 全クエリを並列実行
+  const [tutorialsResult, allSectionsResult, allChaptersResult, progressResult] = await Promise.all([
+    supabase
+      .from("contents")
+      .select("id, slug_path, title, genre, tutorial")
+      .eq("version_id", activeVersionId)
+      .eq("content_type", "tutorial")
+      .eq("genre", selectedGenre)
+      .order("order"),
+    supabase
+      .from("contents")
+      .select("id, tutorial, chapter")
+      .eq("version_id", activeVersionId)
+      .eq("content_type", "section")
+      .eq("genre", selectedGenre),
+    supabase
+      .from("contents")
+      .select("id, tutorial")
+      .eq("version_id", activeVersionId)
+      .eq("content_type", "chapter")
+      .eq("genre", selectedGenre),
+    isReadOnly
+      ? Promise.resolve({ data: null })
+      : supabase
+          .from("content_progress")
+          .select("content_id")
+          .eq("user_id", user.id),
+  ])
 
-  // 全セクションを取得（進捗率計算用）
-  const { data: allSections } = await supabase
-    .from("contents")
-    .select("id, tutorial, chapter")
-    .eq("version_id", activeVersionId)
-    .eq("content_type", "section")
-    .eq("genre", selectedGenre)
-
-  // 全チャプターを取得（チャプター数計算用）
-  const { data: allChapters } = await supabase
-    .from("contents")
-    .select("id, tutorial")
-    .eq("version_id", activeVersionId)
-    .eq("content_type", "chapter")
-    .eq("genre", selectedGenre)
-
-  // ユーザーの進捗データを取得（閲覧専用ロールはスキップ）
-  let completedContentIds = new Set<string>()
-  if (!isReadOnly) {
-    const { data: progressData } = await supabase
-      .from("content_progress")
-      .select("content_id")
-      .eq("user_id", user.id)
-
-    completedContentIds = new Set(
-      (progressData ?? []).map((p) => p.content_id)
-    )
-  }
+  const tutorials = tutorialsResult.data
+  const allSections = allSectionsResult.data
+  const allChapters = allChaptersResult.data
+  const completedContentIds = new Set<string>(
+    (progressResult.data ?? []).map((p: { content_id: string }) => p.content_id)
+  )
 
   // チュートリアルごとの進捗率を算出
   const tutorialsWithProgress: TutorialWithProgress[] = (tutorials ?? []).map(

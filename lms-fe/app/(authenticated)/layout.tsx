@@ -1,6 +1,6 @@
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import { AppShellLayout } from "@/components/app-shell/app-shell-layout"
 import type { AppShellUser, UserRole, UserTerm } from "@/lib/types/app-shell"
 
@@ -9,21 +9,17 @@ export default async function AuthenticatedLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, role, avatar_url, current_term")
-    .eq("id", user.id)
-    .single()
+  // getUserProfile は cache() でリクエスト内重複排除される
+  const [profile, cookieStore] = await Promise.all([
+    getUserProfile(user.id),
+    cookies(),
+  ])
 
   const appUser: AppShellUser = {
     id: user.id,
@@ -33,7 +29,6 @@ export default async function AuthenticatedLayout({
     currentTerm: (profile?.current_term as UserTerm) ?? null,
   }
 
-  const cookieStore = await cookies()
   const sidebarState = cookieStore.get("sidebar_state")?.value
   const defaultOpen = sidebarState !== "false"
 

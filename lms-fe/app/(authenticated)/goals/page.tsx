@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import { MonthlyGoalCard } from "./_components/monthly-goal-card"
 import { WeeklyGoalCard } from "./_components/weekly-goal-card"
 import { LearningHoursChart, type DailyBar } from "@/app/(authenticated)/reports/_components/learning-hours-chart"
@@ -85,22 +85,14 @@ interface PageProps {
 export default async function GoalsPage({ searchParams }: PageProps) {
   const params = await searchParams
 
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user, supabase } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
   }
 
   // プロフィールから作成日を取得（セレクター範囲の起点に使用）
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("created_at")
-    .eq("id", user.id)
-    .single()
+  const profile = await getUserProfile(user.id)
 
   const accountCreatedAt = profile?.created_at ?? user.created_at
 

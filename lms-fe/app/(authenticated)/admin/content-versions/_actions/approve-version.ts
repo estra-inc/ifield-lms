@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import type { ActionResult } from "@/lib/validations/auth"
@@ -81,7 +81,8 @@ export async function approveVersion(
     }
   }
 
-  // --- revalidatePath ---
+  // --- キャッシュ無効化 ---
+  revalidateTag("active-version-id", "max")
   revalidatePath("/admin/content-versions")
   revalidatePath("/contents")
 

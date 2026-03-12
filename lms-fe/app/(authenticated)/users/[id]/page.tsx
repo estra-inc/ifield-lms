@@ -1,13 +1,12 @@
 import { notFound, redirect } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile, getCachedActiveVersionId } from "@/lib/supabase/cached-queries"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { formatLocalDate } from "@/lib/utils/week-helpers"
 import type { UserDetail } from "@/lib/types/user-management"
 import type { LearningMetrics } from "@/lib/types/daily-reports"
 import type { DailyBar } from "@/app/(authenticated)/reports/_components/learning-hours-chart"
-import { getActiveVersionId } from "@/lib/supabase/content-version"
 import type { TutorialProgressItem, SkillCategoryScore, SkillReportData } from "@/lib/types/dashboard"
 import { MetricsRow } from "@/app/(authenticated)/reports/_components/metrics-row"
 import { TutorialProgressCard } from "@/app/(authenticated)/dashboard/_components/tutorial-progress-card"
@@ -16,7 +15,7 @@ import { LearningOverview } from "@/app/(authenticated)/admin/users/[id]/_compon
 import { ProjectAssignmentsCard, type SubmissionRow } from "./_components/project-assignments-card"
 import { SkillReportCard } from "@/app/(authenticated)/dashboard/_components/skill-report-card"
 
-/* ─── ヘルパー関数（admin/users/[id]/page.tsx と同パターン） ─── */
+/* ─── ヘルパー関数 ─── */
 
 function getMonthRange(yearMonth: string) {
   const [year, month] = yearMonth.split("-").map(Number)
@@ -65,67 +64,40 @@ function formatWeekLabel(startStr: string, endStr: string): string {
 
 interface PageProps {
   params: Promise<{ id: string }>
-  searchParams: Promise<{
-    chartMonth?: string
-    chartWeek?: string
-  }>
+  searchParams: Promise<{ chartMonth?: string; chartWeek?: string }>
 }
 
 export default async function ManagerUserDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params
   const sp = await searchParams
 
-  // --- 認証・権限チェック（manager のみ） ---
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // --- 認証・権限チェック（cache() で layout と共有） ---
+  const { user } = await getAuthUser()
+  if (!user) redirect("/auth/login")
 
-  if (!user) {
-    redirect("/auth/login")
-  }
+  const currentProfile = await getUserProfile(user.id)
+  if (!currentProfile || currentProfile.role !== "manager") redirect("/dashboard")
 
-  const { data: currentProfile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single()
-
-  if (!currentProfile || currentProfile.role !== "manager") {
-    redirect("/dashboard")
-  }
-
-  // --- Admin クライアント（RLS バイパス）でユーザーデータ取得 ---
   const adminClient = createAdminClient()
 
-  const { data: profile, error: profileError } = await adminClient
-    .from("profiles")
-    .select("id, full_name, email, avatar_url, role, current_term, default_genre, created_at")
-    .eq("id", id)
-    .single()
+  // --- Phase 1: ユーザーデータ + ban 状態を並列取得 ---
+  const [profileResult, authUserResult] = await Promise.all([
+    adminClient
+      .from("profiles")
+      .select("id, full_name, email, avatar_url, role, current_term, default_genre, created_at")
+      .eq("id", id)
+      .single(),
+    adminClient.auth.admin.getUserById(id),
+  ])
 
-  if (profileError || !profile) {
-    notFound()
-  }
+  const profile = profileResult.data
+  if (profileResult.error || !profile) notFound()
+  if (profile.role !== "user") notFound()
+  if (authUserResult.error || !authUserResult.data) notFound()
 
-  // user ロール以外は表示しない
-  if (profile.role !== "user") {
-    notFound()
-  }
+  const bannedUntil = authUserResult.data.user?.banned_until ?? null
+  const isBanned = !!bannedUntil && new Date(bannedUntil) > new Date()
 
-  // --- ban状態の取得 ---
-  const { data: authUser, error: authError } =
-    await adminClient.auth.admin.getUserById(id)
-
-  if (authError || !authUser) {
-    notFound()
-  }
-
-  const bannedUntil = authUser.user?.banned_until ?? null
-  const isBanned =
-    !!bannedUntil && new Date(bannedUntil) > new Date()
-
-  // --- UserDetail 構築 ---
   const userDetail: UserDetail = {
     id: profile.id,
     fullName: profile.full_name,
@@ -137,45 +109,98 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
     isBanned,
   }
 
-  // --- 担当コーチ取得（閲覧のみ） ---
-  const { data: coachAssignmentsRaw } = await adminClient
-    .from("coach_assignments")
-    .select("genre, coach_id")
-    .eq("user_id", id)
+  // --- Phase 2: 全データを一括並列取得 ---
+  const now = new Date()
+  const today = formatLocalDate(now)
+  const currentYearMonth = getCurrentYearMonth()
+  const currentMonday = getCurrentMonday()
+  const monthRange = getMonthRange(currentYearMonth)
+  const weekRange = getWeekRangeFrom(currentMonday)
+  const chartMonthKey = sp.chartMonth ?? currentYearMonth
+  const chartMonthRange = getMonthRange(chartMonthKey)
+  const chartWeekMonday = sp.chartWeek ?? currentMonday
+  const chartWeekRange = getWeekRangeFrom(chartWeekMonday)
 
+  const [
+    activeVersionId,
+    coachAssignmentsResult,
+    assignmentsResult,
+    skillResult,
+    monthReportsResult,
+    monthlyGoalResult,
+    weeklyGoalResult,
+    recentReportsResult,
+  ] = await Promise.all([
+    getCachedActiveVersionId(),
+    adminClient.from("coach_assignments").select("genre, coach_id").eq("user_id", id),
+    adminClient
+      .from("project_assignments")
+      .select("id, project_id, mock_projects(slug, title, genre), project_submissions(id, status, score, created_at)")
+      .eq("user_id", id),
+    adminClient
+      .from("project_assignments")
+      .select(`
+        project_submissions(
+          project_evaluations(
+            status,
+            project_evaluation_details(category_large, is_ok)
+          )
+        )
+      `)
+      .eq("user_id", id),
+    adminClient
+      .from("daily_reports")
+      .select("actual_hours, report_date")
+      .eq("user_id", id)
+      .gte("report_date", monthRange.start)
+      .lte("report_date", monthRange.end),
+    adminClient
+      .from("monthly_goals")
+      .select("target_hours")
+      .eq("user_id", id)
+      .eq("year_month", currentYearMonth)
+      .maybeSingle(),
+    adminClient
+      .from("weekly_goals")
+      .select("target_hours")
+      .eq("user_id", id)
+      .eq("start_date", currentMonday)
+      .maybeSingle(),
+    adminClient
+      .from("daily_reports")
+      .select("id, report_date, actual_hours, content")
+      .eq("user_id", id)
+      .order("report_date", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(5),
+  ])
+
+  // --- コーチ名解決 ---
   let coachAssignments: { genre: string; coachId: string; coachName: string }[] = []
-  if (coachAssignmentsRaw && coachAssignmentsRaw.length > 0) {
-    const coachIds = coachAssignmentsRaw.map((a) => a.coach_id)
+  const coachAssignmentsData = coachAssignmentsResult.data
+  if (coachAssignmentsData && coachAssignmentsData.length > 0) {
+    const coachIds = coachAssignmentsData.map((a) => a.coach_id)
     const { data: coachProfiles } = await adminClient
       .from("profiles")
       .select("id, full_name")
       .in("id", coachIds)
-
     const nameMap = new Map<string, string>()
-    for (const p of coachProfiles ?? []) {
-      nameMap.set(p.id, p.full_name ?? "不明")
-    }
-
-    coachAssignments = coachAssignmentsRaw.map((a) => ({
+    for (const p of coachProfiles ?? []) nameMap.set(p.id, p.full_name ?? "不明")
+    coachAssignments = coachAssignmentsData.map((a) => ({
       genre: a.genre,
       coachId: a.coach_id,
       coachName: nameMap.get(a.coach_id) ?? "不明",
     }))
   }
 
-  // --- 模擬案件の提出データ取得（提出単位） ---
-  const { data: assignmentsRaw } = await adminClient
-    .from("project_assignments")
-    .select("id, project_id, mock_projects(slug, title, genre), project_submissions(id, status, score, created_at)")
-    .eq("user_id", id)
-
+  // --- 模擬案件整形 ---
   type AssignmentRow = {
     id: string
     project_id: string
     mock_projects: { slug: string; title: string; genre: string } | null
     project_submissions: { id: string; status: string; score: number | null; created_at: string }[]
   }
-  const assignments = (assignmentsRaw ?? []) as unknown as AssignmentRow[]
+  const assignments = (assignmentsResult.data ?? []) as unknown as AssignmentRow[]
 
   const submissionRows: SubmissionRow[] = assignments
     .flatMap((a) =>
@@ -190,34 +215,16 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
     )
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-  // --- スキルレポートデータ取得 ---
-  const { data: skillRaw } = await adminClient
-    .from("project_assignments")
-    .select(`
-      project_submissions(
-        project_evaluations(
-          status,
-          project_evaluation_details(
-            category_large,
-            is_ok
-          )
-        )
-      )
-    `)
-    .eq("user_id", id)
-
+  // --- スキルレポート整形 ---
   type SkillAssignment = {
     project_submissions: {
       project_evaluations: {
         status: string
-        project_evaluation_details: {
-          category_large: string
-          is_ok: boolean
-        }[]
+        project_evaluation_details: { category_large: string; is_ok: boolean }[]
       } | null
     }[]
   }
-  const skillAssignments = (skillRaw ?? []) as unknown as SkillAssignment[]
+  const skillAssignments = (skillResult.data ?? []) as unknown as SkillAssignment[]
 
   const categoryMap = new Map<string, { ok: number; total: number }>()
   for (const assignment of skillAssignments) {
@@ -242,80 +249,41 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
       percentage: total > 0 ? Math.round((ok / total) * 100) : 0,
     })
   )
-
   const skillReport: SkillReportData = { categories, hasData: categories.length > 0 }
 
-  // --- 教材進捗データ取得 ---
+  // --- 教材進捗 ---
   let tutorialProgress: TutorialProgressItem[] = []
+  if (profile.default_genre && activeVersionId) {
+    const [sectionsResult, tutorialsResult, completedResult] = await Promise.all([
+      adminClient.from("contents").select("id, tutorial, title, slug_path, genre")
+        .eq("genre", profile.default_genre).eq("content_type", "section").eq("status", "active").eq("version_id", activeVersionId),
+      adminClient.from("contents").select("tutorial, title, slug_path, genre")
+        .eq("genre", profile.default_genre).eq("content_type", "tutorial").eq("status", "active").eq("version_id", activeVersionId)
+        .order("order", { ascending: true }),
+      adminClient.from("content_progress").select("content_id").eq("user_id", id),
+    ])
 
-  if (profile.default_genre) {
-    const activeVersionId = await getActiveVersionId(adminClient)
+    const sections = sectionsResult.data ?? []
+    const tutorials = tutorialsResult.data ?? []
+    const completedIds = new Set((completedResult.data ?? []).map((r) => r.content_id))
 
-    if (activeVersionId) {
-      const [sectionsResult, tutorialsResult, completedResult] = await Promise.all([
-        adminClient
-          .from("contents")
-          .select("id, tutorial, title, slug_path, genre")
-          .eq("genre", profile.default_genre)
-          .eq("content_type", "section")
-          .eq("status", "active")
-          .eq("version_id", activeVersionId),
-        adminClient
-          .from("contents")
-          .select("tutorial, title, slug_path, genre")
-          .eq("genre", profile.default_genre)
-          .eq("content_type", "tutorial")
-          .eq("status", "active")
-          .eq("version_id", activeVersionId)
-          .order("order", { ascending: true }),
-        adminClient
-          .from("content_progress")
-          .select("content_id")
-          .eq("user_id", id),
-      ])
-
-      const sections = sectionsResult.data ?? []
-      const tutorials = tutorialsResult.data ?? []
-      const completedIds = new Set((completedResult.data ?? []).map((r) => r.content_id))
-
-      tutorialProgress = tutorials.map((t) => {
-        const tutSections = sections.filter((s) => s.tutorial === t.tutorial)
-        const completed = tutSections.filter((s) => completedIds.has(s.id)).length
-        const total = tutSections.length
-        return {
-          tutorialSlug: t.tutorial,
-          tutorialTitle: t.title,
-          genre: t.genre,
-          completedSections: completed,
-          totalSections: total,
-          percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
-        }
-      })
-    }
+    tutorialProgress = tutorials.map((t) => {
+      const tutSections = sections.filter((s) => s.tutorial === t.tutorial)
+      const completed = tutSections.filter((s) => completedIds.has(s.id)).length
+      const total = tutSections.length
+      return {
+        tutorialSlug: t.tutorial,
+        tutorialTitle: t.title,
+        genre: t.genre,
+        completedSections: completed,
+        totalSections: total,
+        percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
+      }
+    })
   }
 
-  // --- 学習データ取得 ---
-  const now = new Date()
-  const today = formatLocalDate(now)
-  const currentYearMonth = getCurrentYearMonth()
-  const currentMonday = getCurrentMonday()
-
-  // 月次範囲
-  const monthRange = getMonthRange(currentYearMonth)
-
-  // 週次範囲
-  const weekRange = getWeekRangeFrom(currentMonday)
-
-  // 今月の日報（月次・週次・日次メトリクス算出に使用）
-  const { data: monthReports } = await adminClient
-    .from("daily_reports")
-    .select("actual_hours, report_date")
-    .eq("user_id", id)
-    .gte("report_date", monthRange.start)
-    .lte("report_date", monthRange.end)
-
-  const reports = monthReports ?? []
-
+  // --- 学習データ整形 ---
+  const reports = monthReportsResult.data ?? []
   const monthlyActual = reports.reduce((sum, r) => sum + r.actual_hours, 0)
   const weeklyActual = reports
     .filter((r) => r.report_date >= weekRange.start && r.report_date <= weekRange.end)
@@ -324,152 +292,68 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
     .filter((r) => r.report_date === today)
     .reduce((sum, r) => sum + r.actual_hours, 0)
 
-  // 月次・週次目標
-  const { data: monthlyGoal } = await adminClient
-    .from("monthly_goals")
-    .select("target_hours")
-    .eq("user_id", id)
-    .eq("year_month", currentYearMonth)
-    .maybeSingle()
-
-  const { data: weeklyGoal } = await adminClient
-    .from("weekly_goals")
-    .select("target_hours")
-    .eq("user_id", id)
-    .eq("start_date", currentMonday)
-    .maybeSingle()
-
-  const monthlyTarget = monthlyGoal?.target_hours ?? null
-  const weeklyTarget = weeklyGoal?.target_hours ?? null
-
   const metrics: LearningMetrics = {
     monthly: {
       actual: monthlyActual,
-      target: monthlyTarget,
-      percentage: monthlyTarget ? Math.round((monthlyActual / monthlyTarget) * 100) : null,
+      target: monthlyGoalResult.data?.target_hours ?? null,
+      percentage: monthlyGoalResult.data?.target_hours ? Math.round((monthlyActual / monthlyGoalResult.data.target_hours) * 100) : null,
     },
     weekly: {
       actual: weeklyActual,
-      target: weeklyTarget,
-      percentage: weeklyTarget ? Math.round((weeklyActual / weeklyTarget) * 100) : null,
+      target: weeklyGoalResult.data?.target_hours ?? null,
+      percentage: weeklyGoalResult.data?.target_hours ? Math.round((weeklyActual / weeklyGoalResult.data.target_hours) * 100) : null,
     },
-    daily: {
-      actual: dailyActual,
-    },
+    daily: { actual: dailyActual },
   }
 
-  // --- チャート用データ ---
-  const chartMonthKey = sp.chartMonth ?? currentYearMonth
-  const chartMonthRange = getMonthRange(chartMonthKey)
-  const chartWeekMonday = sp.chartWeek ?? currentMonday
-  const chartWeekRange = getWeekRangeFrom(chartWeekMonday)
-
-  // チャート月の日報データ
+  // --- チャートデータ ---
   let chartMonthReports = reports
   if (chartMonthKey !== currentYearMonth) {
     const { data } = await adminClient
-      .from("daily_reports")
-      .select("actual_hours, report_date")
-      .eq("user_id", id)
-      .gte("report_date", chartMonthRange.start)
-      .lte("report_date", chartMonthRange.end)
+      .from("daily_reports").select("actual_hours, report_date").eq("user_id", id)
+      .gte("report_date", chartMonthRange.start).lte("report_date", chartMonthRange.end)
     chartMonthReports = data ?? []
   }
 
-  // チャート用目標（フォールバック付き）
-  let chartMonthlyGoal =
-    chartMonthKey === currentYearMonth
-      ? monthlyGoal
-      : (
-          await adminClient
-            .from("monthly_goals")
-            .select("target_hours")
-            .eq("user_id", id)
-            .eq("year_month", chartMonthKey)
-            .maybeSingle()
-        ).data
+  const [chartMonthlyGoalResult, chartWeeklyGoalResult] = await Promise.all([
+    (async () => {
+      if (chartMonthKey === currentYearMonth) return monthlyGoalResult.data
+      const { data } = await adminClient.from("monthly_goals").select("target_hours").eq("user_id", id).eq("year_month", chartMonthKey).maybeSingle()
+      if (data) return data
+      const { data: fb } = await adminClient.from("monthly_goals").select("target_hours").eq("user_id", id).lte("year_month", chartMonthKey).order("year_month", { ascending: false }).limit(1).maybeSingle()
+      return fb
+    })(),
+    (async () => {
+      if (chartWeekMonday === currentMonday) return weeklyGoalResult.data
+      const { data } = await adminClient.from("weekly_goals").select("target_hours").eq("user_id", id).eq("start_date", chartWeekMonday).maybeSingle()
+      if (data) return data
+      const { data: fb } = await adminClient.from("weekly_goals").select("target_hours").eq("user_id", id).lte("start_date", chartWeekMonday).order("start_date", { ascending: false }).limit(1).maybeSingle()
+      return fb
+    })(),
+  ])
 
-  if (!chartMonthlyGoal) {
-    const { data } = await adminClient
-      .from("monthly_goals")
-      .select("target_hours")
-      .eq("user_id", id)
-      .lte("year_month", chartMonthKey)
-      .order("year_month", { ascending: false })
-      .limit(1)
-      .maybeSingle()
-    chartMonthlyGoal = data
-  }
-
-  let chartWeeklyGoal =
-    chartWeekMonday === currentMonday
-      ? weeklyGoal
-      : (
-          await adminClient
-            .from("weekly_goals")
-            .select("target_hours")
-            .eq("user_id", id)
-            .eq("start_date", chartWeekMonday)
-            .maybeSingle()
-        ).data
-
-  if (!chartWeeklyGoal) {
-    const { data } = await adminClient
-      .from("weekly_goals")
-      .select("target_hours")
-      .eq("user_id", id)
-      .lte("start_date", chartWeekMonday)
-      .order("start_date", { ascending: false })
-      .limit(1)
-      .maybeSingle()
-    chartWeeklyGoal = data
-  }
-
-  // 月チャートデータ
   const monthHoursByDate = new Map<string, number>()
   for (const r of chartMonthReports) {
-    monthHoursByDate.set(
-      r.report_date,
-      (monthHoursByDate.get(r.report_date) ?? 0) + r.actual_hours
-    )
+    monthHoursByDate.set(r.report_date, (monthHoursByDate.get(r.report_date) ?? 0) + r.actual_hours)
   }
 
   const [chartYear, chartMonth] = chartMonthKey.split("-").map(Number)
   const daysInChartMonth = new Date(chartYear, chartMonth, 0).getDate()
-  const monthlyChartData: DailyBar[] = Array.from(
-    { length: daysInChartMonth },
-    (_, i) => {
-      const day = i + 1
-      const dateStr = `${chartMonthKey}-${String(day).padStart(2, "0")}`
-      return {
-        label: String(day),
-        hours: monthHoursByDate.get(dateStr) ?? 0,
-        isToday: dateStr === today,
-      }
-    }
-  )
+  const monthlyChartData: DailyBar[] = Array.from({ length: daysInChartMonth }, (_, i) => {
+    const day = i + 1
+    const dateStr = `${chartMonthKey}-${String(day).padStart(2, "0")}`
+    return { label: String(day), hours: monthHoursByDate.get(dateStr) ?? 0, isToday: dateStr === today }
+  })
 
-  // 週チャートデータ
-  const weekNeedsExtraFetch =
-    chartWeekRange.start < chartMonthRange.start ||
-    chartWeekRange.end > chartMonthRange.end
-
+  const weekNeedsExtraFetch = chartWeekRange.start < chartMonthRange.start || chartWeekRange.end > chartMonthRange.end
   let weekHoursByDate = new Map<string, number>()
   if (!weekNeedsExtraFetch) {
     weekHoursByDate = monthHoursByDate
   } else {
     const { data } = await adminClient
-      .from("daily_reports")
-      .select("actual_hours, report_date")
-      .eq("user_id", id)
-      .gte("report_date", chartWeekRange.start)
-      .lte("report_date", chartWeekRange.end)
-    for (const r of data ?? []) {
-      weekHoursByDate.set(
-        r.report_date,
-        (weekHoursByDate.get(r.report_date) ?? 0) + r.actual_hours
-      )
-    }
+      .from("daily_reports").select("actual_hours, report_date").eq("user_id", id)
+      .gte("report_date", chartWeekRange.start).lte("report_date", chartWeekRange.end)
+    for (const r of data ?? []) weekHoursByDate.set(r.report_date, (weekHoursByDate.get(r.report_date) ?? 0) + r.actual_hours)
   }
 
   const weekDayLabels = ["月", "火", "水", "木", "金", "土", "日"]
@@ -478,21 +362,8 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
     const d = new Date(chartWeekStart)
     d.setDate(chartWeekStart.getDate() + i)
     const dateStr = formatLocalDate(d)
-    return {
-      label,
-      hours: weekHoursByDate.get(dateStr) ?? 0,
-      isToday: dateStr === today,
-    }
+    return { label, hours: weekHoursByDate.get(dateStr) ?? 0, isToday: dateStr === today }
   })
-
-  // 最近の日報（直近5件）
-  const { data: recentReportsData } = await adminClient
-    .from("daily_reports")
-    .select("id, report_date, actual_hours, content")
-    .eq("user_id", id)
-    .order("report_date", { ascending: false })
-    .order("created_at", { ascending: false })
-    .limit(5)
 
   const learningData = {
     metrics,
@@ -502,40 +373,29 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
     weekLabel: formatWeekLabel(chartWeekRange.start, chartWeekRange.end),
     currentMonthKey: chartMonthKey,
     currentWeekStart: chartWeekMonday,
-    monthlyTargetHours: chartMonthlyGoal?.target_hours ?? null,
-    weeklyTargetHours: chartWeeklyGoal?.target_hours ?? null,
+    monthlyTargetHours: chartMonthlyGoalResult?.target_hours ?? null,
+    weeklyTargetHours: chartWeeklyGoalResult?.target_hours ?? null,
     accountCreatedAt: profile.created_at,
-    recentReports: (recentReportsData ?? []).map((r) => ({
-      id: r.id,
-      reportDate: r.report_date,
-      actualHours: r.actual_hours,
-      content: r.content,
+    recentReports: (recentReportsResult.data ?? []).map((r) => ({
+      id: r.id, reportDate: r.report_date, actualHours: r.actual_hours, content: r.content,
     })),
   }
 
   return (
     <div className="flex flex-col gap-6 p-8">
-      {/* ヘッダー */}
       <div className="flex items-center gap-3">
-        <Link
-          href="/users"
-          className="text-muted-foreground hover:text-foreground transition-colors"
-        >
+        <Link href="/users" className="text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="size-5" />
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight">
-          ユーザー詳細
-        </h1>
+        <h1 className="text-2xl font-bold tracking-tight">ユーザー詳細</h1>
       </div>
 
-      {/* プロフィール + 学習メトリクス + 教材進捗 横並び */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[400px_1fr_1fr]">
         <ProfileCard user={userDetail} coachAssignments={coachAssignments} coachReadOnly />
         <MetricsRow metrics={learningData.metrics} goalHref={null} vertical />
         <TutorialProgressCard items={tutorialProgress} defaultGenre={profile.default_genre} progressHref={`/users/${id}/progress`} />
       </div>
 
-      {/* コンテンツ */}
       <div className="flex flex-col gap-6">
         <LearningOverview userId={id} userName={profile.full_name ?? ""} basePath={`/users/${id}`} hideMetrics {...learningData} />
         <ProjectAssignmentsCard submissions={submissionRows} />

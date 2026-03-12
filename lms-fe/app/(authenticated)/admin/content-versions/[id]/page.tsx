@@ -1,7 +1,6 @@
 import { redirect, notFound } from "next/navigation"
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
-import { getActiveVersionId } from "@/lib/supabase/content-version"
+import { getAuthUser, getUserProfile, getCachedActiveVersionId } from "@/lib/supabase/cached-queries"
 import {
   Card,
   CardContent,
@@ -86,23 +85,15 @@ export default async function ContentVersionDetailPage({
   params,
 }: PageProps) {
   const { id } = await params
-  const supabase = await createClient()
+  const { user, supabase } = await getAuthUser()
 
   // --- 認証チェック ---
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
   if (!user) {
     redirect("/auth/login")
   }
 
   // --- Super Admin 権限チェック ---
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single()
+  const profile = await getUserProfile(user.id)
 
   if (!profile || profile.role !== "super_admin") {
     redirect("/dashboard")
@@ -127,7 +118,7 @@ export default async function ContentVersionDetailPage({
   const mockProjectChangesSummary = version.mock_project_changes_summary as ChangesSummaryType | null
 
   // --- 比較対象バージョンの特定 ---
-  const activeVersionId = await getActiveVersionId(supabase)
+  const activeVersionId = await getCachedActiveVersionId()
 
   let comparisonVersionId: string | null = null
   if (activeVersionId && activeVersionId !== version.id) {

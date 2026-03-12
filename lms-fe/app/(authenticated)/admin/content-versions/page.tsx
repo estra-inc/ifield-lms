@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import {
   Card,
   CardContent,
@@ -74,23 +74,15 @@ export default async function ContentVersionsPage({
   searchParams,
 }: PageProps) {
   const params = await searchParams
-  const supabase = await createClient()
+  const { user, supabase } = await getAuthUser()
 
   // --- 認証チェック ---
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
   if (!user) {
     redirect("/auth/login")
   }
 
   // --- Super Admin 権限チェック ---
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single()
+  const profile = await getUserProfile(user.id)
 
   if (!profile || profile.role !== "super_admin") {
     redirect("/dashboard")

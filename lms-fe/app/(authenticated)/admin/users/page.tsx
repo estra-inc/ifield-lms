@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import { createAdminClient } from "@/lib/supabase/admin"
 import type { UserListItem } from "@/lib/types/user-management"
 import { UserFilters } from "./_components/user-filters"
@@ -21,20 +21,13 @@ export default async function UsersPage({ searchParams }: PageProps) {
   const params = await searchParams
 
   // --- 認証・権限チェック ---
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user, supabase } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single()
+  const profile = await getUserProfile(user.id)
 
   if (!profile || profile.role !== "super_admin") {
     redirect("/dashboard")

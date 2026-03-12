@@ -1,6 +1,6 @@
 import React from "react"
 import { redirect, notFound } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import {
   deriveProjectStatus,
   type ProjectStatusInput,
@@ -41,11 +41,7 @@ export default async function ProjectDetailPage({
   params,
   searchParams,
 }: ProjectDetailPageProps) {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { user, supabase } = await getAuthUser()
 
   if (!user) {
     redirect("/auth/login")
@@ -55,11 +51,7 @@ export default async function ProjectDetailPage({
   const { tab, page } = await searchParams
 
   // ユーザーのプロファイル取得（current_term, role）
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("current_term, role")
-    .eq("id", user.id)
-    .single()
+  const profile = await getUserProfile(user.id)
 
   const isSuperAdmin = profile?.role === "super_admin"
   const isReadOnly = isSuperAdmin || profile?.role === "manager"
