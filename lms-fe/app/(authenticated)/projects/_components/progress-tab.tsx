@@ -57,10 +57,10 @@ export function ProgressTab({
 }: ProgressTabProps) {
   return (
     <div className="space-y-6">
-      {/* 進捗サマリカード */}
+      {/* 進捗サマリ + 提出統計カード */}
       <Card>
         <CardContent>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4 sm:grid-cols-7">
             <div className="space-y-1">
               <p className="font-mono text-xs text-muted-foreground">開始日</p>
               <p className="font-mono text-sm font-medium" data-testid="start-date">
@@ -77,14 +77,6 @@ export function ProgressTab({
                 {formatDate(latestSubmissionDate)}
               </p>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 提出統計カード */}
-      <Card>
-        <CardContent>
-          <div className="grid grid-cols-4 gap-4">
             <div className="space-y-1">
               <p className="font-mono text-xs text-muted-foreground">提出回数</p>
               <p className="font-mono text-sm font-medium">{submissionCount}</p>
