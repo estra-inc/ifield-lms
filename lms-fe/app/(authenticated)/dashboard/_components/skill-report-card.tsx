@@ -10,9 +10,8 @@
  * Requirements: 1.4 (追加要件: スキルレポート統合)
  */
 
-import Link from "next/link"
 import { ResponsiveRadar } from "@nivo/radar"
-import { BarChart3, ArrowRight } from "lucide-react"
+import { BarChart3 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import type { SkillReportData } from "@/lib/types/dashboard"
@@ -57,22 +56,13 @@ export function SkillReportCard({ data }: SkillReportCardProps) {
 
   return (
     <Card className="border-border shadow-none">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle className="font-[family-name:var(--font-primary)] text-base tracking-tight">
-            スキルレポート
-          </CardTitle>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">
-            採点済み案件のカテゴリ別達成率
-          </p>
-        </div>
-        <Link
-          href="/projects"
-          className="flex items-center gap-1 text-xs text-primary hover:underline"
-        >
-          詳細を見る
-          <ArrowRight className="size-3" />
-        </Link>
+      <CardHeader>
+        <CardTitle className="font-[family-name:var(--font-primary)] text-base tracking-tight">
+          スキルレポート
+        </CardTitle>
+        <p className="mt-1 font-mono text-xs text-muted-foreground">
+          採点済み案件のカテゴリ別達成率
+        </p>
       </CardHeader>
       <div className="mx-0 h-px bg-border" />
       <CardContent className="pt-6">
