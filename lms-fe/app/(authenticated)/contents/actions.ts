@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import type { ActionResult } from "@/lib/validations/auth"
 
 /**
@@ -76,6 +77,21 @@ export async function markAsRead(
       success: false,
       message: "読了記録の保存に失敗しました。もう一度お試しください。",
     }
+  }
+
+  // ターム移行: 未開始（null）→ 基礎（初回読了時）
+  const adminClient = createAdminClient()
+  const { data: profile } = await adminClient
+    .from("profiles")
+    .select("current_term")
+    .eq("id", user.id)
+    .single()
+
+  if (profile && profile.current_term === null) {
+    await adminClient
+      .from("profiles")
+      .update({ current_term: "基礎", updated_at: new Date().toISOString() })
+      .eq("id", user.id)
   }
 
   revalidatePath("/contents")
