@@ -113,9 +113,18 @@ export default async function ContentVersionDetailPage({
   }
 
   type ChangesSummaryType = { added: number; updated: number; deleted: number }
-  const changesSummary = version.changes_summary as ChangesSummaryType | null
-  const quizChangesSummary = version.quiz_changes_summary as ChangesSummaryType | null
-  const mockProjectChangesSummary = version.mock_project_changes_summary as ChangesSummaryType | null
+
+  /** サマリーが実質空（全ゼロ）の場合は null として扱う */
+  function normalizeChangesSummary(raw: unknown): ChangesSummaryType | null {
+    const s = raw as ChangesSummaryType | null
+    if (!s) return null
+    if (s.added === 0 && s.updated === 0 && s.deleted === 0) return null
+    return s
+  }
+
+  const changesSummary = normalizeChangesSummary(version.changes_summary)
+  const quizChangesSummary = normalizeChangesSummary(version.quiz_changes_summary)
+  const mockProjectChangesSummary = normalizeChangesSummary(version.mock_project_changes_summary)
 
   // --- 比較対象バージョンの特定 ---
   const activeVersionId = await getCachedActiveVersionId()
@@ -307,7 +316,7 @@ export default async function ContentVersionDetailPage({
   let mockProjectDiffItems: DiffItem[] = []
 
   // mock_project_changes_summary に items が含まれている場合はそれを使用
-  const mockProjectItems = (mockProjectChangesSummary as { items?: { slug: string; genre: string; change_type: string }[] } | null)?.items
+  const mockProjectItems = (version.mock_project_changes_summary as { items?: { slug: string; genre: string; change_type: string }[] } | null)?.items
   if (mockProjectItems && mockProjectItems.length > 0) {
     mockProjectDiffItems = mockProjectItems.map((item) => ({
       path: `${item.genre}/${item.slug}`,
@@ -316,6 +325,7 @@ export default async function ContentVersionDetailPage({
   }
 
   // === TABS DATA ===
+  // 教材タブは常に表示。その他のタブは差分がある場合のみ表示。
   const tabsData: DiffTabData[] = [
     {
       label: "教材",
@@ -323,16 +333,20 @@ export default async function ContentVersionDetailPage({
       summary: changesSummary,
       emptyMessage: curriculumEmptyMessage,
     },
-    {
-      label: "演習問題",
-      items: quizDiffItems,
-      summary: quizChangesSummary,
-    },
-    {
-      label: "模擬案件",
-      items: mockProjectDiffItems,
-      summary: mockProjectChangesSummary,
-    },
+    ...(quizDiffItems.length > 0 || quizChangesSummary
+      ? [{
+          label: "演習問題",
+          items: quizDiffItems,
+          summary: quizChangesSummary,
+        }]
+      : []),
+    ...(mockProjectDiffItems.length > 0 || mockProjectChangesSummary
+      ? [{
+          label: "模擬案件",
+          items: mockProjectDiffItems,
+          summary: mockProjectChangesSummary,
+        }]
+      : []),
   ]
 
   // --- 全体プレビューリンク ---
@@ -439,7 +453,7 @@ export default async function ContentVersionDetailPage({
                   { label: "教材", summary: changesSummary },
                   { label: "演習問題", summary: quizChangesSummary },
                   { label: "模擬案件", summary: mockProjectChangesSummary },
-                ].map(({ label, summary }) => (
+                ].filter(({ summary }) => summary !== null).map(({ label, summary }) => (
                   <div key={label} className="flex items-center gap-2">
                     <span className="font-[family-name:var(--font-primary)] text-xs text-muted-foreground w-16 shrink-0">
                       {label}
