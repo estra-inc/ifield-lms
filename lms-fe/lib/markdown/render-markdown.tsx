@@ -228,8 +228,14 @@ function rehypeNormalizeCodeLanguage() {
 export async function renderMarkdown(
   markdownBody: string
 ): Promise<MarkdownRenderResult> {
+  // ![][url] → ![](url) に変換（参照スタイル画像リンクの修正）
+  const normalizedBody = markdownBody.replace(
+    /!\[\]\[(https?:\/\/[^\]]+)\]/g,
+    "![]($1)"
+  )
+
   // ToC データを独立に抽出
-  const tocItems = extractTocItems(markdownBody)
+  const tocItems = extractTocItems(normalizedBody)
 
   // unified 非同期パイプラインで Markdown → HTML 変換
   const result = await unified()
@@ -245,7 +251,7 @@ export async function renderMarkdown(
       defaultLang: "text",
     })
     .use(rehypeStringify)
-    .process(markdownBody)
+    .process(normalizedBody)
 
   const html = String(result)
 
