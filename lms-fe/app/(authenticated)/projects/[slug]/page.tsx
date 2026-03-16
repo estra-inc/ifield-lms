@@ -330,7 +330,7 @@ export default async function ProjectDetailPage({
                 dueDate={assignment!.due_date ?? null}
                 latestSubmissionDate={latestSubmission?.created_at ?? null}
                 latestSubmissionStatus={latestSubmission?.status ?? null}
-                isGrading={latestSubmission?.status === "grading"}
+                isGrading={latestSubmission?.status === "submitted" || latestSubmission?.status === "grading"}
                 isArchived={isArchived}
                 currentPage={Math.max(1, parseInt(page ?? "1", 10) || 1)}
                 slug={slug}

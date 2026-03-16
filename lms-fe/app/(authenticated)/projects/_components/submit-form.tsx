@@ -246,7 +246,7 @@ export function SubmitForm({
 
       {isGrading && (
         <p className="font-mono text-xs text-muted-foreground">
-          採点中のため提出できません。採点完了までお待ちください。
+          前回の提出がまだ採点されていません。採点完了までお待ちください。
         </p>
       )}
 

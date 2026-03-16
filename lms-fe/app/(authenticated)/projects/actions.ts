@@ -211,7 +211,7 @@ export async function submitWork(
     }
   }
 
-  // grading 中チェック（最新 submission のステータス確認）
+  // 未採点の提出物チェック（submitted または grading 中は再提出不可）
   const { data: latestSubmission } = await supabase
     .from("project_submissions")
     .select("id, status")
@@ -220,10 +220,10 @@ export async function submitWork(
     .limit(1)
     .single()
 
-  if (latestSubmission?.status === "grading") {
+  if (latestSubmission?.status === "submitted" || latestSubmission?.status === "grading") {
     return {
       success: false,
-      message: "採点中のため提出できません。採点完了までお待ちください。",
+      message: "前回の提出がまだ採点されていません。採点完了までお待ちください。",
     }
   }
 

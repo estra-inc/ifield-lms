@@ -121,7 +121,7 @@ export function ProgressTab({
         <div className="flex items-center gap-2 rounded-lg border border-amber-500/50 bg-amber-50 px-4 py-3 dark:bg-amber-950/20">
           <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
           <p className="font-[family-name:var(--font-primary)] text-sm text-amber-800 dark:text-amber-200">
-            採点中の成果物がある場合は、新しい成果物の提出はできません。
+            未採点の成果物がある場合は、新しい成果物の提出はできません。
           </p>
         </div>
       )}
