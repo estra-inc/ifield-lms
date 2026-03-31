@@ -4,12 +4,14 @@ import { NextRequest } from "next/server"
 
 const mockVerifyOtp = jest.fn()
 const mockExchangeCodeForSession = jest.fn()
+const mockGetUser = jest.fn()
 const mockFrom = jest.fn()
 
 const mockSupabaseClient = {
   auth: {
     verifyOtp: mockVerifyOtp,
     exchangeCodeForSession: mockExchangeCodeForSession,
+    getUser: mockGetUser,
   },
   from: mockFrom,
 }
@@ -31,39 +33,31 @@ describe("Auth コールバック Route Handler", () => {
   })
 
   describe("type=invite", () => {
-    it("verifyOtp で招待トークンを検証する", async () => {
+    it("verifyOtp を呼ばず token_hash 付きで /auth/invite/setup へリダイレクトする", async () => {
       const { GET } = await import("@/app/auth/callback/route")
 
-      mockVerifyOtp.mockResolvedValue({
-        data: { user: { id: "user-123" } },
+      // 未認証ユーザー（セッションなし）
+      mockGetUser.mockResolvedValue({
+        data: { user: null },
         error: null,
-      })
-      mockFrom.mockReturnValue({
-        select: jest.fn().mockReturnValue({
-          eq: jest.fn().mockReturnValue({
-            single: jest.fn().mockResolvedValue({
-              data: { full_name: null },
-              error: null,
-            }),
-          }),
-        }),
       })
 
       const request = createRequest(
         "/auth/callback?token_hash=abc123&type=invite"
       )
-      await GET(request)
+      const response = await GET(request)
 
-      expect(mockVerifyOtp).toHaveBeenCalledWith({
-        token_hash: "abc123",
-        type: "invite",
-      })
+      expect(mockVerifyOtp).not.toHaveBeenCalled()
+      expect(response.status).toBe(307)
+      const location = response.headers.get("Location")
+      expect(location).toContain("/auth/invite/setup")
+      expect(location).toContain("token_hash=abc123")
     })
 
-    it("トークン検証成功・full_name 未設定の場合 /auth/invite/setup へリダイレクトする", async () => {
+    it("既存セッションあり・full_name 未設定の場合 token_hash 付きで /auth/invite/setup へリダイレクトする", async () => {
       const { GET } = await import("@/app/auth/callback/route")
 
-      mockVerifyOtp.mockResolvedValue({
+      mockGetUser.mockResolvedValue({
         data: { user: { id: "user-123" } },
         error: null,
       })
@@ -83,15 +77,17 @@ describe("Auth コールバック Route Handler", () => {
       )
       const response = await GET(request)
 
+      expect(mockVerifyOtp).not.toHaveBeenCalled()
       expect(response.status).toBe(307)
       const location = response.headers.get("Location")
       expect(location).toContain("/auth/invite/setup")
+      expect(location).toContain("token_hash=abc123")
     })
 
-    it("トークン検証成功・full_name 設定済みの場合 /dashboard へリダイレクトする", async () => {
+    it("既存セッションあり・full_name 設定済みの場合 /dashboard へリダイレクトする", async () => {
       const { GET } = await import("@/app/auth/callback/route")
 
-      mockVerifyOtp.mockResolvedValue({
+      mockGetUser.mockResolvedValue({
         data: { user: { id: "user-123" } },
         error: null,
       })
@@ -111,22 +107,16 @@ describe("Auth コールバック Route Handler", () => {
       )
       const response = await GET(request)
 
+      expect(mockVerifyOtp).not.toHaveBeenCalled()
       expect(response.status).toBe(307)
       const location = response.headers.get("Location")
       expect(location).toContain("/dashboard")
     })
 
-    it("トークン検証失敗の場合 /auth/invite/error へリダイレクトする", async () => {
+    it("token_hash がない場合 /auth/invite/error へリダイレクトする", async () => {
       const { GET } = await import("@/app/auth/callback/route")
 
-      mockVerifyOtp.mockResolvedValue({
-        data: { user: null },
-        error: { message: "Token expired" },
-      })
-
-      const request = createRequest(
-        "/auth/callback?token_hash=expired_token&type=invite"
-      )
+      const request = createRequest("/auth/callback?type=invite")
       const response = await GET(request)
 
       expect(response.status).toBe(307)

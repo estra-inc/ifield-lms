@@ -129,6 +129,24 @@ export async function completeInviteSetup(
   }
 
   const supabase = await createClient()
+  const tokenHash = formData.get("tokenHash") as string | null
+
+  // token_hash がある場合: 招待リンクからの新規フロー（ここでトークンを消費）
+  // token_hash がない場合: 既存セッション経由（Middleware リダイレクト）
+  if (tokenHash) {
+    const { error: otpError } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: "invite",
+    })
+
+    if (otpError) {
+      return {
+        success: false,
+        message:
+          "招待リンクが無効または期限切れです。管理者に再招待を依頼してください。",
+      }
+    }
+  }
 
   // 現在のユーザーを取得
   const {

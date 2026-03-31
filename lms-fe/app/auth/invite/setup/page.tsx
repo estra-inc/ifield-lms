@@ -4,9 +4,16 @@ import { InviteSetupForm } from "./invite-setup-form"
  * 招待登録ページ (Server Component)
  *
  * Server Component ラッパー。InviteSetupForm Client Component をレンダリングする。
- * Middleware が未認証ユーザーのアクセスをブロック。
- * 認証済み + full_name 設定済みの場合は /dashboard へリダイレクト。
+ * URL の token_hash をフォームに引き継ぐ。
+ *
+ * - token_hash あり: 招待リンクからの遷移（未認証）
+ * - token_hash なし: Middleware 経由のリダイレクト（既存セッションあり）
  */
-export default function InviteSetupPage() {
-  return <InviteSetupForm />
+export default async function InviteSetupPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ token_hash?: string }>
+}) {
+  const { token_hash } = await searchParams
+  return <InviteSetupForm tokenHash={token_hash} />
 }

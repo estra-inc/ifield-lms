@@ -83,9 +83,11 @@ function Stepper({ currentStep }: { currentStep: 1 | 2 }) {
  *
  * - useState で currentStep: 1 | 2 を管理 (URL は変わらない)
  * - Step 1 のデータはローカルステートに保持
- * - Step 2 送信時に Step 1 + Step 2 データ + アバターを一括で FormData 送信
+ * - Step 2 送信時に Step 1 + Step 2 データ + アバター + token_hash を一括で FormData 送信
+ *
+ * @param tokenHash - 招待リンクからのトークン（Middleware経由の場合は undefined）
  */
-export function InviteSetupForm() {
+export function InviteSetupForm({ tokenHash }: { tokenHash?: string }) {
   const [currentStep, setCurrentStep] = useState<1 | 2>(1)
   const [step1Data, setStep1Data] = useState<InviteSetupStep1FormValues | null>(null)
   const [avatar, setAvatar] = useState<File | null>(null)
@@ -152,6 +154,9 @@ export function InviteSetupForm() {
     formData.append("confirmPassword", data.confirmPassword)
     if (avatar) {
       formData.append("avatar", avatar)
+    }
+    if (tokenHash) {
+      formData.append("tokenHash", tokenHash)
     }
 
     startTransition(() => {

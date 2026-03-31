@@ -7,8 +7,8 @@ import { createClient } from "@/lib/supabase/server"
  * Supabase Auth のコールバック（招待 URL、パスワードリセット）を処理する。
  * URL パラメータの `type` で処理を分岐する。
  *
- * - type=invite: verifyOtp({ token_hash, type: 'invite' }) でセッション確立
- *   (PKCE 非対応のため exchangeCodeForSession は使用しない)
+ * - type=invite: token_hash をセットアップページに引き継ぐ（verifyOtp はセットアップ完了時に実行）
+ *   セットアップ完了前にブラウザを閉じても再度リンクからやり直せるようにする
  * - type=recovery: PKCE code または token_hash でセッション確立
  * - code パラメータのみ（type なし）: PKCE フローとして処理
  * - 不正な type: ログインページへリダイレクト
@@ -42,8 +42,9 @@ export async function GET(request: NextRequest) {
 /**
  * 招待コールバック処理
  *
- * verifyOtp で招待トークンを検証し、セッションを確立する。
- * full_name の設定状態に基づきリダイレクト先を決定する。
+ * トークンを消費せず、token_hash をセットアップページに引き継ぐ。
+ * セットアップフォーム送信時に verifyOtp を実行することで、
+ * ブラウザを閉じても再度リンクからやり直せるようにする。
  */
 async function handleInviteCallback(
   supabase: Awaited<ReturnType<typeof createClient>>,
@@ -56,27 +57,26 @@ async function handleInviteCallback(
     return NextResponse.redirect(new URL("/auth/invite/error", origin))
   }
 
-  const { data, error } = await supabase.auth.verifyOtp({
-    token_hash: tokenHash,
-    type: "invite",
-  })
+  // 既にセットアップ完了済みの場合はダッシュボードへ（verifyOtp は呼ばない）
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .single()
 
-  if (error || !data.user) {
-    return NextResponse.redirect(new URL("/auth/invite/error", origin))
+    if (profile?.full_name) {
+      return NextResponse.redirect(new URL("/dashboard", origin))
+    }
   }
 
-  // profiles テーブルから full_name を確認
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("id", data.user.id)
-    .single()
-
-  if (profile?.full_name) {
-    return NextResponse.redirect(new URL("/dashboard", origin))
-  }
-
-  return NextResponse.redirect(new URL("/auth/invite/setup", origin))
+  // token_hash をセットアップページに引き継ぐ（ここでは verifyOtp を呼ばない）
+  const setupUrl = new URL("/auth/invite/setup", origin)
+  setupUrl.searchParams.set("token_hash", tokenHash)
+  return NextResponse.redirect(setupUrl)
 }
 
 /**
