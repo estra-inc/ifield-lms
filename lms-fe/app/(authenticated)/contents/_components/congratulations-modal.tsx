@@ -36,7 +36,7 @@ export function CongratulationsModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="w-[440px] max-w-[440px] rounded-xl p-8 shadow-[0_8px_40px_rgba(0,0,0,0.3)]"
+        className="w-full max-w-[440px] rounded-xl p-6 sm:p-8 shadow-[0_8px_40px_rgba(0,0,0,0.3)]"
       >
         <div className="flex flex-col items-center gap-6">
           {/* アイコン */}
