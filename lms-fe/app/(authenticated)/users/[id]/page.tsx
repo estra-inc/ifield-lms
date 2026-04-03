@@ -382,7 +382,7 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
   }
 
   return (
-    <div className="flex flex-col gap-6 p-8">
+    <div className="flex flex-col gap-6 px-4 py-4 sm:px-6 md:px-8 md:py-6">
       <div className="flex items-center gap-3">
         <Link href="/users" className="text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="size-5" />
@@ -390,7 +390,7 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
         <h1 className="text-xl md:text-2xl font-bold tracking-tight">ユーザー詳細</h1>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-[400px_1fr_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[400px_1fr_1fr]">
         <ProfileCard user={userDetail} coachAssignments={coachAssignments} coachReadOnly />
         <MetricsRow metrics={learningData.metrics} goalHref={null} vertical />
         <TutorialProgressCard items={tutorialProgress} defaultGenre={profile.default_genre} progressHref={`/users/${id}/progress`} />

@@ -19,7 +19,7 @@ export function ProgressSummaryCards({
   genreLabel,
 }: ProgressSummaryCardsProps) {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {/* ジャンル進捗カード */}
       <div className="rounded-lg border border-border bg-card p-5">
         <p className="font-mono text-xs text-muted-foreground">

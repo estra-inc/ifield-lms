@@ -154,7 +154,7 @@ export function ProjectAssignmentsCard({
       <h3 className="text-base font-bold tracking-tight">模擬案件</h3>
 
       {/* 提出統計 */}
-      <div className="grid grid-cols-4 gap-4 rounded-lg border border-border bg-muted/30 p-4">
+      <div className="grid grid-cols-2 gap-4 rounded-lg border border-border bg-muted/30 p-4 sm:grid-cols-4">
         <div className="space-y-1">
           <p className="font-mono text-xs text-muted-foreground">提出回数</p>
           <p className="font-mono text-sm font-medium">{submissionCount}</p>
