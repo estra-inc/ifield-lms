@@ -145,7 +145,7 @@ export default async function ContentVersionsPage({
       {/* バージョンカードグリッド */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Active バージョンカード */}
-        <Card className="border-border">
+        <Card className="border-border overflow-hidden">
           <CardHeader className="border-b border-border">
             <div className="flex items-center gap-3">
               <CardTitle className="font-[family-name:var(--font-primary)] text-base">
@@ -175,7 +175,7 @@ export default async function ContentVersionsPage({
                     <span className="font-[family-name:var(--font-primary)] text-xs text-muted-foreground uppercase tracking-wider shrink-0">
                       コミットメッセージ
                     </span>
-                    <span className="font-[family-name:var(--font-secondary)] text-sm text-foreground truncate">
+                    <span className="font-[family-name:var(--font-secondary)] text-sm text-foreground line-clamp-2 sm:truncate sm:line-clamp-none">
                       {activeVersion.commit_message}
                     </span>
                   </div>
@@ -200,7 +200,7 @@ export default async function ContentVersionsPage({
         </Card>
 
         {/* Draft バージョンカード */}
-        <Card className="border-border">
+        <Card className="border-border overflow-hidden">
           <CardHeader className="border-b border-border">
             <div className="flex items-center gap-3">
               <CardTitle className="font-[family-name:var(--font-primary)] text-base">
@@ -233,7 +233,7 @@ export default async function ContentVersionsPage({
                       <span className="font-[family-name:var(--font-primary)] text-xs text-muted-foreground uppercase tracking-wider shrink-0">
                         コミットメッセージ
                       </span>
-                      <span className="font-[family-name:var(--font-secondary)] text-sm text-foreground truncate">
+                      <span className="font-[family-name:var(--font-secondary)] text-sm text-foreground line-clamp-2 sm:truncate sm:line-clamp-none">
                         {draftVersion.commit_message}
                       </span>
                     </div>
