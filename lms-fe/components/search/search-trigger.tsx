@@ -49,7 +49,7 @@ export function SearchTrigger({ userRole }: SearchTriggerProps) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex w-[600px] items-center gap-2 rounded-lg bg-muted px-3 h-9 transition-colors hover:bg-muted/80"
+        className="flex w-full max-w-[600px] items-center gap-2 rounded-lg bg-muted px-3 h-9 transition-colors hover:bg-muted/80"
       >
         <Search className="size-4 text-muted-foreground" />
         <span className="flex-1 text-left font-mono text-[13px] text-muted-foreground">
