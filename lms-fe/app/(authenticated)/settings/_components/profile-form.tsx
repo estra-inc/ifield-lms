@@ -181,7 +181,7 @@ export function ProfileForm({
           className="flex flex-col gap-6"
         >
           {/* 姓名フィールド (横並び) */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="lastName"
