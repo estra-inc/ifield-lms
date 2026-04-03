@@ -23,7 +23,7 @@ export function ContentBreadcrumb({
   return (
     <nav
       aria-label="パンくずリスト"
-      className="px-8 py-5"
+      className="px-4 py-4 sm:px-6 md:px-8 md:py-5"
     >
       <ol className="flex items-center font-mono text-[13px]">
         {items.map((item, index) => (

@@ -105,7 +105,7 @@ export default async function GradingListPage({ searchParams }: PageProps) {
   const totalPending = submissions.length
 
   return (
-    <div className="flex flex-col gap-6 px-8 py-6">
+    <div className="flex flex-col gap-6 px-4 py-4 sm:px-6 md:px-8 md:py-6">
       {/* ページヘッダー */}
       <div>
         <h1 className="font-[family-name:var(--font-primary)] text-2xl font-bold tracking-[-1px]">
