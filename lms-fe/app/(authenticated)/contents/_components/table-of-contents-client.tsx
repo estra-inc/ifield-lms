@@ -53,7 +53,7 @@ export function TableOfContentsClient({
   }
 
   return (
-    <div className="w-60 shrink-0 pt-6">
+    <div className="hidden md:block w-60 shrink-0 pt-6">
       <nav className="sticky top-6 max-h-[calc(100vh-3rem)] rounded-lg border border-border bg-card p-4 overflow-y-auto">
         <h4 className="font-[family-name:var(--font-primary)] text-sm font-bold text-foreground">
           目次

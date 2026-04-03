@@ -176,8 +176,8 @@ export default async function ContentDetailPage({
         )}
 
         {/* メインコンテンツ */}
-        <div className="w-0 flex-1 pl-8 pt-6">
-          <div className="rounded-lg border border-border bg-card p-8 space-y-8">
+        <div className="w-0 flex-1 md:pl-8 pt-6">
+          <div className="rounded-lg border border-border bg-card p-4 sm:p-6 md:p-8 space-y-8">
             {/* セクションタイトル */}
             <h1
               id="section-content"
