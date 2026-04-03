@@ -169,7 +169,7 @@ export function QuizClient({
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card p-8 space-y-8">
+    <div className="rounded-lg border border-border bg-card p-4 sm:p-6 md:p-8 space-y-6 md:space-y-8">
       {/* タイトル */}
       <h1 className="font-[family-name:var(--font-primary)] text-[22px] font-bold text-foreground">
         {quiz.title}
