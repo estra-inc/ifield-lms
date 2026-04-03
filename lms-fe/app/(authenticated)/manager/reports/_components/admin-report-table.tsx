@@ -100,7 +100,7 @@ export function AdminReportTable({
               <TableHead className="w-[90px] text-[13px] text-muted-foreground">
                 日付
               </TableHead>
-              <TableHead className="w-[80px] text-[13px] text-muted-foreground">
+              <TableHead className="w-[80px] text-[13px] text-muted-foreground hidden md:table-cell">
                 学習時間
               </TableHead>
               <TableHead className="text-[13px] text-muted-foreground">
@@ -147,7 +147,7 @@ export function AdminReportTable({
                   </TableCell>
 
                   {/* 学習時間 */}
-                  <TableCell className="text-[13px] font-normal tabular-nums">
+                  <TableCell className="text-[13px] font-normal tabular-nums hidden md:table-cell">
                     {report.actualHours}h
                   </TableCell>
 
