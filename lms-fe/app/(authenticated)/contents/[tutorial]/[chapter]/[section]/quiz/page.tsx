@@ -172,7 +172,7 @@ export default async function QuizPage({
       <div>
         <ContentBreadcrumb items={breadcrumbItems} currentLabel="演習問題" />
 
-        <div className="px-8 pb-8">
+        <div className="px-4 pb-6 sm:px-6 md:px-8 md:pb-8">
           <div className="mx-auto max-w-2xl space-y-6">
             <h1 className="font-[family-name:var(--font-primary)] text-lg font-bold text-foreground">
               演習問題を選択
@@ -285,7 +285,7 @@ export default async function QuizPage({
     <div>
       <ContentBreadcrumb items={breadcrumbItems} currentLabel="演習問題" />
 
-      <div className="px-8 pb-8">
+      <div className="px-4 pb-6 sm:px-6 md:px-8 md:pb-8">
         <QuizClient
           quiz={{
             id: quiz.id,

@@ -142,7 +142,7 @@ export default async function GradingPage({ params }: PageProps) {
     }
 
     return (
-      <div className="flex flex-col gap-6 px-8 py-6">
+      <div className="flex flex-col gap-6 px-4 py-4 sm:px-6 md:px-8 md:py-6">
         <Link
           href="/admin/grading"
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit"
@@ -275,7 +275,7 @@ export default async function GradingPage({ params }: PageProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6 px-8 py-6">
+    <div className="flex flex-col gap-6 px-4 py-4 sm:px-6 md:px-8 md:py-6">
       {/* 戻るリンク */}
       <Link
         href="/admin/grading"

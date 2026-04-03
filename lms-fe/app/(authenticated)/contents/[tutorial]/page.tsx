@@ -113,7 +113,7 @@ export default async function TutorialDetailPage({
     <div>
       <ContentBreadcrumb items={breadcrumbItems} currentLabel={tutorialData.title} />
 
-      <div className="px-8 pb-8 space-y-6">
+      <div className="px-4 pb-6 sm:px-6 md:px-8 md:pb-8 space-y-6">
         <h1 className="font-[family-name:var(--font-primary)] text-[22px] font-bold text-foreground">
           {tutorialData.title}
         </h1>

@@ -169,7 +169,7 @@ export default async function ContentDetailPage({
       <ContentBreadcrumb items={breadcrumbItems} currentLabel={content.title} />
 
       {/* メインレイアウト */}
-      <div className="flex gap-0 px-8 pb-8">
+      <div className="flex gap-0 px-4 pb-6 sm:px-6 md:px-8 md:pb-8">
         {/* サイドバー目次 */}
         {tocItems.length > 0 && (
           <TableOfContentsClient tocItems={tocItems} />

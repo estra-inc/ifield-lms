@@ -303,7 +303,7 @@ export default async function GoalsPage({ searchParams }: PageProps) {
   )
 
   return (
-    <div className="flex flex-col gap-6 px-8 py-6">
+    <div className="flex flex-col gap-6 px-4 py-4 sm:px-6 md:px-8 md:py-6">
       {/* ページヘッダー */}
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">学習目標</h1>
