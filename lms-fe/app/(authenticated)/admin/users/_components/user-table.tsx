@@ -72,16 +72,16 @@ export function UserTable({ users, paginationSlot }: UserTableProps) {
       <Table>
         <TableHeader>
           <TableRow className="h-11 bg-muted">
-            <TableHead className="w-10 text-center">
+            <TableHead className="w-10 text-center hidden md:table-cell">
               <input type="checkbox" className="size-4 rounded border-border" disabled />
             </TableHead>
             <TableHead className="w-[180px] text-[13px] text-muted-foreground">氏名</TableHead>
             <TableHead className="text-[13px] text-muted-foreground">メールアドレス</TableHead>
-            <TableHead className="w-[120px] text-[13px] text-muted-foreground">ロール</TableHead>
+            <TableHead className="w-[120px] text-[13px] text-muted-foreground hidden md:table-cell">ロール</TableHead>
             <TableHead className="w-[90px] text-[13px] text-muted-foreground">受講状態</TableHead>
-            <TableHead className="w-[120px] text-[13px] text-muted-foreground">作成日</TableHead>
-            <TableHead className="w-[90px] text-[13px] text-muted-foreground">経過日数</TableHead>
-            <TableHead className="w-[60px]" />
+            <TableHead className="w-[120px] text-[13px] text-muted-foreground hidden md:table-cell">作成日</TableHead>
+            <TableHead className="w-[90px] text-[13px] text-muted-foreground hidden md:table-cell">経過日数</TableHead>
+            <TableHead className="w-[60px] hidden md:table-cell" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -91,7 +91,7 @@ export function UserTable({ users, paginationSlot }: UserTableProps) {
               className="cursor-pointer h-[52px]"
               onClick={() => router.push(`${pathname}/${user.id}`)}
             >
-              <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+              <TableCell className="text-center hidden md:table-cell" onClick={(e) => e.stopPropagation()}>
                 <input type="checkbox" className="size-4 rounded border-border" />
               </TableCell>
               <TableCell>
@@ -115,7 +115,7 @@ export function UserTable({ users, paginationSlot }: UserTableProps) {
               <TableCell className="text-[13px] font-normal">
                 {user.email}
               </TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
                 <Badge
                   variant="outline"
                   className={`rounded-full px-2.5 py-1 text-xs ${ROLE_BADGE_CLASSES[user.role]}`}
@@ -135,13 +135,13 @@ export function UserTable({ users, paginationSlot }: UserTableProps) {
                   {user.isBanned ? "無効" : "有効"}
                 </Badge>
               </TableCell>
-              <TableCell className="text-[13px] font-normal">
+              <TableCell className="text-[13px] font-normal hidden md:table-cell">
                 {formatDate(user.createdAt)}
               </TableCell>
-              <TableCell className="text-[13px] font-normal tabular-nums">
+              <TableCell className="text-[13px] font-normal tabular-nums hidden md:table-cell">
                 {getElapsedDays(user.createdAt)}日
               </TableCell>
-              <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+              <TableCell className="text-center hidden md:table-cell" onClick={(e) => e.stopPropagation()}>
                 <EllipsisIcon className="size-[18px] text-muted-foreground mx-auto" />
               </TableCell>
             </TableRow>
