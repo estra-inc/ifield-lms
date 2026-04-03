@@ -129,7 +129,7 @@ export default async function UsersPage({ searchParams }: PageProps) {
       </div>
 
       {/* ロール別カウント */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-lg border border-border bg-card px-4 py-3">
           <p className="font-mono text-xs text-muted-foreground">受講生</p>
           <p className="text-2xl font-bold">{learnerCount}<span className="ml-1 text-sm font-normal text-muted-foreground">人</span></p>
