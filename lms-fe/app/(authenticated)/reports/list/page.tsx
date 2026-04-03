@@ -72,7 +72,7 @@ export default async function ReportListPage({ searchParams }: PageProps) {
       {/* ページヘッダー */}
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight">日報一覧</h1>
+          <h1 className="text-xl md:text-2xl font-semibold tracking-tight">日報一覧</h1>
           <p className="text-sm text-muted-foreground">
             これまでの学習記録を振り返りましょう
           </p>

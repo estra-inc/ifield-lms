@@ -387,7 +387,7 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
         <Link href="/users" className="text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="size-5" />
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight">ユーザー詳細</h1>
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">ユーザー詳細</h1>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[400px_1fr_1fr]">

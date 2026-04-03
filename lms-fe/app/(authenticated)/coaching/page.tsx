@@ -109,7 +109,7 @@ export default async function CoachingPage({ searchParams }: PageProps) {
   return (
     <div className="flex flex-col gap-6 p-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">コーチング予約</h1>
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">コーチング予約</h1>
         <GenreSelect currentGenre={selectedGenre} defaultGenre={defaultGenre} />
       </div>
       <CoachingPageClient

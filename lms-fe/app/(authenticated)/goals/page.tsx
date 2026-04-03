@@ -306,7 +306,7 @@ export default async function GoalsPage({ searchParams }: PageProps) {
     <div className="flex flex-col gap-6 px-4 py-4 sm:px-6 md:px-8 md:py-6">
       {/* ページヘッダー */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">学習目標</h1>
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">学習目標</h1>
         <p className="text-sm text-muted-foreground">
           月次・週次の学習目標を設定して進捗を管理しましょう
         </p>

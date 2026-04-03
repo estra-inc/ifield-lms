@@ -244,7 +244,7 @@ export default async function AdminSkillReportPage({ params }: PageProps) {
 
       {/* ページヘッダー */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">
           スキルレポート
         </h1>
         <p className="text-sm text-muted-foreground">

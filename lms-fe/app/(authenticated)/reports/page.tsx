@@ -143,7 +143,7 @@ export default async function ReportsPage() {
     <div className="flex flex-col gap-6 px-4 py-4 sm:px-6 md:px-8 md:py-6">
       {/* ページヘッダー */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">日報入力</h1>
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">日報入力</h1>
         <p className="text-sm text-muted-foreground">
           日々の学習時間と学習内容を記録しましょう
         </p>
