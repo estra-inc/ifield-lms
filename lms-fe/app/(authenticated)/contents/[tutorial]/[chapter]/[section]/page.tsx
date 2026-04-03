@@ -3,7 +3,7 @@ import { getAuthUser, getUserProfile } from "@/lib/supabase/cached-queries"
 import { resolveVersionId } from "@/lib/supabase/content-version"
 import { renderMarkdown } from "@/lib/markdown/render-markdown"
 import { ContentBreadcrumb } from "@/app/(authenticated)/contents/_components/content-breadcrumb"
-import { TableOfContentsClient } from "@/app/(authenticated)/contents/_components/table-of-contents-client"
+import { TableOfContentsClient, MobileTableOfContents } from "@/app/(authenticated)/contents/_components/table-of-contents-client"
 import { SectionNavigation } from "@/app/(authenticated)/contents/_components/section-navigation"
 import { ReadCompleteButton } from "@/app/(authenticated)/contents/_components/read-complete-button"
 import { SectionQuizButton } from "@/app/(authenticated)/contents/_components/section-quiz-button"
@@ -168,9 +168,16 @@ export default async function ContentDetailPage({
       {/* パンくずリスト */}
       <ContentBreadcrumb items={breadcrumbItems} currentLabel={content.title} />
 
+      {/* モバイル: 折りたたみ式目次 */}
+      {tocItems.length > 0 && (
+        <div className="md:hidden px-4 pt-4 sm:px-6">
+          <MobileTableOfContents tocItems={tocItems} />
+        </div>
+      )}
+
       {/* メインレイアウト */}
       <div className="flex gap-0 px-4 pb-6 sm:px-6 md:px-8 md:pb-8">
-        {/* サイドバー目次 */}
+        {/* デスクトップ: サイドバー目次 */}
         {tocItems.length > 0 && (
           <TableOfContentsClient tocItems={tocItems} />
         )}
