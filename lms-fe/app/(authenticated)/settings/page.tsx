@@ -83,7 +83,7 @@ export default async function SettingsPage() {
     <div className="flex flex-col gap-6 px-4 py-6 sm:px-6 md:px-8">
       {/* ページヘッダー */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">設定</h1>
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">設定</h1>
         <p className="text-sm text-muted-foreground">
           プロフィールやアカウント情報を管理します
         </p>

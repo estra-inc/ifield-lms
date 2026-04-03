@@ -37,7 +37,7 @@ export function ProgressDetailView({
         >
           <ArrowLeft className="size-5" />
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight">{backLabel}</h1>
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">{backLabel}</h1>
       </div>
 
       {tutorials.length === 0 ? (

@@ -410,7 +410,7 @@ export default async function DashboardPage() {
       )}
 
       <div>
-        <h1 className="font-[family-name:var(--font-primary)] text-2xl font-bold tracking-[-1px]">
+        <h1 className="font-[family-name:var(--font-primary)] text-xl md:text-2xl font-bold tracking-[-1px]">
           ダッシュボード
         </h1>
         <p className="mt-1 font-mono text-sm text-muted-foreground">

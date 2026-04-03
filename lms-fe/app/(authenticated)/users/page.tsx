@@ -108,7 +108,7 @@ export default async function ManagerUsersPage({ searchParams }: PageProps) {
     <div className="flex flex-col gap-6 px-4 py-4 sm:px-6 md:px-8 md:py-6">
       {/* ヘッダー */}
       <div>
-        <h1 className="font-[family-name:var(--font-primary)] text-2xl font-bold tracking-[-1px]">
+        <h1 className="font-[family-name:var(--font-primary)] text-xl md:text-2xl font-bold tracking-[-1px]">
           ユーザー一覧
         </h1>
         <p className="mt-1 font-mono text-sm text-muted-foreground">

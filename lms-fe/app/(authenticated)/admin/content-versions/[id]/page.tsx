@@ -367,7 +367,7 @@ export default async function ContentVersionDetailPage({
               <ArrowLeftIcon className="size-4" />
             </Link>
           </Button>
-          <h1 className="font-[family-name:var(--font-primary)] text-2xl font-semibold tracking-tight text-foreground">
+          <h1 className="font-[family-name:var(--font-primary)] text-xl md:text-2xl font-semibold tracking-tight text-foreground">
             差分ビュー
           </h1>
           {(() => {

@@ -134,7 +134,7 @@ export default async function ContentVersionsPage({
     <div className="flex flex-col gap-6 px-4 py-4 sm:px-6 md:px-8 md:py-6">
       {/* ページヘッダー */}
       <div className="flex flex-col gap-1">
-        <h1 className="font-[family-name:var(--font-primary)] text-2xl font-semibold tracking-tight text-foreground">
+        <h1 className="font-[family-name:var(--font-primary)] text-xl md:text-2xl font-semibold tracking-tight text-foreground">
           バージョン管理
         </h1>
         <p className="font-[family-name:var(--font-primary)] text-sm text-muted-foreground">
