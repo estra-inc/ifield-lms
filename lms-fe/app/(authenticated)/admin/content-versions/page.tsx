@@ -162,7 +162,7 @@ export default async function ContentVersionsPage({
           <CardContent>
             {activeVersion ? (
               <div className="flex flex-col gap-3">
-                <div className="flex items-baseline justify-between">
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
                   <span className="font-[family-name:var(--font-primary)] text-xs text-muted-foreground uppercase tracking-wider">
                     コミットハッシュ
                   </span>
@@ -171,7 +171,7 @@ export default async function ContentVersionsPage({
                   </code>
                 </div>
                 {activeVersion.commit_message && (
-                  <div className="flex items-baseline justify-between gap-4">
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
                     <span className="font-[family-name:var(--font-primary)] text-xs text-muted-foreground uppercase tracking-wider shrink-0">
                       コミットメッセージ
                     </span>
@@ -180,7 +180,7 @@ export default async function ContentVersionsPage({
                     </span>
                   </div>
                 )}
-                <div className="flex items-baseline justify-between">
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
                   <span className="font-[family-name:var(--font-primary)] text-xs text-muted-foreground uppercase tracking-wider">
                     同期日時
                   </span>
@@ -220,7 +220,7 @@ export default async function ContentVersionsPage({
             {draftVersion ? (
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-baseline justify-between">
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
                     <span className="font-[family-name:var(--font-primary)] text-xs text-muted-foreground uppercase tracking-wider">
                       コミットハッシュ
                     </span>
@@ -229,7 +229,7 @@ export default async function ContentVersionsPage({
                     </code>
                   </div>
                   {draftVersion.commit_message && (
-                    <div className="flex items-baseline justify-between gap-4">
+                    <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
                       <span className="font-[family-name:var(--font-primary)] text-xs text-muted-foreground uppercase tracking-wider shrink-0">
                         コミットメッセージ
                       </span>
@@ -238,7 +238,7 @@ export default async function ContentVersionsPage({
                       </span>
                     </div>
                   )}
-                  <div className="flex items-baseline justify-between">
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
                     <span className="font-[family-name:var(--font-primary)] text-xs text-muted-foreground uppercase tracking-wider">
                       同期日時
                     </span>

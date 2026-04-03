@@ -270,7 +270,7 @@ export default async function AdminCoachingPage({
           {/* 1段目: ステータス + 氏名検索 */}
           <div className="flex flex-wrap items-center gap-4">
             {/* ステータスフィルタ */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {FILTER_OPTIONS.map((opt) => (
                 <Button
                   key={opt.key}
@@ -333,7 +333,7 @@ export default async function AdminCoachingPage({
           </div>
 
           {/* 2段目: 日付期間フィルタ */}
-          <form method="GET" action="/admin/coaching" className="flex items-end gap-2">
+          <form method="GET" action="/admin/coaching" className="flex flex-wrap items-end gap-2">
             {statusFilter !== "all" && (
               <input type="hidden" name="status" value={statusFilter} />
             )}
