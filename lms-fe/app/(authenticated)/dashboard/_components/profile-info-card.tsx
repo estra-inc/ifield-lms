@@ -86,7 +86,7 @@ export function ProfileInfoCard({
         </div>
 
         {/* 情報グリッド（2列） */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[11px]">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-0.5 text-[11px] sm:grid-cols-2">
           <span className="text-muted-foreground">ロール</span>
           <span className="text-right font-medium">{roleLabel}</span>
 

@@ -34,7 +34,7 @@ export function AppShellLayout({
       <AppSidebar user={user} />
       <SidebarInset className="h-svh overflow-hidden">
         <AppHeader pageTitle={pageTitle} userRole={user.role} />
-        <main className="min-w-0 flex-1 overflow-y-auto">
+        <main className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden">
           {children}
         </main>
       </SidebarInset>
