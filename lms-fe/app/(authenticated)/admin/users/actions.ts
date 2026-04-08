@@ -533,6 +533,9 @@ export async function updateUserGenre(
   }
 
   revalidatePath(`/admin/users/${userId}`)
+  // 受講生側ページのキャッシュも念のため無効化（既存 updateDefaultGenre と同パターン）
+  revalidatePath("/contents")
+  revalidatePath("/coaching")
   return { success: true, message: "ジャンルを更新しました。" }
 }
 
