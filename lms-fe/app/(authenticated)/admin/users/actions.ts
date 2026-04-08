@@ -479,6 +479,64 @@ export async function assignCoach(
 }
 
 /**
+ * 受講生ジャンル変更 Server Action（管理者用）
+ *
+ * Super Admin が受講生（role='user'）の default_genre を更新する。
+ * 受講生本人が /contents の「デフォルト」設定で書き込む値と同じカラムを更新する。
+ */
+export async function updateUserGenre(
+  _prevState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
+  const authResult = await verifySuperAdmin()
+  if ("error" in authResult) {
+    return authResult.error
+  }
+
+  const userId = formData.get("userId") as string
+  const genre = formData.get("genre") as string
+
+  if (!userId) {
+    return { success: false, message: "ユーザーIDが不足しています。" }
+  }
+  if (genre !== "engineering" && genre !== "design") {
+    return { success: false, message: "無効なジャンルです。" }
+  }
+
+  const adminClient = createAdminClient()
+
+  // 対象ユーザーが受講生（role='user'）であることを確認
+  const { data: targetProfile, error: targetError } = await adminClient
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .single()
+
+  if (targetError || !targetProfile) {
+    return { success: false, message: "対象ユーザーが見つかりません。" }
+  }
+  if (targetProfile.role !== "user") {
+    return { success: false, message: "受講生以外のジャンルは変更できません。" }
+  }
+
+  const { error: updateError } = await adminClient
+    .from("profiles")
+    .update({
+      default_genre: genre,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userId)
+
+  if (updateError) {
+    console.error("updateUserGenre error:", updateError.message)
+    return { success: false, message: "ジャンルの更新に失敗しました。" }
+  }
+
+  revalidatePath(`/admin/users/${userId}`)
+  return { success: true, message: "ジャンルを更新しました。" }
+}
+
+/**
  * コーチングセッション メモ保存 Server Action（管理者用）
  *
  * Super Admin が任意ユーザーのセッション notes を更新する。

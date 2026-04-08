@@ -10,6 +10,7 @@ import {
   type CoachAssignmentItem,
   type CoachOption,
 } from "./coach-assignment-section"
+import { GenreSection } from "./genre-section"
 
 const ROLE_LABELS: Record<UserRole, string> = {
   user: "User",
@@ -39,6 +40,7 @@ interface ProfileCardProps {
   coachAssignments?: CoachAssignmentItem[]
   availableCoaches?: CoachOption[]
   coachReadOnly?: boolean
+  defaultGenre?: string | null
 }
 
 export function ProfileCard({
@@ -46,6 +48,7 @@ export function ProfileCard({
   coachAssignments = [],
   availableCoaches = [],
   coachReadOnly = false,
+  defaultGenre = null,
 }: ProfileCardProps) {
   const createdDate = format(new Date(user.createdAt), "yyyy/MM/dd")
   const elapsedDays = differenceInDays(new Date(), new Date(user.createdAt))
@@ -105,6 +108,15 @@ export function ProfileCard({
             <span className="text-[13px] text-muted-foreground">経過日数</span>
             <span className="text-[13px] tabular-nums">{elapsedDays}日</span>
           </div>
+
+          {/* ジャンル設定セクション（user ロールのみ） */}
+          {user.role === "user" && (
+            <GenreSection
+              userId={user.id}
+              defaultGenre={defaultGenre}
+              coachAssignments={coachAssignments}
+            />
+          )}
 
           {/* コーチ割り当てセクション（user ロールのみ） */}
           {user.role === "user" && (
