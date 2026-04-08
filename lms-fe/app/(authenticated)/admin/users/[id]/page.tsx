@@ -534,7 +534,7 @@ export default async function UserDetailPage({ params, searchParams }: PageProps
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[400px_1fr_1fr]">
-        <ProfileCard user={userDetail} coachAssignments={coachAssignments} availableCoaches={availableCoaches} />
+        <ProfileCard user={userDetail} coachAssignments={coachAssignments} availableCoaches={availableCoaches} defaultGenre={profile.default_genre} />
         <MetricsRow metrics={learningData.metrics} goalHref={null} vertical />
         <TutorialProgressCard items={tutorialProgress} defaultGenre={profile.default_genre} progressHref={`/admin/users/${id}/progress`} />
       </div>
