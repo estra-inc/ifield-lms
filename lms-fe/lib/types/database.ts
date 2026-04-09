@@ -85,6 +85,7 @@ export type Database = {
           current_term: string | null
           graduation_date: string | null
           default_genre: string | null
+          slack_user_id: string | null
           created_at: string
           updated_at: string
         }
@@ -99,6 +100,7 @@ export type Database = {
           current_term?: string | null
           graduation_date?: string | null
           default_genre?: string | null
+          slack_user_id?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -113,6 +115,7 @@ export type Database = {
           current_term?: string | null
           graduation_date?: string | null
           default_genre?: string | null
+          slack_user_id?: string | null
           created_at?: string
           updated_at?: string
         }

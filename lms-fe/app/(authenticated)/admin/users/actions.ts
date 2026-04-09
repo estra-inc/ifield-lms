@@ -577,3 +577,120 @@ export async function saveSessionNote(
 
   return { success: true, message: "メモを保存しました。" }
 }
+
+// ---- Slack User ID 管理 ----
+
+const SLACK_USER_ID_REGEX = /^[UW][A-Z0-9]+$/
+
+/**
+ * Slack User ID 登録・更新 Server Action（Super Admin 用）
+ *
+ * 管理者ユーザー詳細画面から他の Super Admin の slack_user_id を設定する。
+ * useActionState 互換のシグネチャ。
+ */
+export async function updateSlackUserId(
+  _prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  const authResult = await verifySuperAdmin()
+  if ("error" in authResult) {
+    return authResult.error
+  }
+
+  const targetUserId = formData.get("userId") as string
+  const slackUserId = (formData.get("slackUserId") as string ?? "").trim()
+
+  if (!targetUserId) {
+    return { success: false, message: "対象ユーザーIDが不足しています。" }
+  }
+
+  if (!slackUserId) {
+    return {
+      success: false,
+      message: "Slack User ID が空です。解除する場合は「解除」ボタンを使用してください。",
+    }
+  }
+
+  if (!SLACK_USER_ID_REGEX.test(slackUserId)) {
+    return {
+      success: false,
+      message: "Slack User ID の形式が正しくありません（U または W から始まる英大文字・数字の文字列）。",
+    }
+  }
+
+  // 更新対象が super_admin であることを検証
+  const adminClient = createAdminClient()
+  const { data: targetProfile } = await adminClient
+    .from("profiles")
+    .select("role")
+    .eq("id", targetUserId)
+    .single()
+
+  if (targetProfile?.role !== "super_admin") {
+    return {
+      success: false,
+      message: "Slack User ID は Super Admin にのみ登録できます。",
+    }
+  }
+
+  const { error } = await adminClient
+    .from("profiles")
+    .update({ slack_user_id: slackUserId })
+    .eq("id", targetUserId)
+
+  if (error) {
+    console.error("updateSlackUserId: update error:", error.message)
+    return { success: false, message: "Slack User ID の保存に失敗しました。" }
+  }
+
+  revalidatePath(`/admin/users/${targetUserId}`)
+  return { success: true, message: "Slack User ID を保存しました。" }
+}
+
+/**
+ * Slack User ID 解除 Server Action（Super Admin 用）
+ *
+ * adminDisconnectGoogleCalendar と同パターン。
+ * slack_user_id を NULL に更新する。
+ */
+export async function clearSlackUserId(
+  targetUserId: string
+): Promise<ActionResult> {
+  const authResult = await verifySuperAdmin()
+  if ("error" in authResult) {
+    return authResult.error
+  }
+
+  if (!targetUserId) {
+    return { success: false, message: "対象ユーザーIDが不足しています。" }
+  }
+
+  const adminClient = createAdminClient()
+
+  // 更新対象が super_admin であることを検証
+  const { data: targetProfile } = await adminClient
+    .from("profiles")
+    .select("role")
+    .eq("id", targetUserId)
+    .single()
+
+  if (targetProfile?.role !== "super_admin") {
+    return {
+      success: false,
+      message: "Slack User ID は Super Admin にのみ操作できます。",
+    }
+  }
+
+  const { error } = await adminClient
+    .from("profiles")
+    .update({ slack_user_id: null })
+    .eq("id", targetUserId)
+
+  if (error) {
+    console.error("clearSlackUserId: error:", error.message)
+    return { success: false, message: "Slack User ID の解除に失敗しました。" }
+  }
+
+  revalidatePath(`/admin/users/${targetUserId}`)
+  return { success: true, message: "Slack User ID を解除しました。" }
+}
