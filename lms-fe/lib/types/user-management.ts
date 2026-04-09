@@ -30,9 +30,11 @@ export interface UserListResult {
 /**
  * ユーザー詳細のデータ型
  *
- * UserListItem と同一。個別ページでの利用を明示するためのエイリアス。
+ * UserListItem を拡張し、Slack User ID（Super Admin のみ使用）を含む。
  */
-export type UserDetail = UserListItem
+export type UserDetail = UserListItem & {
+  slackUserId: string | null
+}
 
 /**
  * ユーザー一覧のフィルタパラメータ型

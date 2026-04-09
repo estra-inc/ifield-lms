@@ -9,6 +9,10 @@ import {
 } from "@/lib/google-calendar"
 import { isCoachActive, getActiveCoaches } from "@/lib/utils/coach-helpers"
 import { toJST, formatDateStr } from "@/lib/utils/coaching-slots"
+import {
+  notifyCoachingBooked,
+  notifyCoachingCancelled,
+} from "@/lib/notifications/messages/coaching"
 import type { ActionResult } from "@/lib/validations/auth"
 
 /**
@@ -276,6 +280,22 @@ export async function bookSession(
     calendarWarning = `（※ Google カレンダーへの登録に失敗しました: ${calendarResult.reason}）`
   }
 
+  // --- Slack 通知（fail-safe） ---
+  // 通知失敗は予約成功レスポンスに影響しない
+  try {
+    await notifyCoachingBooked(adminClient, {
+      studentName,
+      coachId: selectedCoachId,
+      coachName: selectedCoachName,
+      genre: genre as "engineering" | "design",
+      sessionDate: date,
+      startTime,
+      endTime,
+    })
+  } catch (notificationError) {
+    console.error("bookSession: Slack notification failed:", notificationError)
+  }
+
   revalidatePath("/coaching")
   return {
     success: true,
@@ -311,10 +331,10 @@ export async function cancelSession(
   const adminClient = createAdminClient()
   const userId = authResult.userId
 
-  // セッション取得 & 所有権確認
+  // セッション取得 & 所有権確認（通知に必要な日時・ジャンル・受講生名も取得）
   const { data: session, error: fetchError } = await adminClient
     .from("coaching_sessions")
-    .select("id, user_id, status, google_event_id, coach_id")
+    .select("id, user_id, status, google_event_id, coach_id, session_date, start_time, end_time, genre")
     .eq("id", sessionId)
     .single()
 
@@ -359,6 +379,37 @@ export async function cancelSession(
   // Google Calendar イベント削除
   if (session.google_event_id && session.coach_id) {
     await deleteCalendarEvent(session.coach_id, session.google_event_id)
+  }
+
+  // --- Slack 通知（fail-safe） ---
+  try {
+    // 受講生氏名・担当コーチ氏名を取得
+    const [studentProfile, coachProfile] = await Promise.all([
+      adminClient
+        .from("profiles")
+        .select("full_name")
+        .eq("id", userId)
+        .single(),
+      session.coach_id
+        ? adminClient
+            .from("profiles")
+            .select("full_name")
+            .eq("id", session.coach_id)
+            .single()
+        : Promise.resolve({ data: null }),
+    ])
+
+    await notifyCoachingCancelled(adminClient, {
+      studentName: studentProfile.data?.full_name ?? "受講生",
+      coachId: session.coach_id,
+      coachName: coachProfile.data?.full_name ?? null,
+      genre: (session.genre ?? "engineering") as "engineering" | "design",
+      sessionDate: session.session_date,
+      startTime: session.start_time,
+      endTime: session.end_time,
+    })
+  } catch (notificationError) {
+    console.error("cancelSession: Slack notification failed:", notificationError)
   }
 
   revalidatePath("/coaching")

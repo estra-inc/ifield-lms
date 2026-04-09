@@ -13,6 +13,7 @@ import { MetricsRow } from "@/app/(authenticated)/reports/_components/metrics-ro
 import { TutorialProgressCard } from "@/app/(authenticated)/dashboard/_components/tutorial-progress-card"
 import { ProfileCard } from "./_components/profile-card"
 import { ActionsCard } from "./_components/actions-card"
+import { SlackIntegrationCard } from "./_components/slack-integration-card"
 import { LearningOverview } from "./_components/learning-overview"
 import { CoachingCreditsCard } from "./_components/coaching-credits-card"
 import { ProjectAssignmentsCard, type SubmissionRow } from "@/app/(authenticated)/users/[id]/_components/project-assignments-card"
@@ -90,7 +91,7 @@ export default async function UserDetailPage({ params, searchParams }: PageProps
   const [profileResult, authUserResult] = await Promise.all([
     adminClient
       .from("profiles")
-      .select("id, full_name, email, avatar_url, role, current_term, default_genre, created_at")
+      .select("id, full_name, email, avatar_url, role, current_term, default_genre, slack_user_id, created_at")
       .eq("id", id)
       .single(),
     adminClient.auth.admin.getUserById(id),
@@ -114,6 +115,7 @@ export default async function UserDetailPage({ params, searchParams }: PageProps
     currentTerm: profile.current_term,
     createdAt: profile.created_at,
     isBanned,
+    slackUserId: profile.slack_user_id,
   }
 
   // --- Phase 2: 全データを一括並列取得（learner の場合） ---
@@ -127,6 +129,12 @@ export default async function UserDetailPage({ params, searchParams }: PageProps
           <h1 className="text-xl md:text-2xl font-bold tracking-tight">ユーザー詳細</h1>
         </div>
         <ProfileCard user={userDetail} coachAssignments={[]} availableCoaches={[]} />
+        {profile.role === "super_admin" && (
+          <SlackIntegrationCard
+            userId={userDetail.id}
+            currentSlackUserId={userDetail.slackUserId}
+          />
+        )}
         <ActionsCard user={userDetail} isSelf={isSelf} />
       </div>
     )

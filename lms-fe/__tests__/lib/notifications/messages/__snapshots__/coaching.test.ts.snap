@@ -1,0 +1,237 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildBookingBlocks > @here フォールバックの場合のブロック構造（snapshot） 1`] = `
+[
+  {
+    "text": {
+      "emoji": true,
+      "text": "📅 新規コーチング予約",
+      "type": "plain_text",
+    },
+    "type": "header",
+  },
+  {
+    "text": {
+      "text": "<!here> 新しいコーチング予約が入りました。",
+      "type": "mrkdwn",
+    },
+    "type": "section",
+  },
+  {
+    "fields": [
+      {
+        "text": "*受講生:*
+山田太郎",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*ジャンル:*
+エンジニアリング",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*日時:*
+2026/04/15 (水) 14:00〜15:00",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*担当コーチ:*
+佐藤花子",
+        "type": "mrkdwn",
+      },
+    ],
+    "type": "section",
+  },
+  {
+    "elements": [
+      {
+        "text": {
+          "emoji": false,
+          "text": "管理画面で開く",
+          "type": "plain_text",
+        },
+        "type": "button",
+        "url": "https://ifield-lms.vercel.app/admin/coaching",
+      },
+    ],
+    "type": "actions",
+  },
+]
+`;
+
+exports[`buildBookingBlocks > メンション付きの場合のブロック構造（snapshot） 1`] = `
+[
+  {
+    "text": {
+      "emoji": true,
+      "text": "📅 新規コーチング予約",
+      "type": "plain_text",
+    },
+    "type": "header",
+  },
+  {
+    "text": {
+      "text": "<@U01ABCDEF> 新しいコーチング予約が入りました。",
+      "type": "mrkdwn",
+    },
+    "type": "section",
+  },
+  {
+    "fields": [
+      {
+        "text": "*受講生:*
+山田太郎",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*ジャンル:*
+エンジニアリング",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*日時:*
+2026/04/15 (水) 14:00〜15:00",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*担当コーチ:*
+佐藤花子",
+        "type": "mrkdwn",
+      },
+    ],
+    "type": "section",
+  },
+  {
+    "elements": [
+      {
+        "text": {
+          "emoji": false,
+          "text": "管理画面で開く",
+          "type": "plain_text",
+        },
+        "type": "button",
+        "url": "https://ifield-lms.vercel.app/admin/coaching",
+      },
+    ],
+    "type": "actions",
+  },
+]
+`;
+
+exports[`buildCancellationBlocks > @here フォールバックの場合のブロック構造（snapshot） 1`] = `
+[
+  {
+    "text": {
+      "emoji": true,
+      "text": "❌ コーチング予約キャンセル",
+      "type": "plain_text",
+    },
+    "type": "header",
+  },
+  {
+    "text": {
+      "text": "<!here> 受講生がコーチング予約をキャンセルしました。",
+      "type": "mrkdwn",
+    },
+    "type": "section",
+  },
+  {
+    "fields": [
+      {
+        "text": "*受講生:*
+山田太郎",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*ジャンル:*
+エンジニアリング",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*元の日時:*
+2026/04/15 (水) 14:00〜15:00",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*担当コーチ:*
+佐藤花子",
+        "type": "mrkdwn",
+      },
+    ],
+    "type": "section",
+  },
+  {
+    "elements": [
+      {
+        "text": {
+          "emoji": false,
+          "text": "管理画面で開く",
+          "type": "plain_text",
+        },
+        "type": "button",
+        "url": "https://ifield-lms.vercel.app/admin/coaching",
+      },
+    ],
+    "type": "actions",
+  },
+]
+`;
+
+exports[`buildCancellationBlocks > メンション付きの場合のブロック構造（snapshot） 1`] = `
+[
+  {
+    "text": {
+      "emoji": true,
+      "text": "❌ コーチング予約キャンセル",
+      "type": "plain_text",
+    },
+    "type": "header",
+  },
+  {
+    "text": {
+      "text": "<@U01ABCDEF> 受講生がコーチング予約をキャンセルしました。",
+      "type": "mrkdwn",
+    },
+    "type": "section",
+  },
+  {
+    "fields": [
+      {
+        "text": "*受講生:*
+山田太郎",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*ジャンル:*
+エンジニアリング",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*元の日時:*
+2026/04/15 (水) 14:00〜15:00",
+        "type": "mrkdwn",
+      },
+      {
+        "text": "*担当コーチ:*
+佐藤花子",
+        "type": "mrkdwn",
+      },
+    ],
+    "type": "section",
+  },
+  {
+    "elements": [
+      {
+        "text": {
+          "emoji": false,
+          "text": "管理画面で開く",
+          "type": "plain_text",
+        },
+        "type": "button",
+        "url": "https://ifield-lms.vercel.app/admin/coaching",
+      },
+    ],
+    "type": "actions",
+  },
+]
+`;

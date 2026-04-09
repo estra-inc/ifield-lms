@@ -107,6 +107,7 @@ export default async function ManagerUserDetailPage({ params, searchParams }: Pa
     currentTerm: profile.current_term,
     createdAt: profile.created_at,
     isBanned,
+    slackUserId: null,
   }
 
   // --- Phase 2: 全データを一括並列取得 ---
