@@ -86,17 +86,8 @@ export function buildBookingBlocks(
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `${mention} 新しいコーチング予約が入りました。`,
+        text: `${mention} 新しいコーチング予約が入りました。\n\n*日時:* ${dateTimeText}\n*受講生:* ${input.studentName}\n*担当コーチ:* ${coachName}\n*ジャンル:* ${genreLabel}`,
       },
-    },
-    {
-      type: "section",
-      fields: [
-        { type: "mrkdwn", text: `*受講生:*\n${input.studentName}` },
-        { type: "mrkdwn", text: `*ジャンル:*\n${genreLabel}` },
-        { type: "mrkdwn", text: `*日時:*\n${dateTimeText}` },
-        { type: "mrkdwn", text: `*担当コーチ:*\n${coachName}` },
-      ],
     },
     {
       type: "actions",
@@ -143,17 +134,8 @@ export function buildCancellationBlocks(
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `${mention} 受講生がコーチング予約をキャンセルしました。`,
+        text: `${mention} 受講生がコーチング予約をキャンセルしました。\n\n*元の日時:* ${dateTimeText}\n*受講生:* ${input.studentName}\n*担当コーチ:* ${coachName}\n*ジャンル:* ${genreLabel}`,
       },
-    },
-    {
-      type: "section",
-      fields: [
-        { type: "mrkdwn", text: `*受講生:*\n${input.studentName}` },
-        { type: "mrkdwn", text: `*ジャンル:*\n${genreLabel}` },
-        { type: "mrkdwn", text: `*元の日時:*\n${dateTimeText}` },
-        { type: "mrkdwn", text: `*担当コーチ:*\n${coachName}` },
-      ],
     },
     {
       type: "actions",

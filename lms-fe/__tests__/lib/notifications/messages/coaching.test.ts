@@ -42,15 +42,14 @@ describe("buildBookingBlocks", () => {
     expect(blocks).toMatchSnapshot()
   })
 
-  it("デザインジャンルの場合 fields に『デザイン』が含まれる", () => {
+  it("デザインジャンルの場合に『デザイン』が含まれる", () => {
     const blocks = buildBookingBlocks(
       { ...baseInput, genre: "design" },
       "<@U01ABCDEF>"
     )
-    const fieldsBlock = blocks[2] as { fields: { text: string }[] }
-    const fieldsText = fieldsBlock.fields.map((f) => f.text).join("\n")
-    expect(fieldsText).toContain("デザイン")
-    expect(fieldsText).not.toContain("エンジニアリング")
+    const sectionBlock = blocks[1] as { text: { text: string } }
+    expect(sectionBlock.text.text).toContain("デザイン")
+    expect(sectionBlock.text.text).not.toContain("エンジニアリング")
   })
 
   it("coachName が null の場合は『未割当』が表示される", () => {
@@ -58,14 +57,13 @@ describe("buildBookingBlocks", () => {
       { ...baseInput, coachName: null },
       "<@U01ABCDEF>"
     )
-    const fieldsBlock = blocks[2] as { fields: { text: string }[] }
-    const fieldsText = fieldsBlock.fields.map((f) => f.text).join("\n")
-    expect(fieldsText).toContain("未割当")
+    const sectionBlock = blocks[1] as { text: { text: string } }
+    expect(sectionBlock.text.text).toContain("未割当")
   })
 
   it("管理画面リンクのボタンが含まれる", () => {
     const blocks = buildBookingBlocks(baseInput, "<@U01ABCDEF>")
-    const actionsBlock = blocks[3] as {
+    const actionsBlock = blocks[2] as {
       elements: { url: string; text: { text: string } }[]
     }
     expect(actionsBlock.elements[0].url).toBe(
@@ -105,10 +103,9 @@ describe("buildCancellationBlocks", () => {
     expect(headerBlock.text.text).toBe("❌ コーチング予約キャンセル")
   })
 
-  it("fields に『元の日時』が含まれる（予約時の『日時』とは区別される）", () => {
+  it("本文に『元の日時』が含まれる（予約時の『日時』とは区別される）", () => {
     const blocks = buildCancellationBlocks(baseInput, HERE_MENTION)
-    const fieldsBlock = blocks[2] as { fields: { text: string }[] }
-    const fieldsText = fieldsBlock.fields.map((f) => f.text).join("\n")
-    expect(fieldsText).toContain("元の日時")
+    const sectionBlock = blocks[1] as { text: { text: string } }
+    expect(sectionBlock.text.text).toContain("元の日時")
   })
 })
