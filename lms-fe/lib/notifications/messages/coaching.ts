@@ -55,7 +55,10 @@ export function formatCoachingDateTime(
     timeZone: "UTC",
   }).format(date)
   const formattedDate = `${year}/${String(month).padStart(2, "0")}/${String(day).padStart(2, "0")}`
-  return `${formattedDate} (${weekday}) ${startTime}〜${endTime}`
+  // DB の time 型は HH:MM:SS で返る場合があるため、HH:MM に切り詰める
+  const start = startTime.slice(0, 5)
+  const end = endTime.slice(0, 5)
+  return `${formattedDate} (${weekday}) ${start}〜${end}`
 }
 
 /**
