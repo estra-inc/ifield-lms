@@ -39,20 +39,19 @@ export async function fetchProgressDetail(
         .order("order", { ascending: true }),
       client
         .from("contents")
-        .select("chapter, tutorial, title")
+        .select("chapter, tutorial, title, order")
         .eq("genre", genre)
         .eq("content_type", "chapter")
         .eq("status", "active")
         .eq("version_id", versionId)
-        .order("chapter", { ascending: true }),
+        .order("order", { ascending: true }),
       client
         .from("contents")
-        .select("id, tutorial, chapter, title")
+        .select("id, tutorial, chapter, title, order")
         .eq("genre", genre)
         .eq("content_type", "section")
         .eq("status", "active")
         .eq("version_id", versionId)
-        .order("chapter", { ascending: true })
         .order("order", { ascending: true }),
       client
         .from("content_progress")
@@ -71,14 +70,27 @@ export async function fetchProgressDetail(
     progressMap.set(row.content_id, row.completed_at)
   }
 
-  // chapter キー → タイトルのマップ
+  // chapter キー → タイトル / order のマップ
+  // chapter カラムは "chapter-10" のような文字列のため、文字列ソートでは
+  // chapter-1 → chapter-10 → chapter-2 の順になってしまう。
+  // 数値カラム order でソートするために map を構築する。
   const chapterTitleMap = new Map<string, string>()
+  const chapterOrderMap = new Map<string, number>()
   for (const ch of chapters) {
-    chapterTitleMap.set(`${ch.tutorial}/${ch.chapter}`, ch.title)
+    const key = `${ch.tutorial}/${ch.chapter}`
+    chapterTitleMap.set(key, ch.title)
+    chapterOrderMap.set(key, ch.order ?? 0)
   }
 
   return tutorials.map((t) => {
-    const tutSections = sections.filter((s) => s.tutorial === t.tutorial)
+    const tutSections = sections
+      .filter((s) => s.tutorial === t.tutorial)
+      .sort((a, b) => {
+        const ao = chapterOrderMap.get(`${a.tutorial}/${a.chapter}`) ?? 0
+        const bo = chapterOrderMap.get(`${b.tutorial}/${b.chapter}`) ?? 0
+        if (ao !== bo) return ao - bo
+        return (a.order ?? 0) - (b.order ?? 0)
+      })
     const sectionProgresses: SectionProgress[] = tutSections.map((s) => ({
       title: s.title,
       chapterTitle:
