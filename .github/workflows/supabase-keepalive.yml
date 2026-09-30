@@ -1,0 +1,141 @@
+# 本番 Supabase の自動一時停止を防ぎ、LMS の死活を見張る。
+#
+# なぜ要るか: Supabase の無料プランは「過去1週間の DB アクティビティが少ない」プロジェクトを
+# 自動で一時停止し、ダッシュボードで Resume するまで戻らない（2026-08-31・2026-09-30 に発生し、
+# 受講生がログインできなくなった）。利用が少ない週があっても止まらないよう、1日2回 DB に
+# クエリを投げる。あわせて本番のログイン画面も確認する。
+# https://supabase.com/docs/guides/platform/free-project-pausing
+#
+# 通知: 異常になったら「🚨」、戻ったら「✅」を #03_develop_notification に1回ずつ投稿する
+# （前回の実行結果と比べて状態が変わったときだけ。同じ異常を毎回は投稿しない）。
+# 異常の間はジョブも失敗させるので、GitHub からもメールが届く（cron 行を最後に編集した人宛て）。
+# 作りは estra-inc/lms-grading-harness の ops-watchdog.yml に揃えている。
+#
+# Secrets:
+#   SUPABASE_URL           本番 Supabase の URL
+#   SUPABASE_ANON_KEY      本番 Supabase の anon key（ブラウザにも配られている公開用キー）
+#   OPS_SLACK_WEBHOOK_URL  #03_develop_notification の Incoming Webhook
+#   LMS_BASE_URL           本番 LMS の URL（sync-contents.yml と共用）
+
+name: Supabase Keepalive
+
+on:
+  schedule:
+    # UTC 表記で JST 9:23 / 21:23。毎時0分は混雑で遅れやすいので外している
+    - cron: "23 0,12 * * *"
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "配線テスト: 状態に関わらず Slack にテストメッセージを送る"
+        type: boolean
+        default: false
+
+concurrency:
+  group: supabase-keepalive
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read # 前回の実行結果を見て、状態が変わったときだけ通知するため
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Supabase と LMS を確認
+        id: check
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          LMS_BASE_URL: ${{ secrets.LMS_BASE_URL }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ] || [ -z "$LMS_BASE_URL" ]; then
+            echo "::error::SUPABASE_URL / SUPABASE_ANON_KEY / LMS_BASE_URL の secrets を設定してください"
+            { echo "db=未設定"; echo "auth=未設定"; echo "app=未設定"; echo "ok=false"; } >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # HTTP ステータスを返す。接続できないときは 000
+          status() { curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "$@" || true; }
+
+          # これが停止防止の DB アクティビティになる（RLS で結果は空だが SQL は実行される）。
+          # 目安は「毎日数回」なので1回の実行で3回投げる
+          db=""
+          for _ in 1 2 3; do
+            db=$(status "${SUPABASE_URL%/}/rest/v1/profiles?select=id&limit=1" -H "apikey: $SUPABASE_ANON_KEY")
+            [ "$db" = "200" ] || break
+          done
+          auth=$(status "${SUPABASE_URL%/}/auth/v1/health" -H "apikey: $SUPABASE_ANON_KEY")
+          app=$(status "${LMS_BASE_URL%/}/auth/login")
+
+          echo "Supabase DB: $db / Supabase Auth: $auth / LMS ログイン画面: $app"
+          ok=false
+          if [ "$db" = "200" ] && [ "$auth" = "200" ] && [ "$app" = "200" ]; then ok=true; fi
+          { echo "db=$db"; echo "auth=$auth"; echo "app=$app"; echo "ok=$ok"; } >> "$GITHUB_OUTPUT"
+
+      - name: 状態が変わったら Slack に通知
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OPS_SLACK_WEBHOOK_URL: ${{ secrets.OPS_SLACK_WEBHOOK_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          OK: ${{ steps.check.outputs.ok }}
+          DB: ${{ steps.check.outputs.db }}
+          AUTH: ${{ steps.check.outputs.auth }}
+          APP: ${{ steps.check.outputs.app }}
+          TEST: ${{ github.event.inputs.test }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # 前回（完了済みの最新。実行中の今回は含まない）の結果。failure なら通知済み
+          prev=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow supabase-keepalive.yml \
+            --status completed --limit 1 --json conclusion --jq '.[0].conclusion // ""' || true)
+          echo "前回: ${prev:-なし} / 今回: $([ "$OK" = "true" ] && echo 正常 || echo 異常)"
+
+          text=""
+          if [ "$TEST" = "true" ]; then
+            text=":test_tube: supabase-keepalive の配線テストです（現在: Supabase DB ${DB} / Auth ${AUTH} / LMS ログイン画面 ${APP}）"
+          elif [ "$OK" != "true" ] && [ "$prev" != "failure" ]; then
+            ref=$(echo "$SUPABASE_URL" | sed -E 's#^https?://([^.]+)\..*#\1#')
+            text=$(printf '%s\n' \
+              ":rotating_light: *iField LMS の異常*（production）" \
+              "" \
+              ":octagonal_sign: *受講生がログインできない可能性がある*" \
+              "- Supabase DB: HTTP $DB" \
+              "- Supabase Auth: HTTP $AUTH" \
+              "- LMS ログイン画面: HTTP $APP" \
+              "（000 = 接続できない）" \
+              "→ Supabase ダッシュボードで一時停止（paused）になっていないか確認し、なっていれば「Resume project」を押す（数分で戻る）。paused でなければ Supabase / Vercel 側の障害を疑う。" \
+              "" \
+              "ダッシュボード: <https://supabase.com/dashboard/project/$ref|Supabase>" \
+              "実行ログ: <$RUN_URL|GitHub Actions>")
+          elif [ "$OK" = "true" ] && [ "$prev" = "failure" ]; then
+            text=":white_check_mark: iField LMS（production）: 異常は解消しました"
+          fi
+
+          if [ -z "$text" ]; then
+            echo "状態に変化がないので通知しない"
+            exit 0
+          fi
+          if [ -z "$OPS_SLACK_WEBHOOK_URL" ]; then
+            echo "::warning::OPS_SLACK_WEBHOOK_URL が未設定のため Slack に通知できません"
+            [ "$TEST" = "true" ] && exit 1
+            exit 0
+          fi
+          # 投稿の失敗でジョブを落とすと、次回「前回は異常」と誤認して解消通知が出るので警告に留める
+          # （配線テストのときだけは失敗させる）
+          if ! jq -n --arg text "$text" '{text: $text}' |
+            curl -sS --fail-with-body --max-time 20 -H 'Content-Type: application/json' --data @- "$OPS_SLACK_WEBHOOK_URL"; then
+            echo "::warning::Slack への投稿に失敗しました"
+            [ "$TEST" = "true" ] && exit 1
+          fi
+          echo
+
+      - name: 異常ならジョブを失敗させる
+        if: steps.check.outputs.ok != 'true'
+        env:
+          DB: ${{ steps.check.outputs.db }}
+          AUTH: ${{ steps.check.outputs.auth }}
+          APP: ${{ steps.check.outputs.app }}
+        run: |
+          echo "::error::Supabase または LMS が応答していません（Supabase DB ${DB} / Auth ${AUTH} / LMS ログイン画面 ${APP}）"
+          exit 1
