@@ -290,3 +290,7 @@ erDiagram
 ## 関連リポジトリ
 
 - [ifield-curriculums](https://github.com/estra-inc/ifield-curriculums) - 教材・演習問題・模擬案件コンテンツ
+
+## ライセンス
+
+本リポジトリはソースコードを公開していますが、オープンソースではありません。無断での複製・改変・再配布・利用を禁じます（All rights reserved）。
