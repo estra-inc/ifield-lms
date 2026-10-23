@@ -1,0 +1,4 @@
+# gitleaks の誤検知（ダミー値・ドキュメントの記入例）。実在のキーではないことを確認済み
+c31fb343cc85fc129a3f4f2fa3c3e9e4187daa74:docs/mock-projects-guide.md:curl-auth-header:211
+c31fb343cc85fc129a3f4f2fa3c3e9e4187daa74:lms-fe/__tests__/app/(authenticated)/settings/actions-google.test.ts:generic-api-key:108
+c31fb343cc85fc129a3f4f2fa3c3e9e4187daa74:lms-fe/__tests__/app/api/auth/google/callback.test.ts:generic-api-key:103
